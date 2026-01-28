@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brady W Karras | Portfolio</title>
+    <style>
+        /* --- CSS VARIABLES FOR EASY COLOR CHANGES --- */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --accent-color: #2c3e50; /* Dark Slate Blue */
+            --link-color: #3498db;
+        }
+
+        /* --- GLOBAL RESET & TYPOGRAPHY --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* --- PROJECT GRID --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* --- PROJECT CARD DESIGN --- */
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-header h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #e9ecef;
+            color: #555;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: bold;
+            border: 2px solid var(--link-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-align: center;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .card-link:hover {
+            background: var(--link-color);
+            color: #fff;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        footer a {
+            color: #888;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Brady W Karras</h1>
+            <p class="subtitle">Student at UVU | Developer | Musician</p>
+        </header>
+
+        <div class="project-grid">
+
+            <article class="project-card">
+                <div class="card-header">
+                    <span class="tag">App Development</span>
+                    <h3>BradyRecipes</h3>
+                    <p class="card-desc">
+                        A custom recipe management application built using Firebase. Organized culinary data for easier access and sharing.
+                    </p>
+                </div>
+                <a href="#" class="card-link">View Project</a>
+            </article>
+
+            <article class="project-card">
+                <div class="card-header">
+                    <span class="tag">Music Production</span>
+                    <h3>Funnel Web</h3>
+                    <p class="card-desc">
+                        Solo music project featuring singles "Mercury (v1)" and "Fortune Killer." Released via DistroKid.
+                    </p>
+                </div>
+                <a href="#" class="card-link">Listen</a>
+            </article>
+
+            <article class="project-card">
+                <div class="card-header">
+                    <span class="tag">App Development</span>
+                    <h3>UltimateRecipes</h3>
+                    <p class="card-desc">
+                        An iteration on the recipe platform concept, focusing on enhanced UI and database efficiency.
+                    </p>
+                </div>
+                <a href="#" class="card-link">View Repository</a>
+            </article>
+
+            <article class="project-card">
+                <div class="card-header">
+                    <span class="tag">Band</span>
+                    <h3>Peaked in High School</h3>
+                    <p class="card-desc">
+                        Bass guitar performance and live event organization for local rock/alternative concerts.
+                    </p>
+                </div>
+                <a href="#" class="card-link">View Gallery</a>
+            </article>
+
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Brady W Karras</p>
+            <br>
+            <a href="https://github.com/YOUR_USERNAME">GitHub</a>
+            <a href="https://linkedin.com/in/YOUR_PROFILE">LinkedIn</a>
+        </footer>
+    </div>
+
+</body>
+</html>
