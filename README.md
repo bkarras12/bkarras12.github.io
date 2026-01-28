@@ -1,2 +1,2 @@
 # bkarras12.github.io
-Crumbl web page!
+Some portfolio artifacts of some work I have done in the past :)
