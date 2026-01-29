@@ -70,9 +70,7 @@
     .output-card h3 { margin-top: 0; font-size: 1.1rem; color: var(--primary); }
     .output-card span { display: block; margin-top: 10px; font-size: 0.9rem; color: var(--accent); font-weight: bold; }
 
-    /* --- NEW STYLES FOR IMAGE ZOOM --- */
-    
-    /* Style the trigger image to look clickable */
+
     .zoom-trigger {
       cursor: zoom-in;
       max-width: 100%;
@@ -85,11 +83,11 @@
       opacity: 0.8;
     }
 
-    /* The Modal (background) */
+
     .modal {
-      display: none; /* Hidden by default */
+      display: none; 
       position: fixed; 
-      z-index: 1000; /* Sit on top */
+      z-index: 1000; 
       padding-top: 50px; 
       left: 0;
       top: 0;
@@ -97,10 +95,10 @@
       height: 100%; 
       overflow: auto; 
       background-color: rgb(0,0,0); 
-      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+      background-color: rgba(0,0,0,0.9); 
     }
 
-    /* Modal Content (The expanded image) */
+   
     .modal-content {
       margin: auto;
       display: block;
@@ -113,7 +111,7 @@
       animation-duration: 0.3s;
     }
 
-    /* Caption of Modal Image */
+
     #caption {
       margin: auto;
       display: block;
@@ -125,7 +123,7 @@
       height: 150px;
     }
 
-    /* The Close Button */
+
     .close {
       position: absolute;
       top: 15px;
@@ -143,13 +141,13 @@
       cursor: pointer;
     }
 
-    /* Add Animation */
+
     @keyframes zoom {
       from {transform:scale(0)} 
       to {transform:scale(1)}
     }
 
-    /* Mobile Responsive Modal */
+
     @media only screen and (max-width: 700px){
       .modal-content {
         width: 100%;
@@ -174,6 +172,9 @@
       <ul>
         <li><strong>Data Source:</strong> CollegeFootballData API</li>
         <li><strong>Performance:</strong> Averaging <strong>73% Accuracy</strong> week-to-week.</li>
+        <li>Taught the model on metrics such as EPA on offense and defense, PPA per play type, ELO ratings, Season player and team stats, and talent composit ratings</li>
+
+        <li>Implemented Linear regression for game probabilities and used the logistic regression model for spread projections</li>
       </ul>
     </section>
 
@@ -226,10 +227,10 @@
   </div>
 
   <script>
-    // Get the modal
+  
     var modal = document.getElementById("myModal");
 
-    // Get the image and insert it inside the modal - use its "alt" text as a caption
+   
     var img = document.getElementById("myImg");
     var modalImg = document.getElementById("img01");
     var captionText = document.getElementById("caption");
@@ -240,15 +241,13 @@
       captionText.innerHTML = this.alt;
     }
 
-    // Get the <span> element that closes the modal
+
     var span = document.getElementsByClassName("close")[0];
 
-    // When the user clicks on <span> (x), close the modal
     span.onclick = function() { 
       modal.style.display = "none";
     }
 
-    // Also close if user clicks anywhere outside the image
     modal.onclick = function(event) {
       if (event.target === modal) {
         modal.style.display = "none";
