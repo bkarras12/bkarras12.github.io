@@ -2,121 +2,269 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>College Football Prediction Model</title>
 
   <style>
+    :root {
+      /* Color Palette: "Varsity Tech" */
+      --primary: #0f172a;       /* Deep Navy */
+      --accent: #2563eb;        /* Bright Blue */
+      --bg-color: #f8fafc;      /* Cool White */
+      --card-bg: #ffffff;
+      --text-main: #334155;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --code-bg: #1e293b;       /* Dark terminal background */
+      --code-text: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
       line-height: 1.6;
-      background-color: #f9f9f9;
-      color: #222;
+      background-color: var(--bg-color);
+      color: var(--text-main);
     }
 
-    section {
-      background: #ffffff;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-
-    h1, h2 {
-      margin-top: 0;
-    }
-
-    .output-box {
-      border: 2px dashed #ccc;
-      padding: 20px;
-      margin-top: 10px;
-      background: #fafafa;
+    /* Hero Section */
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 3rem 2rem;
       text-align: center;
-      color: #666;
+      margin-bottom: 2rem;
+      border-bottom: 4px solid var(--accent);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      color: #94a3b8;
+      margin-top: 10px;
+      font-size: 1.1rem;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 60px 20px;
+    }
+
+    /* Card Styling */
+    section {
+      background: var(--card-bg);
+      padding: 30px;
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      /* Subtle lift instead of a heavy shadow */
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--primary);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+      font-size: 1.5rem;
+    }
+
+    p, li {
+      color: var(--text-main);
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* Technical/Math Styling */
+    .formula-box {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      margin: 20px 0;
+      border-left: 5px solid var(--accent);
+      overflow-x: auto;
     }
 
     code {
-      background: #eee;
+      background: #f1f5f9;
+      color: #d63384; /* Pinkish red for variables */
       padding: 2px 6px;
       border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+
+    /* Source Link Button */
+    .source-link {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+      border: 1px solid var(--accent);
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .source-link:hover {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    /* Dashboard Grid for Outputs */
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .output-card {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .output-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent);
+    }
+
+    .output-card h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: var(--primary);
+    }
+
+    .output-card span {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    /* Mobile tweak */
+    @media (max-width: 600px) {
+      header { padding: 2rem 1rem; }
+      section { padding: 20px; }
     }
   </style>
 </head>
 
 <body>
 
-  <h1>College Football Prediction Model</h1>
+  <header>
+    <h1>CFB Prediction Model</h1>
+    <p>Historical Analysis • Regression Modeling • Game Outcomes</p>
+  </header>
 
-  <!-- PROJECT OVERVIEW -->
-  <section>
-    <h2>Project Overview</h2>
-    <p>
-      This project uses historical college football data to predict game outcomes.
-      The models were built using data analytics techniques including feature engineering,
-      regression modeling, and model evaluation.
-    </p>
+  <main>
+    <section>
+      <h2>Project Overview</h2>
+      <p>
+        This project leverages historical college football data to predict game outcomes with high fidelity.
+        The models utilize advanced data analytics techniques including feature engineering,
+        regression modeling, and rigorous evaluation.
+      </p>
 
-    <ul>
-      <li>Data sourced from CollegeFootballData API</li>
-      <li>Taught the model on metrics such as EPA on offense and defense, PPA per play type, ELO ratings, Season player and team stats, and talent composit ratings</li>
-      <li>Implemented Linear regression for game probabilities and used the logistic regression model for spread projections</li>
-      <li>Scored an Average 73% Accuracy week to week.</li>
-    </ul>
-  </section>
-
-  
-  <section>
-    <h2>Linear Regression Model</h2>
-
-    <p>
-      The linear regression model predicts margin of victory using the following equation:
-    </p>
-
-    <p>
-      ŷ = β₀ + β₁(Elo_diff) + β₂(Off_PPA_diff) + β₃(Def_PPA_diff) + β₄(Home_Field)
-    </p>
-
-    <p>
-      Where:
-    </p>
-
-    <ul>
-      <li><code>ŷ</code> = predicted margin of victory</li>
-      <li><code>β₀</code> = intercept</li>
-      <li><code>Elo_diff</code> = difference in team Elo ratings</li>
-      <li><code>Off_PPA_diff</code> = offensive PPA difference</li>
-      <li><code>Def_PPA_diff</code> = defensive PPA difference</li>
-      <li><code>Home_Field</code> = home field indicator (0 or 1)</li>
-    </ul>
-    <li><a href="https://github.com/bkarras12/CFB-ML-model">Link to code on source files</a></li>
-  </section>
-
-  <!-- OUTPUTS SECTION -->
-  <section>
-    <h2>Model Outputs</h2>
-
-    <p>
-      Below are example outputs generated by the models. This section can be updated
-      with tables, charts, screenshots, or embedded visualizations.
-    </p>
-
-    <div class="output-box">
-      <p></p>
-      <p>Examples:</p>
       <ul>
-        <li>Win probabilities</li>
-        <a href="Sheet1.html">Outcome for game probabilities</a>
-        
-        <li>Actual vs predicted charts</li>
-        <a href="projectionsclean2.html">Outcome for predicting spread</a>
-
-        <li>Visualization behind a game prediction logic</li>
-        <img src="utah_asu_week7_logit_driver_bar.png" alt="image" width="800" height="500">
-
+        <li><strong>Data Source:</strong> CollegeFootballData API</li>
+        <li><strong>Key Metrics:</strong> EPA (Offense/Defense), PPA per play, ELO ratings, Season Stats, Talent Composite.</li>
+        <li><strong>Methodology:</strong> Linear regression for margin of victory; Logistic regression for spread projections.</li>
+        <li><strong>Performance:</strong> Averaging <strong>73% Accuracy</strong> week-to-week.</li>
       </ul>
-    </div>
-  </section>
+    </section>
 
+    <section>
+      <h2>Linear Regression Logic</h2>
 
+      <p>
+        The model predicts the margin of victory using a weighted coefficient formula. 
+        It isolates the difference in team quality and adjusts for home-field advantage.
+      </p>
+
+      <div class="formula-box">
+        ŷ = β₀ + β₁(Elo_diff) + β₂(Off_PPA_diff) + β₃(Def_PPA_diff) + β₄(Home_Field)
+      </div>
+
+      <p><strong>Variable Definitions:</strong></p>
+      <ul>
+        <li><code>ŷ</code> : Predicted margin of victory</li>
+        <li><code>β₀</code> : Intercept value</li>
+        <li><code>Elo_diff</code> : Delta in team Elo ratings</li>
+        <li><code>Off_PPA_diff</code> : Offensive Predicted Points Added difference</li>
+        <li><code>Def_PPA_diff</code> : Defensive Predicted Points Added difference</li>
+        <li><code>Home_Field</code> : Binary indicator (0 or 1)</li>
+      </ul>
+
+      <a href="https://github.com/bkarras12/CFB-ML-model" class="source-link" target="_blank">View Source Code on GitHub &rarr;</a>
+    </section>
+
+    <section>
+      <h2>Model Outputs & Visualizations</h2>
+
+      <p>
+        Explore the real-time projections and historical performance charts generated by the pipeline.
+      </p>
+
+      <div class="output-grid">
+        
+        <a href="Sheet1.html" class="output-card">
+          <h3>Win Probabilities</h3>
+          <p>Raw outcome probabilities for upcoming games.</p>
+          <span>View Data &rarr;</span>
+        </a>
+
+        <a href="projectionsclean2.html" class="output-card">
+          <h3>Spread Projections</h3>
+          <p>Actual vs. Predicted performance charts.</p>
+          <span>View Analysis &rarr;</span>
+        </a>
+
+        <div class="output-card">
+          <h3>Logic Visualization</h3>
+          <p>Feature importance breakdown (Example: Utah vs ASU)</p>
+          <img src="utah_asu_week7_logit_driver_bar.png" alt="Utah vs ASU Logic Bar Chart">
+        </div>
+
+      </div>
+    </section>
+  </main>
 
 </body>
 </html>
