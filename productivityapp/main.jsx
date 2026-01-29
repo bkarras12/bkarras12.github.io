@@ -3,29 +3,13 @@ Your Next Mountain
 Brady Karras
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  // Core UI & Navigation
-  LayoutGrid, Clock, BookOpen, PenTool, 
-  
-  // Actions
-  Plus, Trash2, X, CheckCircle2, RefreshCw,
-  Maximize2, Minimize2,
-  Volume2, VolumeX,
-  
-  // Icons for features
-  AlignLeft, ListChecks, Sparkles, 
-  Moon, Sun,
-  Play, Pause, RotateCcw, 
 
-  // Decorative & Categorical
-  AlertTriangle, ArrowRight, Bell, Ghost,
-  Mountain, Target, Quote 
-} from 'lucide-react';
 
 // ==========================================
 // 1. Configuration & Constants
 // ==========================================
+const { LayoutGrid, Clock, BookOpen, PenTool, Plus, Trash2, X, CheckCircle2, RefreshCw, Maximize2, Minimize2, Volume2, VolumeX, AlignLeft, ListChecks, 
+       Sparkles, Moon, Sun, Play, Pause, RotateCcw, AlertTriangle, ArrowRight, Bell, Ghost, Mountain, Target, Quote } = lucide;
 
 const APP_CONFIG = {
   name: "Your Next Mountain",
@@ -115,12 +99,12 @@ const MATRIX_CONFIG = {
  * Hook to manage timer logic, intervals, and audio feedback.
  */
 const useProductivityTimer = () => {
-  const [timeLeft, setTimeLeft] = useState(APP_CONFIG.defaults.timerFocus);
-  const [isActive, setIsActive] = useState(false);
-  const [mode, setMode] = useState('focus');
-  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [timeLeft, setTimeLeft] = React.useState(APP_CONFIG.defaults.timerFocus);
+  const [isActive, setIsActive] = React.useState(false);
+  const [mode, setMode] = React.useState('focus');
+  const [soundEnabled, setSoundEnabled] = React.useState(false);
 
-  const resetTimer = useCallback(() => {
+  const resetTimer = React.useCallback(() => {
     setIsActive(false);
     if (mode === 'focus') setTimeLeft(APP_CONFIG.defaults.timerFocus);
     else if (mode === 'short-break') setTimeLeft(APP_CONFIG.defaults.timerShortBreak);
@@ -135,7 +119,7 @@ const useProductivityTimer = () => {
     else setTimeLeft(APP_CONFIG.defaults.timerLongBreak);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     let interval = null;
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => setTimeLeft((t) => t - 1), 1000);
@@ -164,7 +148,7 @@ const useProductivityTimer = () => {
  * Hook to manage task CRUD operations.
  */
 const useTaskManager = () => {
-  const [tasks, setTasks] = useState([
+  const [tasks, setTasks] = React.useState([
     { id: 1, text: "Client server outage response", category: "q1", completed: false },
     { id: 2, text: "Learn Rust language", category: "q2", completed: false },
     { id: 3, text: "Reply to LinkedIn messages", category: "q3", completed: false },
@@ -387,8 +371,8 @@ const MonkModeOverlay = ({ task, timeLeft, isActive, toggleTimer, toggleTask, ex
 // ==========================================
 
 const MatrixView = ({ tasks, onAddTask, onToggleTask, onDeleteTask, onFocusTask, isDarkMode }) => {
-  const [newTask, setNewTask] = useState("");
-  const [newCategory, setNewCategory] = useState("q1");
+  const [newTask, setNewTask] = React.useState("");
+  const [newCategory, setNewCategory] = React.useState("q1");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -473,10 +457,10 @@ const MatrixView = ({ tasks, onAddTask, onToggleTask, onDeleteTask, onFocusTask,
 };
 
 const JournalView = ({ mode, setMode, isDarkMode, quotes, addQuote }) => {
-  const [entry, setEntry] = useState({ habit: "", better: "", actions: "" });
-  const [freeText, setFreeText] = useState("");
-  const [quoteText, setQuoteText] = useState("");
-  const [quoteAuthor, setQuoteAuthor] = useState("");
+  const [entry, setEntry] = React.useState({ habit: "", better: "", actions: "" });
+  const [freeText, setFreeText] = React.useState("");
+  const [quoteText, setQuoteText] = React.useState("");
+  const [quoteAuthor, setQuoteAuthor] = React.useState("");
 
   const handleAddQuote = () => {
     addQuote(quoteText, quoteAuthor);
@@ -748,23 +732,23 @@ const PlaybookView = ({ isDarkMode }) => (
 
 const App = () => {
   // --- Global State ---
-  const [activeTab, setActiveTab] = useState('tasks');
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [activeTab, setActiveTab] = React.useState('tasks');
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
   
   // --- Feature Hooks ---
   const taskManager = useTaskManager();
   const timer = useProductivityTimer();
 
   // --- Quote Logic ---
-  const [quotes, setQuotes] = useState(INITIAL_QUOTES);
-  const [dailyQuote, setDailyQuote] = useState(INITIAL_QUOTES[0]);
+  const [quotes, setQuotes] = React.useState(INITIAL_QUOTES);
+  const [dailyQuote, setDailyQuote] = React.useState(INITIAL_QUOTES[0]);
 
   // --- UI State ---
-  const [monkModeTask, setMonkModeTask] = useState(null);
-  const [journalMode, setJournalMode] = useState('audit'); 
+  const [monkModeTask, setMonkModeTask] = React.useState(null);
+  const [journalMode, setJournalMode] = React.useState('audit'); 
 
   // --- Effects ---
-  useEffect(() => {
+  React.useEffect(() => {
     // Pick random quote on mount
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     setDailyQuote(randomQuote);
@@ -901,4 +885,5 @@ const App = () => {
   );
 };
 
-export default App;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
