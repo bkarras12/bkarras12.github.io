@@ -1,7 +1,6 @@
 /**
  * Your Next Mountain
  * Brady Karras
- * Fixed for GitHub Pages (No-Build Version)
  */
 
 // ==========================================
@@ -92,9 +91,7 @@ const MATRIX_CONFIG = {
 // 2. Custom Hooks (Logic Abstraction)
 // ==========================================
 
-/**
- * Hook to manage timer logic, intervals, and audio feedback.
- */
+
 const useProductivityTimer = () => {
   const [timeLeft, setTimeLeft] = React.useState(APP_CONFIG.defaults.timerFocus);
   const [isActive, setIsActive] = React.useState(false);
@@ -141,9 +138,7 @@ const useProductivityTimer = () => {
   };
 };
 
-/**
- * Hook to manage task CRUD operations.
- */
+
 const useTaskManager = () => {
   const [tasks, setTasks] = React.useState([
     { id: 1, text: "Client server outage response", category: "q1", completed: false },
