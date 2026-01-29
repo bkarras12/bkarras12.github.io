@@ -1,15 +1,12 @@
 /**
-Your Next Mountain
-Brady Karras
+ * Your Next Mountain
+ * Brady Karras
+ * Fixed for GitHub Pages (No-Build Version)
  */
-
-
 
 // ==========================================
 // 1. Configuration & Constants
 // ==========================================
-const { LayoutGrid, Clock, BookOpen, PenTool, Plus, Trash2, X, CheckCircle2, RefreshCw, Maximize2, Minimize2, Volume2, VolumeX, AlignLeft, ListChecks, 
-       Sparkles, Moon, Sun, Play, Pause, RotateCcw, AlertTriangle, ArrowRight, Bell, Ghost, Mountain, Target, Quote } = lucide;
 
 const APP_CONFIG = {
   name: "Your Next Mountain",
@@ -40,19 +37,19 @@ const PLAYBOOK_LESSONS = [
     title: "Amor Fati (Love of Fate)",
     analogy: "Treat every event like fuel for a fire.",
     explanation: "A fire turns everything thrown into it into flame and brightness. Don't wish for things to be different; use what happens to move forward.",
-    icon: <Mountain className="w-5 h-5" />
+    icon: "🏔️"
   },
   {
     title: "The 'Eat the Frog' Rule",
     analogy: "If you have to eat a live frog, it doesn't pay to sit and look at it for very long.",
     explanation: "Do your hardest, most daunting task first thing in the morning. Once the 'frog' is gone, everything else is like eating dessert.",
-    icon: <Target className="w-5 h-5" />
+    icon: "🐸"
   },
   {
     title: "Monk Mode",
     analogy: "Put blinders on the horse.",
     explanation: "Horses wear blinders so they don't get spooked by the crowd. Monk Mode removes the UI so you don't get spooked by your other tasks.",
-    icon: <Maximize2 className="w-5 h-5" />
+    icon: "👓"
   }
 ];
 
@@ -60,7 +57,7 @@ const MATRIX_CONFIG = {
   q1: { 
     label: "Do First", 
     subLabel: "The Emergency Room", 
-    icon: AlertTriangle, 
+    icon: "🚨", 
     lightClass: "bg-[#E7E5E4] text-stone-800",
     darkClass: "bg-[#292524] text-stone-200 border-stone-700",
     description: "Urgent & Important"
@@ -68,7 +65,7 @@ const MATRIX_CONFIG = {
   q2: { 
     label: "Schedule", 
     subLabel: "The Gym / Strategy", 
-    icon: ArrowRight, 
+    icon: "🗓️", 
     lightClass: "bg-white border-stone-200 text-stone-600",
     darkClass: "bg-[#1c1917] border-stone-800 text-stone-400",
     description: "Not Urgent & Important"
@@ -76,7 +73,7 @@ const MATRIX_CONFIG = {
   q3: { 
     label: "Delegate", 
     subLabel: "The Doorbell / Noise", 
-    icon: Bell, 
+    icon: "🔔", 
     lightClass: "bg-[#F5F5F4] text-stone-500",
     darkClass: "bg-[#292524] text-stone-500",
     description: "Urgent & Not Important"
@@ -84,7 +81,7 @@ const MATRIX_CONFIG = {
   q4: { 
     label: "Delete", 
     subLabel: "The Sofa / Waste", 
-    icon: Ghost, 
+    icon: "🗑️", 
     lightClass: "bg-white border-stone-200 text-stone-400",
     darkClass: "bg-[#0c0a09] border-stone-800 text-stone-600",
     description: "Not Urgent & Not Important"
@@ -187,7 +184,7 @@ const Sidebar = ({ activeTab, setActiveTab, dailyQuote, onShuffleQuote, progress
     {/* Brand Header */}
     <div className="flex items-center gap-3 mb-12 opacity-80 hover:opacity-100 transition-opacity">
       <div className={`p-2 rounded-md transition-colors ${isDarkMode ? 'bg-stone-800 text-stone-200' : 'bg-[#5C5A56] text-[#EBE9E4]'}`}>
-        <Mountain className="w-5 h-5" />
+        <span>⛰️</span>
       </div>
       <h1 className={`text-sm font-bold tracking-widest uppercase transition-colors ${isDarkMode ? 'text-stone-300' : 'text-[#5C5A56]'}`}>
         {APP_CONFIG.name}
@@ -197,10 +194,10 @@ const Sidebar = ({ activeTab, setActiveTab, dailyQuote, onShuffleQuote, progress
     {/* Navigation */}
     <nav className="space-y-4 flex-1">
       {[
-        { id: 'tasks', label: 'Matrix', icon: LayoutGrid },
-        { id: 'timer', label: 'Focus', icon: Clock },
-        { id: 'journal', label: 'Journal', icon: PenTool }, 
-        { id: 'learn', label: 'Playbook', icon: BookOpen },
+        { id: 'tasks', label: 'Matrix', icon: '🏗️' },
+        { id: 'timer', label: 'Focus', icon: '⏱️' },
+        { id: 'journal', label: 'Journal', icon: '📓' }, 
+        { id: 'learn', label: 'Playbook', icon: '📖' },
       ].map((item) => (
         <button 
           key={item.id}
@@ -210,7 +207,7 @@ const Sidebar = ({ activeTab, setActiveTab, dailyQuote, onShuffleQuote, progress
               ? (isDarkMode ? 'bg-stone-800 text-stone-200 shadow-sm' : 'bg-[#D6D3D1] text-stone-800 font-semibold shadow-sm') 
               : 'hover:opacity-100 opacity-60'}`}
         >
-          <item.icon size={18} />
+          <span className="text-lg">{item.icon}</span>
           <span className="text-sm tracking-wide">{item.label}</span>
         </button>
       ))}
@@ -223,7 +220,7 @@ const Sidebar = ({ activeTab, setActiveTab, dailyQuote, onShuffleQuote, progress
         className={`flex items-center gap-3 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all w-full
           ${isDarkMode ? 'bg-stone-800 text-stone-400 hover:text-stone-200' : 'bg-[#D6D3D1] text-stone-600 hover:text-stone-800'}`}
       >
-        {isDarkMode ? <Sun size={14} /> : <Moon size={14} />}
+        <span>{isDarkMode ? '☀️' : '🌙'}</span>
         <span>{isDarkMode ? 'Light Mode' : 'Night Mode'}</span>
       </button>
     </div>
@@ -232,13 +229,13 @@ const Sidebar = ({ activeTab, setActiveTab, dailyQuote, onShuffleQuote, progress
     <div className={`mt-auto pt-8 border-t transition-colors ${isDarkMode ? 'border-stone-800' : 'border-[#D6D3D1]'}`}>
       <div className="mb-6 group relative">
         <div className="flex justify-between items-start mb-2">
-           <Quote size={16} className="text-stone-500" />
+           <span className="text-stone-500 text-lg">❝</span>
            <button 
               onClick={onShuffleQuote}
               className={`opacity-0 group-hover:opacity-100 transition-opacity ${isDarkMode ? 'text-stone-600 hover:text-stone-400' : 'text-stone-400 hover:text-stone-600'}`}
               title="Shuffle Wisdom"
            >
-              <RefreshCw size={12} />
+              <span>🔄</span>
            </button>
         </div>
         <p className="text-xs font-serif italic leading-relaxed mb-2 opacity-80 line-clamp-3">
@@ -278,7 +275,7 @@ const TaskItem = ({ task, onToggle, onDelete, onFocus, isDarkMode }) => (
             : (isDarkMode ? 'border-stone-600 hover:border-stone-400' : 'border-stone-300 hover:border-[#78716C]')
           }`}
       >
-        {task.completed && <CheckCircle2 size={12} />}
+        {task.completed && <span>✓</span>}
       </button>
       <span className={`text-sm tracking-tight truncate 
         ${task.completed 
@@ -296,7 +293,7 @@ const TaskItem = ({ task, onToggle, onDelete, onFocus, isDarkMode }) => (
             className={`p-1.5 rounded transition-colors ${isDarkMode ? 'text-stone-500 hover:text-stone-300 hover:bg-stone-800' : 'text-stone-400 hover:text-stone-700 hover:bg-[#EBE9E4]'}`}
             title="Enter Monk Mode (Focus)"
         >
-            <Maximize2 size={14} />
+            <span>⛶</span>
         </button>
        )}
         <button 
@@ -304,7 +301,7 @@ const TaskItem = ({ task, onToggle, onDelete, onFocus, isDarkMode }) => (
         className={`p-1.5 rounded transition-colors ${isDarkMode ? 'text-stone-600 hover:text-stone-400 hover:bg-stone-800' : 'text-stone-300 hover:text-stone-600 hover:bg-[#EBE9E4]'}`}
         title="Delete"
         >
-        <Trash2 size={14} />
+        <span>✕</span>
         </button>
     </div>
   </div>
@@ -318,14 +315,14 @@ const MonkModeOverlay = ({ task, timeLeft, isActive, toggleTimer, toggleTask, ex
       onClick={exitMode}
       className={`absolute top-8 right-8 p-3 rounded-full transition-colors ${isDarkMode ? 'hover:bg-stone-800 text-stone-500' : 'hover:bg-[#EBE9E4] text-stone-400'}`}
     >
-      <X size={24} />
+      <span>✕</span>
       <span className="sr-only">Exit Monk Mode</span>
     </button>
 
     <div className="max-w-3xl text-center space-y-12">
       <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest 
         ${isDarkMode ? 'bg-stone-800 text-stone-400' : 'bg-[#EBE9E4] text-stone-500'}`}>
-        <Maximize2 size={12} />
+        <span>👓</span>
         Monk Mode Active
       </div>
 
@@ -344,7 +341,7 @@ const MonkModeOverlay = ({ task, timeLeft, isActive, toggleTimer, toggleTask, ex
               className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg 
                 ${isDarkMode ? 'bg-stone-700 text-stone-100 hover:bg-stone-600 shadow-stone-900' : 'bg-[#5C5A56] text-[#EBE9E4] hover:bg-[#44403C] shadow-[#D6D3D1]'}`}
             >
-              {isActive ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" className="ml-1" />}
+              {isActive ? <span>⏸️</span> : <span>▶️</span>}
             </button>
             
             <button
@@ -408,7 +405,7 @@ const MatrixView = ({ tasks, onAddTask, onToggleTask, onDeleteTask, onFocusTask,
             ))}
           </select>
           <button type="submit" className={`px-3 transition-colors ${isDarkMode ? 'bg-stone-700 text-stone-200 hover:bg-stone-600' : 'bg-[#5C5A56] text-[#EBE9E4] hover:bg-[#44403C]'}`}>
-            <Plus size={16} />
+            <span>＋</span>
           </button>
         </form>
       </header>
@@ -422,8 +419,8 @@ const MatrixView = ({ tasks, onAddTask, onToggleTask, onDeleteTask, onFocusTask,
             }`}>
             <div className={`flex items-start justify-between mb-4 pb-3 border-b transition-colors ${isDarkMode ? 'border-stone-800' : 'border-[#F5F5F0]'}`}>
               <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? config.darkClass : config.lightClass}`}>
-                  <config.icon size={14} />
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors ${isDarkMode ? config.darkClass : config.lightClass}`}>
+                  <span>{config.icon}</span>
                 </div>
                 <div>
                   <h3 className={`font-bold text-xs uppercase tracking-widest transition-colors ${isDarkMode ? 'text-stone-300' : 'text-stone-700'}`}>{config.label}</h3>
@@ -476,9 +473,9 @@ const JournalView = ({ mode, setMode, isDarkMode, quotes, addQuote }) => {
         
         <div className={`inline-flex p-1 rounded-full transition-colors ${isDarkMode ? 'bg-stone-800' : 'bg-[#EBE9E4]'}`}>
           {[
-            { id: 'audit', label: 'Daily Audit', icon: ListChecks },
-            { id: 'free', label: 'Free Write', icon: AlignLeft },
-            { id: 'quotes', label: 'My Mantras', icon: Sparkles }
+            { id: 'audit', label: 'Daily Audit', icon: '📝' },
+            { id: 'free', label: 'Free Write', icon: '✍️' },
+            { id: 'quotes', label: 'My Mantras', icon: '✨' }
           ].map((m) => (
             <button 
               key={m.id}
@@ -489,7 +486,7 @@ const JournalView = ({ mode, setMode, isDarkMode, quotes, addQuote }) => {
                   : 'text-stone-500 hover:text-stone-400'}`}
             >
               <div className="flex items-center gap-2">
-                <m.icon size={14} />
+                <span>{m.icon}</span>
                 <span>{m.label}</span>
               </div>
             </button>
@@ -538,9 +535,6 @@ const JournalView = ({ mode, setMode, isDarkMode, quotes, addQuote }) => {
               value={freeText}
               onChange={(e) => setFreeText(e.target.value)}
             />
-            <div className="absolute bottom-0 right-0 p-8 opacity-10 pointer-events-none">
-              <PenTool size={120} className="text-stone-500" />
-            </div>
           </div>
           <div className="flex justify-end mt-6">
             <button className={`px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-colors shadow-md 
@@ -653,14 +647,14 @@ const FocusTimerView = ({ timer, formatTime, isDarkMode }) => (
               ? 'border-stone-700 text-stone-500 hover:text-stone-300 hover:border-stone-500' 
               : 'border-[#D6D3D1] text-stone-400 hover:text-stone-700 hover:border-[#A8A29E]'}`}
         >
-          <RotateCcw size={20} />
+          <span>↺</span>
         </button>
         <button 
           onClick={timer.toggleTimer}
           className={`w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg 
             ${isDarkMode ? 'bg-stone-700 text-stone-100 hover:bg-stone-600 shadow-stone-900' : 'bg-[#5C5A56] text-[#EBE9E4] hover:bg-[#44403C] shadow-[#D6D3D1]'}`}
         >
-          {timer.isActive ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-1" />}
+          {timer.isActive ? <span>⏸️</span> : <span>▶️</span>}
         </button>
         <button 
           className={`w-14 h-14 rounded-full border transition-all duration-300 flex items-center justify-center 
@@ -670,7 +664,7 @@ const FocusTimerView = ({ timer, formatTime, isDarkMode }) => (
           onClick={timer.toggleSound}
           title="White Noise (Simulated)"
         >
-          {timer.soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+          {timer.soundEnabled ? <span>🔊</span> : <span>🔇</span>}
         </button>
       </div>
 
@@ -708,7 +702,7 @@ const PlaybookView = ({ isDarkMode }) => (
           ${isDarkMode ? 'bg-[#292524] border-stone-800 hover:border-stone-600' : 'bg-white border-[#E7E5E4] hover:border-[#D6D3D1]'}`}>
           <div className="flex items-center gap-3 mb-4">
             <div className={`p-2 rounded-md transition-colors ${isDarkMode ? 'bg-stone-800 text-stone-400' : 'bg-[#F5F5F0] text-stone-600'}`}>
-              {lesson.icon}
+              <span className="text-xl">{lesson.icon}</span>
             </div>
             <h3 className={`text-lg font-semibold transition-colors ${isDarkMode ? 'text-stone-200' : 'text-stone-700'}`}>{lesson.title}</h3>
           </div>
@@ -884,6 +878,10 @@ const App = () => {
     </div>
   );
 };
+
+// ==========================================
+// 6. Application Startup (Fixed for Browser)
+// ==========================================
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
