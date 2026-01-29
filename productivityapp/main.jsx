@@ -1,11 +1,6 @@
 /**
- * Project: Your Next Mountain (Productivity Suite)
- * Description: A digital minimalism productivity tool combining the Eisenhower Matrix, 
- * Pomodoro timer, and Stoic journaling.
- * Tech Stack: React, Tailwind CSS, Lucide Icons
- * * Architecture Note:
- * This file uses a "Single File Component" structure for portability, but is organized
- * internally as if it were a modular project.
+Your Next Mountain
+Brady Karras
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
