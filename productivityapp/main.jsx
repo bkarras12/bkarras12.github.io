@@ -1,6 +1,7 @@
 /**
  * Your Next Mountain
  * Brady Karras
+ * Version: GitHub Pages (No-Build) + LocalStorage Persistence
  */
 
 // ==========================================
@@ -91,7 +92,9 @@ const MATRIX_CONFIG = {
 // 2. Custom Hooks (Logic Abstraction)
 // ==========================================
 
-
+/**
+ * Hook to manage timer logic, intervals, and audio feedback.
+ */
 const useProductivityTimer = () => {
   const [timeLeft, setTimeLeft] = React.useState(APP_CONFIG.defaults.timerFocus);
   const [isActive, setIsActive] = React.useState(false);
@@ -138,14 +141,33 @@ const useProductivityTimer = () => {
   };
 };
 
-
+/**
+ * Hook to manage task CRUD operations with LocalStorage Persistence.
+ */
 const useTaskManager = () => {
-  const [tasks, setTasks] = React.useState([
-    { id: 1, text: "Client server outage response", category: "q1", completed: false },
-    { id: 2, text: "Learn Rust language", category: "q2", completed: false },
-    { id: 3, text: "Reply to LinkedIn messages", category: "q3", completed: false },
-    { id: 4, text: "Organize desktop icons", category: "q4", completed: false },
-  ]);
+  // Initialize state by checking LocalStorage first (The "Backpack")
+  const [tasks, setTasks] = React.useState(() => {
+    const saved = localStorage.getItem("app-tasks");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.warn("Failed to parse tasks", e);
+      }
+    }
+    // Default fallback if nothing is saved
+    return [
+      { id: 1, text: "Client server outage response", category: "q1", completed: false },
+      { id: 2, text: "Learn Rust language", category: "q2", completed: false },
+      { id: 3, text: "Reply to LinkedIn messages", category: "q3", completed: false },
+      { id: 4, text: "Organize desktop icons", category: "q4", completed: false },
+    ];
+  });
+
+  // Update LocalStorage whenever 'tasks' changes
+  React.useEffect(() => {
+    localStorage.setItem("app-tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const addTask = (text, category) => {
     if (!text.trim()) return;
@@ -716,27 +738,56 @@ const PlaybookView = ({ isDarkMode }) => (
 );
 
 // ==========================================
-// 5. Main Application Logic
+// 5. Main Application Logic with Persistence
 // ==========================================
 
 const App = () => {
   // --- Global State ---
   const [activeTab, setActiveTab] = React.useState('tasks');
-  const [isDarkMode, setIsDarkMode] = React.useState(false);
   
+  // Persist Theme: Check LocalStorage for 'app-theme'
+  const [isDarkMode, setIsDarkMode] = React.useState(() => {
+    const savedTheme = localStorage.getItem("app-theme");
+    // If no saved theme, default to false (light mode)
+    return savedTheme === "dark";
+  });
+
   // --- Feature Hooks ---
   const taskManager = useTaskManager();
   const timer = useProductivityTimer();
 
-  // --- Quote Logic ---
-  const [quotes, setQuotes] = React.useState(INITIAL_QUOTES);
+  // --- Quote Logic with Persistence ---
+  // Check LocalStorage for 'app-quotes'
+  const [quotes, setQuotes] = React.useState(() => {
+    const savedQuotes = localStorage.getItem("app-quotes");
+    if (savedQuotes) {
+      try {
+        return JSON.parse(savedQuotes);
+      } catch (e) {
+        console.warn("Failed to parse quotes", e);
+      }
+    }
+    return INITIAL_QUOTES;
+  });
+
   const [dailyQuote, setDailyQuote] = React.useState(INITIAL_QUOTES[0]);
 
-  // --- UI State ---
+
   const [monkModeTask, setMonkModeTask] = React.useState(null);
   const [journalMode, setJournalMode] = React.useState('audit'); 
 
-  // --- Effects ---
+
+  
+  // Save Theme whenever it changes
+  React.useEffect(() => {
+    localStorage.setItem("app-theme", isDarkMode ? "dark" : "light");
+  }, [isDarkMode]);
+
+  // Save Quotes whenever they change
+  React.useEffect(() => {
+    localStorage.setItem("app-quotes", JSON.stringify(quotes));
+  }, [quotes]);
+
   React.useEffect(() => {
     // Pick random quote on mount
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -764,12 +815,12 @@ const App = () => {
     if (!text.trim()) return;
     const newQuote = { text, author: author.trim() || "Self" };
     setQuotes(prev => [...prev, newQuote]);
-    setDailyQuote(newQuote); // Immediate gratification
+    setDailyQuote(newQuote); 
   };
 
   const handleTaskCompletion = (id) => {
     taskManager.toggleTask(id);
-    // If completing the monk-mode task, exit mode after a delay
+ 
     if (monkModeTask && monkModeTask.id === id) {
       setTimeout(() => setMonkModeTask(null), 800);
     }
@@ -875,7 +926,7 @@ const App = () => {
 };
 
 // ==========================================
-// 6. Application Startup (Fixed for Browser)
+// 6. Application Startup
 // ==========================================
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
