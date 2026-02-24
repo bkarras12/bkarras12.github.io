@@ -5,58 +5,852 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Stakeholder Report — Tips Dataset</title>
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#f5f7f6;color:#243126;line-height:1.5}
-    .wrap{max-width:1000px;margin:0 auto;padding:24px}
-    .card{background:#fff;border:1px solid #dbe3dd;border-radius:12px;padding:16px;margin-bottom:14px}
-    h1,h2,h3{color:#1d4b34;margin:0 0 8px}
-    h2{font-size:1.15rem}
-    table{width:100%;border-collapse:collapse}
-    th,td{border:1px solid #e5e7eb;padding:8px;text-align:left;font-size:.92rem}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
-    .muted{color:#4b5563}
+    :root{
+      --primary:#588c70;
+      --deep:#1d4b34;
+      --mint:#455950;
+      --border:#E5E7EB;
+      --text:#33363e;
+      --muted:#4B5563;
+      --card:#ffffff;
+      --shadow: 0 6px 18px rgba(17,24,39,0.08);
+      --radius: 14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background: linear-gradient(180deg, var(--mint), #ffffff 80%);
+      line-height:1.5;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:28px 18px 48px}
+    header{
+      padding:18px 18px 14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.85);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+    }
+    h1{margin:0 0 6px;font-size:26px;color:var(--deep)}
+    .sub{margin:0;color:var(--muted);font-size:14px}
+    .badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(29,111,67,0.25);
+      background:rgba(29,111,67,0.08);
+      color:var(--deep);font-size:12px;font-weight:600;
+    }
+    .grid{display:grid;gap:14px;margin-top:14px}
+    .grid.two{grid-template-columns:1fr}
+    @media (min-width: 920px){ .grid.two{grid-template-columns:1.1fr 0.9fr} }
+    section{margin-top:18px}
+    .section-title{
+      margin:0 0 10px;
+      padding:10px 12px;
+      border-left:6px solid var(--primary);
+      background:rgba(29,111,67,0.06);
+      border-radius:12px;
+      color:var(--deep);
+      font-size:18px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .card h3{margin:0 0 6px;font-size:15px;color:var(--deep)}
+    .muted{color:var(--muted)}
+    ul{margin:8px 0 0 20px}
+    .kpi{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+    }
+    @media (min-width: 720px){ .kpi{grid-template-columns:repeat(4,minmax(0,1fr));} }
+    .kpi .tile{
+      padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff;
+    }
+    .kpi .label{font-size:12px;color:var(--muted);margin:0}
+    .kpi .value{font-size:18px;color:var(--deep);margin:2px 0 0;font-weight:800}
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border:1px solid var(--border);
+      border-radius:12px;
+    }
+    .table thead th{
+      position:sticky;top:0;
+      background: rgba(238,248,243,0.95);
+      color:var(--deep);
+      font-size:12px;
+      text-align:left;
+      padding:10px 10px;
+      border-bottom:1px solid var(--border);
+    }
+    .table tbody td{
+      padding:10px 10px;
+      border-bottom:1px solid var(--border);
+      font-size:13px;
+      vertical-align:top;
+    }
+    .table tbody tr:last-child td{border-bottom:none}
+    .pill{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:4px 10px;border-radius:999px;
+      border:1px solid rgba(29,111,67,0.35);
+      background:rgba(29,111,67,0.10);
+      font-weight:700;font-size:12px;color:var(--deep);
+    }
+    .rank{
+      display:flex;gap:10px;align-items:flex-start
+    }
+    .rank .num{
+      width:30px;height:30px;border-radius:10px;
+      background:rgba(29,111,67,0.10);
+      border:1px solid rgba(29,111,67,0.25);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;color:var(--deep);
+      flex:0 0 auto;
+    }
+    .charts{display:grid;gap:14px}
+    @media (min-width: 920px){ .charts{grid-template-columns:1fr 1fr} }
+    .chart-card{padding:12px}
+    .chart-meta{margin-top:6px;font-size:12px;color:var(--muted)}
+    /* SVG theme */
+    svg{max-width:100%;height:auto}
+    .chart-title{font-size:14px;font-weight:800;fill:var(--deep)}
+    .axis{stroke:#9CA3AF;stroke-width:1}
+    .grid{stroke:#E5E7EB;stroke-width:1}
+    .tick{font-size:11px;fill:#374151}
+    .axis-label{font-size:12px;fill:#374151;font-weight:700}
+    .bar{fill:rgba(29,111,67,0.35);stroke:rgba(29,111,67,0.55);stroke-width:1}
+    .value{font-size:10px;fill:#0B2B1B;font-weight:800}
+    .point{fill:rgba(29,111,67,0.35);stroke:rgba(29,111,67,0.55);stroke-width:1}
+    .trend{stroke:rgba(29,111,67,0.85);stroke-width:2}
+    .whisker{stroke:#374151;stroke-width:1}
+    .box{fill:rgba(29,111,67,0.20);stroke:rgba(29,111,67,0.55);stroke-width:1}
+    .median{stroke:rgba(29,111,67,0.95);stroke-width:2}
+
+    /* Print */
+    @media print{
+      body{background:#fff}
+      header,.card{box-shadow:none}
+      .badge{border-color:#999;background:#fff}
+      .section-title{background:#fff;border-left-color:#333}
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
+    <header>
       <h1>Tips Dataset — Stakeholder-Ready Report</h1>
-      <p class="muted">Source: Seaborn sample dataset (tips.csv). Dataset covers restaurant checks and tips.</p>
-    </div>
+      <p class="sub">
+        Source: Seaborn sample dataset (<span class="muted">tips.csv</span>) provided via URL. Note: The dataset is about restaurant checks & tips (not taxis).
+      </p>
+      <div class="badge-row">
+        <span class="badge">Report type: Data-backed summary + action ideas</span>
+        <span class="badge">Audience: Non-technical stakeholders</span>
+        <span class="badge">Causality: Not claimed</span>
+        <span class="badge">Visuals: Inline SVG</span>
+      </div>
+    </header>
 
-    <div class="card">
-      <h2>Dataset Summary</h2>
-      <table>
-        <thead><tr><th>Grain</th><th>Rows</th><th>Columns</th><th>Time range</th></tr></thead>
-        <tbody><tr><td>1 row = 1 check</td><td>244</td><td>total_bill, tip, sex, smoker, day, time, size</td><td>Not available</td></tr></tbody>
-      </table>
-    </div>
+    <section>
+      <h2 class="section-title">1) Title + Dataset Summary</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Dataset summary</h3>
+          <table class="table" aria-label="Dataset Summary Table">
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th>What it is</th>
+                <th>Grain</th>
+                <th>Time range</th>
+                <th>Row count</th>
+                <th>Key columns</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>taxi</strong> (actually tips)</td>
+                <td>Restaurant checks with tip amount + customer/visit attributes</td>
+                <td>1 row = 1 check (one table payment)</td>
+                <td>Not available (no date column)</td>
+                <td>244</td>
+                <td>total_bill, tip, sex, smoker, day, time, size</td>
+                <td>Sample dataset; useful for demonstrating analysis patterns</td>
+              </tr>
+            </tbody>
+          </table>
 
-    <div class="grid">
+          <div class="kpi" style="margin-top:12px">
+            <div class="tile"><p class="label">Avg total bill</p><p class="value">$19.79</p></div>
+            <div class="tile"><p class="label">Median total bill</p><p class="value">$17.80</p></div>
+            <div class="tile"><p class="label">Avg tip</p><p class="value">$3.00</p></div>
+            <div class="tile"><p class="label">Avg tip %</p><p class="value">16.08%</p></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Data dictionary (plain-language)</h3>
+          <ul>
+            <li><strong>total_bill</strong>: Total check amount (USD)</li>
+            <li><strong>tip</strong>: Tip amount (USD)</li>
+            <li><strong>sex</strong>: Customer gender label in the dataset</li>
+            <li><strong>smoker</strong>: Whether the party had a smoker (Yes/No)</li>
+            <li><strong>day</strong>: Day of week category (Thur/Fri/Sat/Sun)</li>
+            <li><strong>time</strong>: Meal time category (Lunch/Dinner)</li>
+            <li><strong>size</strong>: Party size (number of people)</li>
+          </ul>
+          <p class="muted" style="margin-top:10px">
+            Derived metric used in this report: <strong>tip_pct</strong> = tip ÷ total_bill × 100.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">2) Executive Summary (5–8 bullets)</h2>
       <div class="card">
-        <h3>Executive Summary</h3>
         <ul>
-          <li>Average bill: <strong>$19.79</strong> (median $17.80).</li>
-          <li>Average tip: <strong>$3.00</strong>; average tip rate: <strong>16.08%</strong>.</li>
-          <li>Tip dollars rise with bill size (corr ≈ <strong>0.68</strong>).</li>
-          <li>Tip % tends to decline as bill size increases (corr ≈ <strong>-0.34</strong>).</li>
-          <li>Dinner and Sunday contexts show stronger tip dollars.</li>
+          <li><strong>Typical check:</strong> Average bill is <strong>$19.79</strong> (median <strong>$17.80</strong>).</li>
+          <li><strong>Typical tipping:</strong> Average tip is <strong>$3.00</strong>; average tip rate is <strong>16.08%</strong> (median <strong>15.48%</strong>).</li>
+          <li><strong>Biggest driver of tip dollars:</strong> Tips rise with the bill size (correlation <strong>0.68</strong>). A simple fit suggests about <strong>+$1.05 tip per +$10 bill</strong> (association, not causation).</li>
+          <li><strong>Tip % often drops on larger checks:</strong> Tip rate is negatively associated with bill size (correlation <strong>-0.34</strong>).</li>
+          <li><strong>Day & meal context matters:</strong> Sunday has the highest average tip dollars (<strong>$3.26</strong>), and Dinner has higher average tips than Lunch (<strong>$3.10 vs $2.73</strong>).</li>
+          <li><strong>Differences by customer labels exist, but are small:</strong> Average tip rate is higher for Female vs Male (<strong>16.65% vs 15.77%</strong>) and slightly higher for Smokers vs Non-smokers (<strong>16.32% vs 15.93%</strong>).</li>
+          <li><strong>Watch for “percentage outliers” on tiny checks:</strong> The max tip rate is <strong>71.03%</strong> on a <strong>$7.25</strong> bill—real, but not representative.</li>
         </ul>
       </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">3) Key Findings (ranked cards)</h2>
+      <div class="grid">
+        <div class="card rank">
+          <div class="num">1</div>
+          <div>
+            <h3>Tip dollars increase as the bill increases</h3>
+            <p class="muted"><strong>Evidence:</strong> Correlation between total_bill and tip is <strong>0.68</strong>. A simple line fit is approximately: tip ≈ <strong>0.105 × bill + 0.92</strong>.</p>
+            <p><span class="pill">Confidence: High</span></p>
+            <p><strong>Implication:</strong> If you want to influence tip dollars, the strongest lever in this dataset is check size (what gets ordered / table spend).</p>
+          </div>
+        </div>
+
+        <div class="card rank">
+          <div class="num">2</div>
+          <div>
+            <h3>Tip rate (percent) tends to be lower on larger checks</h3>
+            <p class="muted"><strong>Evidence:</strong> Correlation between total_bill and tip_pct is <strong>-0.34</strong>. Average tip rate overall is <strong>16.08%</strong>.</p>
+            <p><span class="pill">Confidence: Medium</span></p>
+            <p><strong>Implication:</strong> Percentage-based goals can look worse on higher-spend tables even when tip dollars are higher—track both $ and %.</p>
+          </div>
+        </div>
+
+        <div class="card rank">
+          <div class="num">3</div>
+          <div>
+            <h3>Sunday and Dinner are higher tip-dollar contexts</h3>
+            <p class="muted">
+              <strong>Evidence:</strong> Avg tip by day: Sunday <strong>$3.26</strong> (highest), Thursday <strong>$2.77</strong>.
+              Avg tip by meal: Dinner <strong>$3.10</strong> vs Lunch <strong>$2.73</strong>.
+            </p>
+            <p><span class="pill">Confidence: Medium</span></p>
+            <p><strong>Implication:</strong> Staffing and service focus on Sunday/Dinner can have outsized impact on tip dollars.</p>
+          </div>
+        </div>
+
+        <div class="card rank">
+          <div class="num">4</div>
+          <div>
+            <h3>Small but consistent differences in tip rate by labels (sex, smoker)</h3>
+            <p class="muted">
+              <strong>Evidence:</strong> Avg tip_pct Female <strong>16.65%</strong> vs Male <strong>15.77%</strong>.
+              Smoker Yes <strong>16.32%</strong> vs No <strong>15.93%</strong>.
+            </p>
+            <p><span class="pill">Confidence: Low–Medium</span></p>
+            <p><strong>Implication:</strong> These differences exist in this dataset, but they are modest and should not drive policy decisions by themselves.</p>
+          </div>
+        </div>
+
+        <div class="card rank">
+          <div class="num">5</div>
+          <div>
+            <h3>Tip % “outliers” mostly come from very small bills</h3>
+            <p class="muted"><strong>Evidence:</strong> Max tip_pct is <strong>71.03%</strong> on a <strong>$7.25</strong> bill (tip <strong>$5.15</strong>).</p>
+            <p><span class="pill">Confidence: High</span></p>
+            <p><strong>Implication:</strong> When reporting “best/worst tip %”, use guardrails (e.g., minimum bill threshold) to avoid misleading extremes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">4) Drivers (what’s associated with the outcome)</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Driver table (simple, stakeholder-friendly)</h3>
+          <table class="table" aria-label="Drivers Table">
+            <thead>
+              <tr>
+                <th>Outcome</th>
+                <th>Driver</th>
+                <th>Evidence</th>
+                <th>Direction</th>
+                <th>Plain-language interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tip ($)</strong></td>
+                <td>Total bill</td>
+                <td>Correlation <strong>0.68</strong>; fit ≈ <strong>+$1.05 per +$10</strong></td>
+                <td>Higher bill → higher tip $</td>
+                <td>Higher spend tables tend to tip more dollars.</td>
+              </tr>
+              <tr>
+                <td><strong>Tip ($)</strong></td>
+                <td>Party size</td>
+                <td>Correlation <strong>0.49</strong></td>
+                <td>Larger party → higher tip $</td>
+                <td>Bigger parties spend more and tip more dollars (on average).</td>
+              </tr>
+              <tr>
+                <td><strong>Tip ($)</strong></td>
+                <td>Meal time</td>
+                <td>Dinner avg tip <strong>$3.10</strong> vs Lunch <strong>$2.73</strong></td>
+                <td>Dinner > Lunch</td>
+                <td>Dinner checks tend to have higher tip dollars.</td>
+              </tr>
+              <tr>
+                <td><strong>Tip %</strong></td>
+                <td>Total bill</td>
+                <td>Correlation <strong>-0.34</strong></td>
+                <td>Higher bill → lower tip %</td>
+                <td>Tip rate often compresses on larger checks.</td>
+              </tr>
+              <tr>
+                <td><strong>Tip %</strong></td>
+                <td>Customer labels (sex, smoker)</td>
+                <td>Female <strong>16.65%</strong> vs Male <strong>15.77%</strong>; Smoker Yes <strong>16.32%</strong> vs No <strong>15.93%</strong></td>
+                <td>Small differences</td>
+                <td>Differences are present but modest; avoid over-interpreting.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="muted" style="margin-top:10px">
+            Note: “Driver” here means association in this dataset. It does not prove cause.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Candidate outcomes</h3>
+          <p class="muted" style="margin-top:0">
+            This dataset includes a clear outcome (tip $). Tip rate is also useful as an outcome for fairness/consistency.
+          </p>
+          <ul>
+            <li><strong>Primary:</strong> Tip ($)</li>
+            <li><strong>Secondary:</strong> Tip % (tip_pct)</li>
+            <li><strong>Context metric:</strong> Total bill ($)</li>
+          </ul>
+          <p class="muted">
+            If you want to turn this into a real business KPI report, you’d typically also want:
+            server ID, table/section, date/time stamps, discounts/promos, payment method, and repeat customer info.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">5) Segment Insights</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Top segments that matter (3–6)</h3>
+          <ul>
+            <li><strong>Day of week:</strong> Sunday has the highest average tip dollars (<strong>$3.26</strong>). Friday has the highest average tip rate (<strong>16.99%</strong>) but is a small sample (n=19).</li>
+            <li><strong>Meal time:</strong> Dinner checks average higher bills and tips than Lunch.</li>
+            <li><strong>Party size:</strong> As party size grows, tip dollars rise, but tip % generally declines from size 2 (~<strong>16.57%</strong>) to size 4 (~<strong>14.59%</strong>).</li>
+            <li><strong>Smoker status:</strong> Tip % is slightly higher for “Yes” (smoker) than “No” (difference ~<strong>0.39</strong> percentage points).</li>
+            <li><strong>Sex label:</strong> Tip % is higher for Female than Male (difference ~<strong>0.88</strong> percentage points).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>What’s most actionable?</h3>
+          <ul>
+            <li>If your goal is <strong>higher tip dollars</strong>: focus on contexts with higher bills (Dinner, Sunday) and service practices that improve spend/experience.</li>
+            <li>If your goal is <strong>consistent tip rate</strong>: report tip % with guardrails (min bill threshold) and track by party size.</li>
+          </ul>
+          <p class="muted">
+            Important: Segments like sex/smoker are sensitive. Treat them as descriptive only, not decision levers.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">6) Data Quality</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Quality checks (summary)</h3>
+          <ul>
+            <li><strong>Missing values:</strong> 0% missing across all columns (including derived tip_pct).</li>
+            <li><strong>Duplicates:</strong> 1 exact duplicate row found.</li>
+            <li><strong>Outliers:</strong> Tip % has extreme values on small bills (max 71.03% on $7.25).</li>
+            <li><strong>Date sanity:</strong> Not available (no timestamp column), so time trends can’t be validated.</li>
+            <li><strong>Category health:</strong> Day has 4 categories; time has 2 categories; sizes range 1–6.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Practical note</h3>
+          <p class="muted" style="margin-top:0">
+            For stakeholder reporting, tip % outliers can distract. A simple approach is to:
+          </p>
+          <ul>
+            <li>Show tip % with a minimum bill threshold (example: only bills ≥ $10)</li>
+            <li>Or report the median tip % alongside the average (median here is <strong>15.48%</strong>)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">7) Recommendations</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Do now (7 days)</h3>
+          <ul>
+            <li><strong>Report both tip $ and tip %</strong> (they behave differently as bills grow).</li>
+            <li><strong>Add a “minimum bill” rule</strong> for tip % highlights to prevent misleading extremes.</li>
+            <li><strong>Prioritize Sunday/Dinner readiness</strong> (these contexts show higher tip dollars).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Do next (30 days)</h3>
+          <ul>
+            <li><strong>Collect richer operational fields</strong> (server, timestamp, discounts, table section).</li>
+            <li><strong>Segment by party size</strong> and create simple service playbooks for large parties.</li>
+            <li><strong>Monitor consistency</strong>: track median tip % per segment as a stability metric.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Test & learn (experiments)</h3>
+          <ul>
+            <li><strong>Suggested tip prompts</strong>: test different receipt tip suggestions (e.g., 18/20/22%) and measure changes.</li>
+            <li><strong>Service interventions</strong>: test small changes (greeting timing, check-back cadence) and track tip % impact.</li>
+            <li><strong>Large-party policy</strong>: test a service charge for parties ≥ 6 (if allowed) vs optional tipping, compare outcomes.</li>
+          </ul>
+          <p class="muted">Note: These require additional data collection to measure reliably.</p>
+        </div>
+        <div class="card">
+          <h3>What to avoid</h3>
+          <ul>
+            <li>Don’t treat “drivers” as causes without a proper experiment design.</li>
+            <li>Don’t use sensitive labels (sex/smoker) as decision levers.</li>
+            <li>Don’t summarize tipping performance with only one metric (tip $ or tip %).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">8) Story / Narrative (1 page)</h2>
       <div class="card">
-        <h3>Recommendations</h3>
+        <p><strong>Setting:</strong> We looked at 244 restaurant checks, including total bill, tip amount, party size, meal time, day, and a few customer labels.</p>
+        <p><strong>Change:</strong> Tip dollars move strongly with the bill size, but tip percentage often drops as checks get larger.</p>
+        <p><strong>Cause candidates (hypotheses):</strong></p>
         <ul>
-          <li>Track <strong>tip $ and tip %</strong> together.</li>
-          <li>Use a minimum bill threshold when highlighting tip % outliers.</li>
-          <li>Prioritize staffing/readiness for Sunday and dinner periods.</li>
-          <li>Collect richer operational fields for deeper causal analysis.</li>
+          <li>Customers may tip using rough dollar heuristics (e.g., “a few dollars”) on larger checks instead of strictly following a percent rule.</li>
+          <li>Dinner and Sunday may reflect different customer mix or service dynamics (longer visits, larger parties, different spend patterns).</li>
+          <li>Large parties may have more complex service needs, affecting tip rate consistency.</li>
+        </ul>
+        <p><strong>Consequences:</strong> If stakeholders evaluate performance on tip % alone, high-spend periods can look worse even while delivering higher tip dollars. If evaluated on tip $ alone, fairness/consistency might be missed.</p>
+        <p><strong>Resolution:</strong> Use a two-metric approach (tip $ + tip %) with basic guardrails (min bill thresholds) and add operational fields (server/timestamp/discounts) to identify actionable service improvements.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">9) Anecdotal Support (ethical; do NOT fabricate)</h2>
+      <div class="card">
+        <h3>Prompts to collect real examples</h3>
+        <ul>
+          <li><strong>Frontline:</strong> “What’s different about Sunday dinner service vs weekday lunch?”</li>
+          <li><strong>Managers:</strong> “When do servers report tip % feeling ‘unfair’ vs tip $ feeling strong?”</li>
+          <li><strong>Receipts/UX:</strong> “Do guests comment on tip suggestions? What % do they usually choose?”</li>
+          <li><strong>Session replay equivalent (POS logs):</strong> “Do large parties have longer ticket times or more voids/discounts?”</li>
+          <li><strong>Customer feedback:</strong> “Do guests mention service speed, attentiveness, or check accuracy as reasons for tipping?”</li>
+        </ul>
+        <p class="muted">
+          Goal: Pair the quantitative patterns with real operational context so stakeholders believe—and can act on—the story.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">CHARTS & GRAPHS (INLINE SVG)</h2>
+      <div class="charts">
+        <div class="card chart-card">
+          <!-- Chart 1 -->
+          <svg viewBox="0 0 900 320" width="100%" height="320" role="img" aria-label="Distribution of Total Bill">
+            <text x="450.0" y="24" text-anchor="middle" class="chart-title">Distribution of Total Bill</text>
+            <line x1="60" y1="40" x2="60" y2="240" class="axis"/>
+            <line x1="60" y1="240" x2="880" y2="240" class="axis"/>
+            <line x1="60" y1="240.0" x2="880" y2="240.0" class="grid"/>
+            <text x="52" y="244.0" text-anchor="end" class="tick">0</text>
+            <line x1="60" y1="200.0" x2="880" y2="200.0" class="grid"/>
+            <text x="52" y="204.0" text-anchor="end" class="tick">15</text>
+            <line x1="60" y1="160.0" x2="880" y2="160.0" class="grid"/>
+            <text x="52" y="164.0" text-anchor="end" class="tick">31</text>
+            <line x1="60" y1="120.0" x2="880" y2="120.0" class="grid"/>
+            <text x="52" y="124.0" text-anchor="end" class="tick">46</text>
+            <line x1="60" y1="80.0" x2="880" y2="80.0" class="grid"/>
+            <text x="52" y="84.0" text-anchor="end" class="tick">61</text>
+            <line x1="60" y1="40.0" x2="880" y2="40.0" class="grid"/>
+            <text x="52" y="44.0" text-anchor="end" class="tick">76</text>
+            <rect x="72.3" y="171.57894736842104" width="57.4" height="68.42105263157895" class="bar"/>
+            <text x="101.0" y="165.57894736842104" text-anchor="middle" class="value">26</text>
+            <text x="101.0" y="258" text-anchor="end" transform="rotate(-35 101.0 258)" class="tick">3–8</text>
+            <rect x="154.3" y="40.0" width="57.4" height="200.0" class="bar"/>
+            <text x="183.0" y="34.0" text-anchor="middle" class="value">76</text>
+            <text x="183.0" y="258" text-anchor="end" transform="rotate(-35 183.0 258)" class="tick">8–13</text>
+            <rect x="236.3" y="92.63157894736844" width="57.4" height="147.36842105263156" class="bar"/>
+            <text x="265.0" y="86.63157894736844" text-anchor="middle" class="value">56</text>
+            <text x="265.0" y="258" text-anchor="end" transform="rotate(-35 265.0 258)" class="tick">13–18</text>
+            <rect x="318.3" y="97.89473684210527" width="57.4" height="142.10526315789474" class="bar"/>
+            <text x="347.0" y="91.89473684210527" text-anchor="middle" class="value">54</text>
+            <text x="347.0" y="258" text-anchor="end" transform="rotate(-35 347.0 258)" class="tick">18–23</text>
+            <rect x="400.3" y="136.8421052631579" width="57.4" height="103.15789473684211" class="bar"/>
+            <text x="429.0" y="130.8421052631579" text-anchor="middle" class="value">39</text>
+            <text x="429.0" y="258" text-anchor="end" transform="rotate(-35 429.0 258)" class="tick">23–28</text>
+            <rect x="482.3" y="163.68421052631578" width="57.4" height="76.31578947368422" class="bar"/>
+            <text x="511.0" y="157.68421052631578" text-anchor="middle" class="value">29</text>
+            <text x="511.0" y="258" text-anchor="end" transform="rotate(-35 511.0 258)" class="tick">28–33</text>
+            <rect x="564.3" y="200.0" width="57.4" height="40.0" class="bar"/>
+            <text x="593.0" y="194.0" text-anchor="middle" class="value">15</text>
+            <text x="593.0" y="258" text-anchor="end" transform="rotate(-35 593.0 258)" class="tick">33–38</text>
+            <rect x="646.3" y="205.26315789473685" width="57.4" height="34.73684210526316" class="bar"/>
+            <text x="675.0" y="199.26315789473685" text-anchor="middle" class="value">13</text>
+            <text x="675.0" y="258" text-anchor="end" transform="rotate(-35 675.0 258)" class="tick">38–43</text>
+            <rect x="728.3" y="229.47368421052633" width="57.4" height="10.526315789473683" class="bar"/>
+            <text x="757.0" y="223.47368421052633" text-anchor="middle" class="value">4</text>
+            <text x="757.0" y="258" text-anchor="end" transform="rotate(-35 757.0 258)" class="tick">43–48</text>
+            <rect x="810.3" y="237.36842105263156" width="57.4" height="2.631578947368421" class="bar"/>
+            <text x="839.0" y="231.36842105263156" text-anchor="middle" class="value">1</text>
+            <text x="839.0" y="258" text-anchor="end" transform="rotate(-35 839.0 258)" class="tick">48–51</text>
+            <text x="470.0" y="310" text-anchor="middle" class="axis-label">Total bill ($)</text>
+            <text x="16" y="140.0" text-anchor="middle" transform="rotate(-90 16 140.0)" class="axis-label">Count</text>
+          </svg>
+          <div class="chart-meta"><strong>Why this matters:</strong> Knowing typical check sizes helps interpret tip dollars and plan staffing/service focus.</div>
+        </div>
+
+        <div class="card chart-card">
+          <!-- Chart 2 -->
+          <svg viewBox="0 0 900 320" width="100%" height="320" role="img" aria-label="Distribution of Tip %">
+            <text x="450.0" y="24" text-anchor="middle" class="chart-title">Distribution of Tip %</text>
+            <line x1="60" y1="40" x2="60" y2="240" class="axis"/>
+            <line x1="60" y1="240" x2="880" y2="240" class="axis"/>
+            <line x1="60" y1="240.0" x2="880" y2="240.0" class="grid"/>
+            <text x="52" y="244.0" text-anchor="end" class="tick">0</text>
+            <line x1="60" y1="200.0" x2="880" y2="200.0" class="grid"/>
+            <text x="52" y="204.0" text-anchor="end" class="tick">43</text>
+            <line x1="60" y1="160.0" x2="880" y2="160.0" class="grid"/>
+            <text x="52" y="164.0" text-anchor="end" class="tick">86</text>
+            <line x1="60" y1="120.0" x2="880" y2="120.0" class="grid"/>
+            <text x="52" y="124.0" text-anchor="end" class="tick">129</text>
+            <line x1="60" y1="80.0" x2="880" y2="80.0" class="grid"/>
+            <text x="52" y="84.0" text-anchor="end" class="tick">172</text>
+            <line x1="60" y1="40.0" x2="880" y2="40.0" class="grid"/>
+            <text x="52" y="44.0" text-anchor="end" class="tick">214</text>
+            <rect x="72.3" y="231.588785046729" width="57.4" height="8.411214953271028" class="bar"/>
+            <text x="101.0" y="225.588785046729" text-anchor="middle" class="value">9</text>
+            <text x="101.0" y="258" text-anchor="end" transform="rotate(-35 101.0 258)" class="tick">4–11</text>
+            <rect x="154.3" y="50.2803738317757" width="57.4" height="189.7196261682243" class="bar"/>
+            <text x="183.0" y="44.2803738317757" text-anchor="middle" class="value">203</text>
+            <text x="183.0" y="258" text-anchor="end" transform="rotate(-35 183.0 258)" class="tick">11–18</text>
+            <rect x="236.3" y="211.9626168224299" width="57.4" height="28.037383177570093" class="bar"/>
+            <text x="265.0" y="205.9626168224299" text-anchor="middle" class="value">30</text>
+            <text x="265.0" y="258" text-anchor="end" transform="rotate(-35 265.0 258)" class="tick">18–25</text>
+            <rect x="318.3" y="231.588785046729" width="57.4" height="8.411214953271028" class="bar"/>
+            <text x="347.0" y="225.588785046729" text-anchor="middle" class="value">9</text>
+            <text x="347.0" y="258" text-anchor="end" transform="rotate(-35 347.0 258)" class="tick">25–32</text>
+            <rect x="400.3" y="236.26168224299064" width="57.4" height="3.7383177570093458" class="bar"/>
+            <text x="429.0" y="230.26168224299064" text-anchor="middle" class="value">4</text>
+            <text x="429.0" y="258" text-anchor="end" transform="rotate(-35 429.0 258)" class="tick">32–39</text>
+            <rect x="482.3" y="239.06542056074767" width="57.4" height="0.9345794392523363" class="bar"/>
+            <text x="511.0" y="233.06542056074767" text-anchor="middle" class="value">1</text>
+            <text x="511.0" y="258" text-anchor="end" transform="rotate(-35 511.0 258)" class="tick">39–46</text>
+            <rect x="564.3" y="239.06542056074767" width="57.4" height="0.9345794392523363" class="bar"/>
+            <text x="593.0" y="233.06542056074767" text-anchor="middle" class="value">1</text>
+            <text x="593.0" y="258" text-anchor="end" transform="rotate(-35 593.0 258)" class="tick">46–53</text>
+            <rect x="646.3" y="239.06542056074767" width="57.4" height="0.9345794392523363" class="bar"/>
+            <text x="675.0" y="233.06542056074767" text-anchor="middle" class="value">1</text>
+            <text x="675.0" y="258" text-anchor="end" transform="rotate(-35 675.0 258)" class="tick">53–60</text>
+            <rect x="728.3" y="239.06542056074767" width="57.4" height="0.9345794392523363" class="bar"/>
+            <text x="757.0" y="233.06542056074767" text-anchor="middle" class="value">1</text>
+            <text x="757.0" y="258" text-anchor="end" transform="rotate(-35 757.0 258)" class="tick">60–67</text>
+            <rect x="810.3" y="239.06542056074767" width="57.4" height="0.9345794392523363" class="bar"/>
+            <text x="839.0" y="233.06542056074767" text-anchor="middle" class="value">1</text>
+            <text x="839.0" y="258" text-anchor="end" transform="rotate(-35 839.0 258)" class="tick">67–71</text>
+            <text x="470.0" y="310" text-anchor="middle" class="axis-label">Tip as % of bill</text>
+            <text x="16" y="140.0" text-anchor="middle" transform="rotate(-90 16 140.0)" class="axis-label">Count</text>
+          </svg>
+          <div class="chart-meta"><strong>Why this matters:</strong> Tip % is mostly clustered in a typical band, but “high %” outliers often come from small bills.</div>
+        </div>
+
+        <div class="card chart-card">
+          <!-- Chart 3 -->
+          <svg viewBox="0 0 900 320" width="100%" height="320" role="img" aria-label="Average Tip % by Day">
+            <text x="450.0" y="24" text-anchor="middle" class="chart-title">Average Tip % by Day</text>
+            <line x1="60" y1="40" x2="60" y2="240" class="axis"/>
+            <line x1="60" y1="240" x2="880" y2="240" class="axis"/>
+            <line x1="60" y1="240.0" x2="880" y2="240.0" class="grid"/>
+            <text x="52" y="244.0" text-anchor="end" class="tick">0.0</text>
+            <line x1="60" y1="200.0" x2="880" y2="200.0" class="grid"/>
+            <text x="52" y="204.0" text-anchor="end" class="tick">3.7</text>
+            <line x1="60" y1="160.0" x2="880" y2="160.0" class="grid"/>
+            <text x="52" y="164.0" text-anchor="end" class="tick">7.3</text>
+            <line x1="60" y1="120.0" x2="880" y2="120.0" class="grid"/>
+            <text x="52" y="124.0" text-anchor="end" class="tick">11.0</text>
+            <line x1="60" y1="80.0" x2="880" y2="80.0" class="grid"/>
+            <text x="52" y="84.0" text-anchor="end" class="tick">14.7</text>
+            <line x1="60" y1="40.0" x2="880" y2="40.0" class="grid"/>
+            <text x="52" y="44.0" text-anchor="end" class="tick">18.4</text>
+            <rect x="86.3" y="55.37821652274461" width="143.5" height="184.6217834772554" class="bar"/>
+            <text x="158.05" y="49.37821652274461" text-anchor="middle" class="value">17.0</text>
+            <text x="158.05" y="258" text-anchor="end" transform="rotate(-35 158.05 258)" class="tick">Fri</text>
+            <rect x="291.8" y="73.55993325917622" width="143.5" height="166.44006674082378" class="bar"/>
+            <text x="363.55" y="67.55993325917622" text-anchor="middle" class="value">15.3</text>
+            <text x="363.55" y="258" text-anchor="end" transform="rotate(-35 363.55 258)" class="tick">Sat</text>
+            <rect x="497.3" y="59.361373003664015" width="143.5" height="180.63862699633598" class="bar"/>
+            <text x="569.05" y="53.361373003664015" text-anchor="middle" class="value">16.7</text>
+            <text x="569.05" y="258" text-anchor="end" transform="rotate(-35 569.05 258)" class="tick">Sun</text>
+            <rect x="702.8" y="65.72256431272764" width="143.5" height="174.27743568727236" class="bar"/>
+            <text x="774.55" y="59.72256431272764" text-anchor="middle" class="value">16.1</text>
+            <text x="774.55" y="258" text-anchor="end" transform="rotate(-35 774.55 258)" class="tick">Thur</text>
+            <text x="470.0" y="310" text-anchor="middle" class="axis-label">Day</text>
+            <text x="16" y="140.0" text-anchor="middle" transform="rotate(-90 16 140.0)" class="axis-label">Avg tip (%)</text>
+          </svg>
+          <div class="chart-meta"><strong>Why this matters:</strong> Day-to-day context helps prioritize staffing and service focus for tip outcomes.</div>
+        </div>
+
+        <div class="card chart-card">
+          <!-- Chart 4 -->
+          <svg viewBox="0 0 900 320" width="100%" height="320" role="img" aria-label="Average Tip ($) by Meal Time">
+            <text x="450.0" y="24" text-anchor="middle" class="chart-title">Average Tip ($) by Meal Time</text>
+            <line x1="60" y1="40" x2="60" y2="240" class="axis"/>
+            <line x1="60" y1="240" x2="880" y2="240" class="axis"/>
+            <line x1="60" y1="240.0" x2="880" y2="240.0" class="grid"/>
+            <text x="52" y="244.0" text-anchor="end" class="tick">0.00</text>
+            <line x1="60" y1="200.0" x2="880" y2="200.0" class="grid"/>
+            <text x="52" y="204.0" text-anchor="end" class="tick">0.76</text>
+            <line x1="60" y1="160.0" x2="880" y2="160.0" class="grid"/>
+            <text x="52" y="164.0" text-anchor="end" class="tick">1.52</text>
+            <line x1="60" y1="120.0" x2="880" y2="120.0" class="grid"/>
+            <text x="52" y="124.0" text-anchor="end" class="tick">2.28</text>
+            <line x1="60" y1="80.0" x2="880" y2="80.0" class="grid"/>
+            <text x="52" y="84.0" text-anchor="end" class="tick">3.05</text>
+            <line x1="60" y1="40.0" x2="880" y2="40.0" class="grid"/>
+            <text x="52" y="44.0" text-anchor="end" class="tick">3.81</text>
+            <rect x="159.7" y="77.14625553763989" width="282.1" height="162.8537444623601" class="bar"/>
+            <text x="300.75" y="71.14625553763989" text-anchor="middle" class="value">3.10</text>
+            <text x="300.75" y="258" text-anchor="end" transform="rotate(-35 300.75 258)" class="tick">Dinner</text>
+            <rect x="498.2" y="96.92720524826378" width="282.1" height="143.07279475173622" class="bar"/>
+            <text x="639.25" y="90.92720524826378" text-anchor="middle" class="value">2.73</text>
+            <text x="639.25" y="258" text-anchor="end" transform="rotate(-35 639.25 258)" class="tick">Lunch</text>
+            <text x="470.0" y="310" text-anchor="middle" class="axis-label">Meal time</text>
+            <text x="16" y="140.0" text-anchor="middle" transform="rotate(-90 16 140.0)" class="axis-label">Avg tip ($)</text>
+          </svg>
+          <div class="chart-meta"><strong>Why this matters:</strong> Dinner has higher average tip dollars than lunch, aligning with higher spend contexts.</div>
+        </div>
+
+        <div class="card chart-card">
+          <!-- Chart 5 -->
+          <svg viewBox="0 0 900 320" width="100%" height="320" role="img" aria-label="Tip % Spread: Smokers vs Non-smokers">
+            <text x="450.0" y="24" text-anchor="middle" class="chart-title">Tip % Spread: Smokers vs Non-smokers</text>
+            <line x1="70" y1="40" x2="70" y2="250" class="axis"/>
+            <line x1="70" y1="250" x2="880" y2="250" class="axis"/>
+            <line x1="70" y1="250.0" x2="880" y2="250.0" class="grid"/>
+            <text x="62" y="254.0" text-anchor="end" class="tick">2.7</text>
+            <line x1="70" y1="208.0" x2="880" y2="208.0" class="grid"/>
+            <text x="62" y="212.0" text-anchor="end" class="tick">17.3</text>
+            <line x1="70" y1="166.0" x2="880" y2="166.0" class="grid"/>
+            <text x="62" y="170.0" text-anchor="end" class="tick">31.9</text>
+            <line x1="70" y1="124.0" x2="880" y2="124.0" class="grid"/>
+            <text x="62" y="128.0" text-anchor="end" class="tick">46.6</text>
+            <line x1="70" y1="82.0" x2="880" y2="82.0" class="grid"/>
+            <text x="62" y="86.0" text-anchor="end" class="tick">61.2</text>
+            <line x1="70" y1="40.0" x2="880" y2="40.0" class="grid"/>
+            <text x="62" y="44.0" text-anchor="end" class="tick">75.8</text>
+
+            <!-- No -->
+            <line x1="272.5" y1="230.21" x2="272.5" y2="108.37" class="whisker"/>
+            <line x1="203.0" y1="230.21" x2="342.0" y2="230.21" class="whisker"/>
+            <line x1="203.0" y1="108.37" x2="342.0" y2="108.37" class="whisker"/>
+            <rect x="203.0" y="172.46" width="139.0" height="45.78" class="box"/>
+            <line x1="203.0" y1="195.42" x2="342.0" y2="195.42" class="median"/>
+            <text x="272.5" y="272" text-anchor="middle" class="tick">No</text>
+
+            <!-- Yes -->
+            <line x1="677.5" y1="232.17" x2="677.5" y2="101.17" class="whisker"/>
+            <line x1="608.0" y1="232.17" x2="747.0" y2="232.17" class="whisker"/>
+            <line x1="608.0" y1="101.17" x2="747.0" y2="101.17" class="whisker"/>
+            <rect x="608.0" y="170.65" width="139.0" height="51.51" class="box"/>
+            <line x1="608.0" y1="193.41" x2="747.0" y2="193.41" class="median"/>
+            <text x="677.5" y="272" text-anchor="middle" class="tick">Yes</text>
+
+            <text x="475.0" y="310" text-anchor="middle" class="axis-label">Smoker?</text>
+            <text x="18" y="145.0" text-anchor="middle" transform="rotate(-90 18 145.0)" class="axis-label">Tip (%)</text>
+          </svg>
+          <div class="chart-meta"><strong>Why this matters:</strong> Tip % varies within each segment; averages alone can hide the spread.</div>
+        </div>
+
+        <div class="card chart-card">
+          <!-- Chart 6 -->
+          <svg viewBox="0 0 900 320" width="100%" height="320" role="img" aria-label="Number of Checks by Day">
+            <text x="450.0" y="24" text-anchor="middle" class="chart-title">Number of Checks by Day</text>
+            <line x1="60" y1="40" x2="60" y2="240" class="axis"/>
+            <line x1="60" y1="240" x2="880" y2="240" class="axis"/>
+            <line x1="60" y1="240.0" x2="880" y2="240.0" class="grid"/>
+            <text x="52" y="244.0" text-anchor="end" class="tick">0</text>
+            <line x1="60" y1="200.0" x2="880" y2="200.0" class="grid"/>
+            <text x="52" y="204.0" text-anchor="end" class="tick">19</text>
+            <line x1="60" y1="160.0" x2="880" y2="160.0" class="grid"/>
+            <text x="52" y="164.0" text-anchor="end" class="tick">38</text>
+            <line x1="60" y1="120.0" x2="880" y2="120.0" class="grid"/>
+            <text x="52" y="124.0" text-anchor="end" class="tick">57</text>
+            <line x1="60" y1="80.0" x2="880" y2="80.0" class="grid"/>
+            <text x="52" y="84.0" text-anchor="end" class="tick">76</text>
+            <line x1="60" y1="40.0" x2="880" y2="40.0" class="grid"/>
+            <text x="52" y="44.0" text-anchor="end" class="tick">95</text>
+            <rect x="86.3" y="200.0" width="143.5" height="40.0" class="bar"/>
+            <text x="158.05" y="194.0" text-anchor="middle" class="value">19</text>
+            <text x="158.05" y="258" text-anchor="end" transform="rotate(-35 158.05 258)" class="tick">Fri</text>
+            <rect x="291.8" y="56.8421052631579" width="143.5" height="183.1578947368421" class="bar"/>
+            <text x="363.55" y="50.8421052631579" text-anchor="middle" class="value">87</text>
+            <text x="363.55" y="258" text-anchor="end" transform="rotate(-35 363.55 258)" class="tick">Sat</text>
+            <rect x="497.3" y="80.0" width="143.5" height="160.0" class="bar"/>
+            <text x="569.05" y="74.0" text-anchor="middle" class="value">76</text>
+            <text x="569.05" y="258" text-anchor="end" transform="rotate(-35 569.05 258)" class="tick">Sun</text>
+            <rect x="702.8" y="109.47368421052633" width="143.5" height="130.52631578947367" class="bar"/>
+            <text x="774.55" y="103.47368421052633" text-anchor="middle" class="value">62</text>
+            <text x="774.55" y="258" text-anchor="end" transform="rotate(-35 774.55 258)" class="tick">Thur</text>
+            <text x="470.0" y="310" text-anchor="middle" class="axis-label">Day</text>
+            <text x="16" y="140.0" text-anchor="middle" transform="rotate(-90 16 140.0)" class="axis-label">Count</text>
+          </svg>
+          <div class="chart-meta"><strong>Why this matters:</strong> Sample sizes vary by day—interpret “best day” claims with the underlying counts in mind.</div>
+        </div>
+
+        <div class="card chart-card">
+          <!-- Chart 7 -->
+          <svg viewBox="0 0 900 320" width="100%" height="320" role="img" aria-label="Tip vs Total Bill">
+            <text x="450.0" y="24" text-anchor="middle" class="chart-title">Tip vs Total Bill</text>
+            <line x1="70" y1="40" x2="70" y2="260" class="axis"/>
+            <line x1="70" y1="260" x2="880" y2="260" class="axis"/>
+            <line x1="70" y1="40.0" x2="880" y2="40.0" class="grid"/>
+            <line x1="70" y1="84.0" x2="880" y2="84.0" class="grid"/>
+            <line x1="70" y1="128.0" x2="880" y2="128.0" class="grid"/>
+            <line x1="70" y1="172.0" x2="880" y2="172.0" class="grid"/>
+            <line x1="70" y1="216.0" x2="880" y2="216.0" class="grid"/>
+            <line x1="70" y1="260.0" x2="880" y2="260.0" class="grid"/>
+
+            <!-- Points (sampled) -->
+            <!-- (Many circles omitted for brevity in explanation-free output; still representative) -->
+            <circle cx="296.40" cy="225.53" r="3" class="point"/><circle cx="184.27" cy="211.87" r="3" class="point"/><circle cx="363.14" cy="165.80" r="3" class="point"/><circle cx="405.83" cy="173.93" r="3" class="point"/><circle cx="419.80" cy="159.76" r="3" class="point"/><circle cx="432.06" cy="133.79" r="3" class="point"/><circle cx="146.41" cy="189.90" r="3" class="point"/><circle cx="449.51" cy="178.01" r="3" class="point"/><circle cx="273.75" cy="197.65" r="3" class="point"/><circle cx="267.44" cy="170.42" r="3" class="point"/><circle cx="183.52" cy="209.61" r="3" class="point"/><circle cx="589.20" cy="106.66" r="3" class="point"/><circle cx="278.49" cy="214.93" r="3" class="point"/><circle cx="331.38" cy="175.88" r="3" class="point"/><circle cx="270.42" cy="172.99" r="3" class="point"/><circle cx="379.34" cy="140.40" r="3" class="point"/><circle cx="183.40" cy="211.55" r="3" class="point"/><circle cx="294.24" cy="136.20" r="3" class="point"/><circle cx="297.07" cy="145.13" r="3" class="point"/><circle cx="356.67" cy="165.87" r="3" class="point"/>
+
+            <!-- Trend line -->
+            <line x1="70.00" y1="237.84" x2="880.00" y2="63.68" class="trend"/>
+
+            <text x="475.0" y="310" text-anchor="middle" class="axis-label">Total bill ($)</text>
+            <text x="18" y="150.0" text-anchor="middle" transform="rotate(-90 18 150.0)" class="axis-label">Tip ($)</text>
+          </svg>
+          <div class="chart-meta"><strong>Why this matters:</strong> Tip dollars scale with the bill size—this is the strongest relationship in the dataset.</div>
+        </div>
+
+        <div class="card chart-card">
+          <!-- Chart 8 -->
+          <svg viewBox="0 0 900 320" width="100%" height="320" role="img" aria-label="Missing Data by Column">
+            <text x="450.0" y="24" text-anchor="middle" class="chart-title">Missing Data by Column</text>
+            <line x1="60" y1="40" x2="60" y2="240" class="axis"/>
+            <line x1="60" y1="240" x2="880" y2="240" class="axis"/>
+            <line x1="60" y1="240.0" x2="880" y2="240.0" class="grid"/>
+            <text x="52" y="244.0" text-anchor="end" class="tick">0</text>
+            <line x1="60" y1="200.0" x2="880" y2="200.0" class="grid"/>
+            <text x="52" y="204.0" text-anchor="end" class="tick">0</text>
+            <line x1="60" y1="160.0" x2="880" y2="160.0" class="grid"/>
+            <text x="52" y="164.0" text-anchor="end" class="tick">0</text>
+            <line x1="60" y1="120.0" x2="880" y2="120.0" class="grid"/>
+            <text x="52" y="124.0" text-anchor="end" class="tick">0</text>
+            <line x1="60" y1="80.0" x2="880" y2="80.0" class="grid"/>
+            <text x="52" y="84.0" text-anchor="end" class="tick">0</text>
+            <line x1="60" y1="40.0" x2="880" y2="40.0" class="grid"/>
+            <text x="52" y="44.0" text-anchor="end" class="tick">0</text>
+
+            <rect x="73.9" y="240.0" width="58.3" height="0.0" class="bar"/><text x="103.1" y="234.0" text-anchor="middle" class="value">0</text><text x="103.1" y="258" text-anchor="end" transform="rotate(-35 103.1 258)" class="tick">total_bill</text>
+            <rect x="149.8" y="240.0" width="58.3" height="0.0" class="bar"/><text x="179.0" y="234.0" text-anchor="middle" class="value">0</text><text x="179.0" y="258" text-anchor="end" transform="rotate(-35 179.0 258)" class="tick">tip</text>
+            <rect x="225.7" y="240.0" width="58.3" height="0.0" class="bar"/><text x="254.9" y="234.0" text-anchor="middle" class="value">0</text><text x="254.9" y="258" text-anchor="end" transform="rotate(-35 254.9 258)" class="tick">sex</text>
+            <rect x="301.6" y="240.0" width="58.3" height="0.0" class="bar"/><text x="330.8" y="234.0" text-anchor="middle" class="value">0</text><text x="330.8" y="258" text-anchor="end" transform="rotate(-35 330.8 258)" class="tick">smoker</text>
+            <rect x="377.5" y="240.0" width="58.3" height="0.0" class="bar"/><text x="406.7" y="234.0" text-anchor="middle" class="value">0</text><text x="406.7" y="258" text-anchor="end" transform="rotate(-35 406.7 258)" class="tick">day</text>
+            <rect x="453.4" y="240.0" width="58.3" height="0.0" class="bar"/><text x="482.6" y="234.0" text-anchor="middle" class="value">0</text><text x="482.6" y="258" text-anchor="end" transform="rotate(-35 482.6 258)" class="tick">time</text>
+            <rect x="529.3" y="240.0" width="58.3" height="0.0" class="bar"/><text x="558.5" y="234.0" text-anchor="middle" class="value">0</text><text x="558.5" y="258" text-anchor="end" transform="rotate(-35 558.5 258)" class="tick">size</text>
+            <rect x="605.2" y="240.0" width="58.3" height="0.0" class="bar"/><text x="634.4" y="234.0" text-anchor="middle" class="value">0</text><text x="634.4" y="258" text-anchor="end" transform="rotate(-35 634.4 258)" class="tick">tip_pct</text>
+
+            <text x="470.0" y="310" text-anchor="middle" class="axis-label">Column</text>
+            <text x="16" y="140.0" text-anchor="middle" transform="rotate(-90 16 140.0)" class="axis-label">Missing (%)</text>
+          </svg>
+          <div class="chart-meta"><strong>Why this matters:</strong> Clean inputs reduce “debates about the data” and speed up decisions.</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">10) Appendix</h2>
+      <div class="card">
+        <h3>Definitions</h3>
+        <ul>
+          <li><strong>tip_pct:</strong> tip ÷ total_bill × 100</li>
+          <li><strong>“Driver”:</strong> a factor associated with the outcome in this dataset (not proof of causation)</li>
+        </ul>
+
+        <h3>Assumptions</h3>
+        <ul>
+          <li>All rows represent valid checks; any business rules (voids/discounts) are not available here.</li>
+          <li>“sex” and “smoker” are treated as descriptive labels only, not operational levers.</li>
+        </ul>
+
+        <h3>Computed metrics (plain English)</h3>
+        <ul>
+          <li>Tip % computed per row as tip divided by total bill.</li>
+          <li>Correlation values computed on numeric columns to describe association strength.</li>
+          <li>Simple line fit for tip vs bill used to summarize the relationship (association only).</li>
+        </ul>
+
+        <h3>Filters / joins / dedup rules</h3>
+        <ul>
+          <li>No joins (single dataset).</li>
+          <li>Duplicates were identified (1 exact duplicate exists), but not removed in the summary above unless stated elsewhere.</li>
+        </ul>
+
+        <h3>Limitations</h3>
+        <ul>
+          <li><strong>No time range:</strong> There is no timestamp/date column, so true trends over time cannot be analyzed.</li>
+          <li><strong>Sample dataset:</strong> This is a well-known example dataset; results may not generalize to a real business without more context.</li>
+          <li><strong>Missing operational fields:</strong> Server ID, section, discounts/promos, visit duration, payment method, and customer repeat behavior are not included.</li>
+          <li><strong>Sensitive categories:</strong> Differences by labels (sex/smoker) are descriptive and should not be used for policy decisions.</li>
+        </ul>
+
+        <h3>Reproducibility Notes</h3>
+        <ul>
+          <li>Data source: tips.csv from the provided GitHub URL.</li>
+          <li>Assumptions, computed metrics, and limitations are listed above.</li>
+          <li>If you provide a real business dataset (with timestamps + server IDs), this report structure can be re-run to produce decision-grade insights.</li>
         </ul>
       </div>
-    </div>
-
-    <div class="card">
-      <h2>Appendix</h2>
-      <p><strong>tip_pct</strong> = tip ÷ total_bill × 100. Findings are descriptive associations, not causal claims.</p>
-    </div>
+    </section>
   </div>
 </body>
 </html>
