@@ -5,134 +5,167 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brady W Karras | Portfolio</title>
     <style>
+  :root {
+    /* Dark moss professional palette */
+    --bg-color: #0b0f0c;          /* near-black moss */
+    --surface-1: #101814;         /* page surface */
+    --surface-2: #141f19;         /* card surface */
+    --border-color: #223128;      /* subtle moss border */
+    --text-color: #e7eee9;        /* primary text */
+    --muted-text: #a7b6ad;        /* secondary text */
 
-        :root {
-            --bg-color: #f8f9fa;
-            --text-color: #333;
-            --card-bg: #ffffff;
-            --accent-color: #2c3e50; /* Dark Slate Blue */
-            --link-color: #3498db;
-        }
+    --accent-color: #4b6f59;      /* dark moss */
+    --accent-glow: rgba(75, 111, 89, 0.35);
 
+    --link-color: #7ec4a1;        /* moss-mint */
+    --link-hover: #9be7bf;
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.6);
+    --radius: 12px;
+  }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 2rem;
-        }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background:
+      radial-gradient(900px 500px at 15% 10%, rgba(75, 111, 89, 0.18), transparent 60%),
+      radial-gradient(700px 400px at 85% 25%, rgba(126, 196, 161, 0.10), transparent 55%),
+      linear-gradient(180deg, var(--bg-color), #070a08 70%);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding: 2rem;
+  }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
 
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-            border-bottom: 2px solid #e9ecef;
-        }
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border-color);
+  }
 
-        h1 {
-            font-size: 2.5rem;
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
+  h1 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
 
-        p.subtitle {
-            font-size: 1.2rem;
-            color: #666;
-        }
+  p.subtitle {
+    font-size: 1.15rem;
+    color: var(--muted-text);
+  }
 
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
 
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
+  .project-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00)) , var(--surface-2);
+    border: 1px solid rgba(34, 49, 40, 0.9);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
 
-        
-        .project-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+  /* Subtle unique “moss sheen” */
+  .project-card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: radial-gradient(600px 220px at 20% 0%, rgba(126,196,161,0.10), transparent 55%);
+    pointer-events: none;
+  }
 
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
-        }
+  .project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(126, 196, 161, 0.35);
+  }
 
-        .card-header h3 {
-            margin-bottom: 0.5rem;
-            color: var(--accent-color);
-        }
+  .card-header h3 {
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    letter-spacing: -0.01em;
+  }
 
-        .tag {
-            display: inline-block;
-            background-color: #e9ecef;
-            color: #555;
-            padding: 0.25rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
+  .tag {
+    display: inline-block;
+    background: rgba(75, 111, 89, 0.20);
+    color: #cfe0d7;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    border: 1px solid rgba(126, 196, 161, 0.22);
+  }
 
-        .card-desc {
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            color: #555;
-        }
+  .card-desc {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    color: var(--muted-text);
+  }
 
-        .card-link {
-            text-decoration: none;
-            color: var(--link-color);
-            font-weight: bold;
-            border: 2px solid var(--link-color);
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-align: center;
-            transition: background 0.3s, color 0.3s;
-        }
+  .card-link {
+    text-decoration: none;
+    color: var(--link-color);
+    font-weight: 800;
+    border: 1px solid rgba(126, 196, 161, 0.45);
+    background: rgba(16, 24, 20, 0.55);
+    padding: 0.55rem 1rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+  }
 
-        .card-link:hover {
-            background: var(--link-color);
-            color: #fff;
-        }
+  .card-link:hover {
+    background: rgba(126, 196, 161, 0.12);
+    color: var(--link-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 4px rgba(75, 111, 89, 0.22);
+  }
 
-    
-        footer {
-            margin-top: 4rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #888;
-        }
-        
-        footer a {
-            color: #888;
-            margin: 0 10px;
-            text-decoration: none;
-        }
+  footer {
+    margin-top: 4rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(167, 182, 173, 0.9);
+  }
 
-        footer a:hover {
-            color: var(--accent-color);
-        }
-    </style>
+  footer a {
+    color: rgba(167, 182, 173, 0.95);
+    margin: 0 10px;
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(167, 182, 173, 0.45);
+  }
+
+  footer a:hover {
+    color: var(--link-hover);
+    border-bottom-color: rgba(126, 196, 161, 0.7);
+  }
+</style>
+
+<!-- --------------------------------------------------------------------------------- -->
 </head>
 <body>
 
@@ -146,14 +179,16 @@
 
             <article class="project-card">
                 <div class="card-header">
-                    <span class="tag">Data</span>
-                    <h3>Class Data Visualization</h3>
+                    <span class="tag">ML model</span>
+                    <h3>College Football Linear Regression Model</h3>
                     <p class="card-desc">
-                        Dashboard and presentation created to help answer questions to a school about their staff and classes. Created with Tableau.
+                    Project where I developed a ML model to predict the outcome and spreads of college football games.
                     </p>
                 </div>
-                <a href="assets/Karras_presentation_project.pdf" class="card-link">View Report</a>
+                <a href="/CFB_linear_reg/" class="card-link">View Project Overview</a>
             </article>
+            
+            
 
             <article class="project-card">
                 <div class="card-header">
@@ -167,7 +202,17 @@
                 <a href="/agentic_analysis.html" class="card-link">View Project</a>
             </article>
 
-            
+
+            <article class="project-card">
+                <div class="card-header">
+                    <span class="tag">Data</span>
+                    <h3>Class Data Visualization</h3>
+                    <p class="card-desc">
+                        Dashboard and presentation created to help answer questions to a school about their staff and classes. Created with Tableau.
+                    </p>
+                </div>
+                <a href="assets/Karras_presentation_project.pdf" class="card-link">View Report</a>
+            </article>
 
             <article class="project-card">
                 <div class="card-header">
@@ -202,16 +247,7 @@
                 <a href="picgradr/" class="card-link">View Repository</a>
             </article>
 
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">ML model</span>
-                    <h3>College Football Linear Regression Model</h3>
-                    <p class="card-desc">
-                    Project where I developed a ML model to predict the outcome and spreads of college football games.
-                    </p>
-                </div>
-                <a href="/CFB_linear_reg/" class="card-link">View Project Overview</a>
-            </article>
+            
 
 
             
