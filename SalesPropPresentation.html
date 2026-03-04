@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Lead Qualification System — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'Instrument Serif', Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #0f1729;
+    --surface: #162040;
+    --surface2: #1d2b52;
+    --surface-elevated: #243362;
+    --border: rgba(200, 180, 140, 0.08);
+    --border-bright: rgba(200, 180, 140, 0.16);
+    --text: #e8e4d8;
+    --text-dim: #9a9484;
+    --accent: #d4a73a;
+    --accent-dim: rgba(212, 167, 58, 0.1);
+    --green: #4ade80;
+    --green-dim: rgba(74, 222, 128, 0.1);
+    --red: #f87171;
+    --red-dim: rgba(248, 113, 113, 0.1);
+    --blue: #60a5fa;
+    --blue-dim: rgba(96, 165, 250, 0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .deck {
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .slide {
+    height: 100dvh;
+    scroll-snap-align: start;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(40px, 6vh, 80px) clamp(40px, 8vw, 120px);
+    isolation: isolate;
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .slide.visible { opacity: 1; transform: none; }
+
+  .slide .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .slide.visible .reveal { opacity: 1; transform: none; }
+  .slide.visible .reveal:nth-child(1) { transition-delay: 0.1s; }
+  .slide.visible .reveal:nth-child(2) { transition-delay: 0.2s; }
+  .slide.visible .reveal:nth-child(3) { transition-delay: 0.3s; }
+  .slide.visible .reveal:nth-child(4) { transition-delay: 0.4s; }
+  .slide.visible .reveal:nth-child(5) { transition-delay: 0.5s; }
+  .slide.visible .reveal:nth-child(6) { transition-delay: 0.6s; }
+  .slide.visible .reveal:nth-child(7) { transition-delay: 0.7s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide, .slide .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+
+  /* NAV CHROME */
+  .deck-progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: var(--accent); z-index: 100;
+    transition: width 0.3s ease; pointer-events: none;
+  }
+  .deck-dots {
+    position: fixed; right: clamp(12px, 2vw, 24px); top: 50%;
+    transform: translateY(-50%); display: flex; flex-direction: column;
+    gap: 8px; z-index: 100; padding: 8px;
+    background: color-mix(in srgb, var(--bg) 60%, transparent 40%);
+    border-radius: 20px; backdrop-filter: blur(4px);
+  }
+  .deck-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--text-dim); opacity: 0.3; border: none; padding: 0;
+    cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+  }
+  .deck-dot:hover { opacity: 0.6; }
+  .deck-dot.active { opacity: 1; transform: scale(1.5); background: var(--accent); }
+  .deck-counter {
+    position: fixed; bottom: clamp(12px, 2vh, 24px); right: clamp(12px, 2vw, 24px);
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); z-index: 100;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .deck-hints {
+    position: fixed; bottom: clamp(12px, 2vh, 24px); left: 50%;
+    transform: translateX(-50%); font-family: var(--font-mono);
+    font-size: 11px; color: var(--text-dim); opacity: 0.6; z-index: 100;
+    transition: opacity 0.5s; white-space: nowrap;
+  }
+  .deck-hints.faded { opacity: 0; pointer-events: none; }
+
+  /* SHARED ELEMENTS */
+  .slide__display {
+    font-size: clamp(48px, 10vw, 120px); font-weight: 400;
+    letter-spacing: -2px; line-height: 0.95; text-wrap: balance;
+  }
+  .slide__heading {
+    font-size: clamp(28px, 5vw, 52px); font-weight: 400;
+    letter-spacing: -0.5px; line-height: 1.15; text-wrap: balance;
+  }
+  .slide__body {
+    font-size: clamp(16px, 2.2vw, 22px); line-height: 1.6;
+    color: var(--text-dim); text-wrap: pretty;
+  }
+  .slide__label {
+    font-family: var(--font-mono); font-size: clamp(10px, 1.2vw, 13px);
+    font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .slide__subtitle {
+    font-family: var(--font-mono); font-size: clamp(12px, 1.5vw, 18px);
+    color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* TITLE SLIDE */
+  .slide--title {
+    justify-content: center; align-items: center; text-align: center;
+    background-image: radial-gradient(ellipse at 50% 30%, var(--accent-dim) 0%, transparent 50%);
+  }
+  .slide--title .slide__display { color: var(--accent); }
+
+  /* DIVIDER */
+  .slide--divider { justify-content: center; }
+  .slide--divider .slide__number {
+    font-size: clamp(100px, 22vw, 260px); font-weight: 200; line-height: 0.85;
+    opacity: 0.06; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -55%); pointer-events: none;
+    color: var(--accent); font-variant-numeric: tabular-nums;
+  }
+
+  /* CONTENT SLIDE */
+  .slide--content .slide__inner {
+    display: grid; grid-template-columns: 3fr 2fr;
+    gap: clamp(24px, 4vw, 60px); align-items: center; width: 100%;
+  }
+  .slide__bullets { list-style: none; padding: 0; }
+  .slide__bullets li {
+    padding: 10px 0 10px 24px; position: relative;
+    font-size: clamp(16px, 2vw, 22px); line-height: 1.5; color: var(--text-dim);
+  }
+  .slide__bullets li::before {
+    content: ''; position: absolute; left: 0; top: 20px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+  .slide__bullets li strong { color: var(--text); }
+
+  /* KPI DASHBOARD */
+  .slide--dashboard .slide__kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 18vw, 220px), 1fr));
+    gap: clamp(12px, 2vw, 24px);
+  }
+  .slide__kpi {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: clamp(16px, 3vh, 32px) clamp(16px, 2vw, 24px);
+    min-width: 0; overflow: hidden;
+  }
+  .slide__kpi-val {
+    font-size: clamp(32px, 5.5vw, 60px); font-weight: 400; letter-spacing: -1.5px;
+    line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .slide__kpi-label {
+    font-family: var(--font-mono); font-size: clamp(9px, 1.1vw, 13px);
+    font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--text-dim); margin-top: 8px;
+  }
+  .slide__kpi-sub {
+    font-family: var(--font-mono); font-size: 12px; margin-top: 4px; color: var(--text-dim);
+  }
+
+  /* AGENT PIPELINE */
+  .agent-pipeline {
+    display: flex; gap: clamp(8px, 1.5vw, 20px);
+    align-items: stretch; width: 100%; margin-top: clamp(16px, 3vh, 32px);
+  }
+  .agent-card {
+    flex: 1; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: clamp(12px, 2vh, 24px) clamp(10px, 1.5vw, 18px);
+    display: flex; flex-direction: column; gap: 8px; position: relative;
+    min-width: 0;
+  }
+  .agent-card::after {
+    content: '→'; position: absolute; right: calc(-1 * clamp(8px, 1.5vw, 20px) / 2 - 8px);
+    top: 50%; transform: translateY(-50%);
+    color: var(--accent); font-family: var(--font-mono); font-size: clamp(14px, 2vw, 22px);
+    opacity: 0.6; pointer-events: none;
+  }
+  .agent-card:last-child::after { display: none; }
+  .agent-num {
+    font-family: var(--font-mono); font-size: clamp(9px, 1.1vw, 12px);
+    font-weight: 700; color: var(--accent); letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .agent-name {
+    font-size: clamp(13px, 1.6vw, 18px); font-weight: 400;
+    line-height: 1.2; color: var(--text);
+  }
+  .agent-desc {
+    font-family: var(--font-mono); font-size: clamp(9px, 1vw, 12px);
+    color: var(--text-dim); line-height: 1.4;
+  }
+  .agent-badge {
+    font-family: var(--font-mono); font-size: clamp(8px, 0.9vw, 11px);
+    padding: 2px 7px; border-radius: 4px; font-weight: 600;
+    letter-spacing: 0.5px; margin-top: auto; align-self: flex-start;
+  }
+  .badge-green { background: var(--green-dim); color: var(--green); }
+  .badge-blue  { background: var(--blue-dim);  color: var(--blue);  }
+  .badge-gold  { background: var(--accent-dim); color: var(--accent);}
+
+  /* SKILLS GRID */
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(clamp(160px, 22vw, 240px), 1fr));
+    gap: clamp(10px, 1.5vw, 18px); margin-top: clamp(16px, 3vh, 28px);
+  }
+  .skill-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: clamp(14px, 2vh, 22px) clamp(14px, 2vw, 20px);
+  }
+  .skill-cat {
+    font-family: var(--font-mono); font-size: clamp(9px, 1vw, 12px);
+    font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .skill-items {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .skill-tag {
+    font-family: var(--font-mono); font-size: clamp(9px, 1vw, 12px);
+    background: var(--surface2); border: 1px solid var(--border-bright);
+    color: var(--text-dim); padding: 3px 9px; border-radius: 4px;
+  }
+
+  /* ROI SLIDE */
+  .roi-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2.5vw, 30px);
+    margin-top: clamp(16px, 3vh, 28px);
+  }
+  .roi-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: clamp(16px, 2.5vh, 28px);
+  }
+  .roi-card.highlight {
+    border-color: var(--accent); background: var(--accent-dim);
+  }
+  .roi-val {
+    font-size: clamp(32px, 5vw, 58px); font-weight: 400; letter-spacing: -1px;
+    line-height: 1.1; font-variant-numeric: tabular-nums;
+  }
+  .roi-label {
+    font-family: var(--font-mono); font-size: clamp(10px, 1.2vw, 13px);
+    font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--text-dim); margin-top: 8px;
+  }
+  .roi-note {
+    font-family: var(--font-mono); font-size: clamp(10px, 1.1vw, 13px);
+    color: var(--text-dim); margin-top: 6px; line-height: 1.5;
+  }
+
+  /* TESTING / FAKE DATA SLIDE */
+  .test-steps {
+    display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px);
+    margin-top: clamp(12px, 2vh, 24px);
+  }
+  .test-step {
+    display: flex; align-items: flex-start; gap: clamp(12px, 2vw, 20px);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: clamp(12px, 2vh, 20px) clamp(14px, 2vw, 22px);
+  }
+  .step-num {
+    font-family: var(--font-mono); font-size: clamp(18px, 2.5vw, 28px);
+    color: var(--accent); font-weight: 700; line-height: 1;
+    flex-shrink: 0; min-width: 32px;
+  }
+  .step-body { flex: 1; }
+  .step-title {
+    font-size: clamp(14px, 1.8vw, 19px); font-weight: 400; color: var(--text); margin-bottom: 4px;
+  }
+  .step-desc {
+    font-family: var(--font-mono); font-size: clamp(10px, 1.1vw, 13px);
+    color: var(--text-dim); line-height: 1.5;
+  }
+
+  /* CLOSING SLIDE */
+  .slide--close {
+    justify-content: center; align-items: center; text-align: center;
+    background-image: radial-gradient(ellipse at 50% 60%, var(--accent-dim) 0%, transparent 50%);
+  }
+  .gh-link {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono); font-size: clamp(14px, 1.6vw, 18px);
+    color: var(--accent); border: 1px solid var(--accent);
+    padding: clamp(12px, 1.8vh, 18px) clamp(20px, 3vw, 36px);
+    border-radius: 8px; text-decoration: none; margin-top: clamp(20px, 4vh, 36px);
+    transition: background 0.2s, color 0.2s;
+  }
+  .gh-link:hover { background: var(--accent); color: var(--bg); }
+  .gh-link svg { flex-shrink: 0; }
+
+  /* SCORE BAND TABLE */
+  .score-table {
+    width: 100%; border-collapse: collapse; margin-top: clamp(12px, 2vh, 24px);
+  }
+  .score-table th {
+    background: var(--surface2); font-family: var(--font-mono);
+    font-size: clamp(10px, 1.3vw, 13px); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
+    text-align: left; padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.5vw, 20px);
+    border-bottom: 2px solid var(--border-bright);
+  }
+  .score-table td {
+    padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.5vw, 20px);
+    border-bottom: 1px solid var(--border);
+    font-size: clamp(13px, 1.6vw, 18px);
+  }
+  .score-table tbody tr:last-child td { border-bottom: none; }
+
+  /* SPLIT */
+  .slide--split { padding: 0; }
+  .slide--split .slide__panels { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
+  .slide__panel {
+    padding: clamp(40px, 6vh, 80px) clamp(32px, 4vw, 60px);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .slide__panel--primary { background: var(--surface); }
+  .slide__panel--secondary { background: var(--surface2); }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <section class="slide slide--title">
+    <div class="slide__label reveal">Portfolio Project</div>
+    <div class="slide__display reveal">AI Lead<br>Qualification<br>System</div>
+    <p class="slide__subtitle reveal" style="margin-top:clamp(12px,2vh,24px);">Multi-agent pipeline · Python · FastAPI · Streamlit</p>
+    <p class="slide__body reveal" style="margin-top:clamp(12px,2.5vh,28px); max-width:500px;">
+      A fully automated system that takes inbound sales leads and decides — without any human — whether they're worth a sales rep's time.
+    </p>
+  </section>
+
+  <!-- SLIDE 2: THE PROBLEM -->
+  <section class="slide" style="background-image:radial-gradient(ellipse at 80% 20%, var(--blue-dim) 0%, transparent 50%);">
+    <div class="slide__label reveal">The Problem</div>
+    <h2 class="slide__heading reveal">Sales reps are wasting<br>half their day on bad leads</h2>
+    <div class="slide__inner reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,4vw,50px); margin-top:clamp(16px,3vh,32px); align-items:start;">
+      <ul class="slide__bullets">
+        <li><strong>30–50%</strong> of demo requests are unqualified and go nowhere</li>
+        <li>Reps manually review <strong>every single submission</strong></li>
+        <li>Response times stretch to <strong>6–24 hours</strong>, killing interest</li>
+        <li><strong>No consistent process</strong> — every rep scores leads differently</li>
+        <li>CRM data is <strong>incomplete or wrong</strong> because enrichment is skipped</li>
+      </ul>
+      <div style="display:flex; flex-direction:column; gap:clamp(10px,1.5vh,16px);">
+        <div class="slide__kpi" style="border-color:rgba(248,113,113,0.2); background:var(--red-dim);">
+          <div class="slide__kpi-val" style="color:var(--red);">~120h</div>
+          <div class="slide__kpi-label">Wasted per month</div>
+          <div class="slide__kpi-sub">at 300 leads/mo, 40% unqualified</div>
+        </div>
+        <div class="slide__kpi" style="border-color:rgba(248,113,113,0.2); background:var(--red-dim);">
+          <div class="slide__kpi-val" style="color:var(--red);">$8,400</div>
+          <div class="slide__kpi-label">Monthly labor wasted</div>
+          <div class="slide__kpi-sub">at $70/hr average rep cost</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: THE SOLUTION -->
+  <section class="slide" style="background-image:radial-gradient(ellipse at 20% 80%, var(--green-dim) 0%, transparent 50%);">
+    <div class="slide__label reveal">The Solution</div>
+    <h2 class="slide__heading reveal">A five-agent AI pipeline that<br>qualifies leads in under 15 minutes</h2>
+    <p class="slide__body reveal" style="margin-top:clamp(8px,1.5vh,16px); max-width:700px;">
+      When a sales lead fills out a demo form, the system automatically enriches their data, scores them, asks follow-up questions, and either routes them to a rep or filters them out — with zero human involvement.
+    </p>
+    <div class="agent-pipeline reveal" style="margin-top:clamp(16px,3vh,32px);">
+      <div class="agent-card">
+        <div class="agent-num">Agent 1</div>
+        <div class="agent-name">Intake</div>
+        <div class="agent-desc">Validates email, cleans up name/company data</div>
+        <span class="agent-badge badge-blue">Validates</span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-num">Agent 2</div>
+        <div class="agent-name">Enrichment</div>
+        <div class="agent-desc">Adds industry, company size, revenue, location</div>
+        <span class="agent-badge badge-blue">Enriches</span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-num">Agent 3</div>
+        <div class="agent-name">Scoring</div>
+        <div class="agent-desc">Scores lead 0–100 against ideal customer profile</div>
+        <span class="agent-badge badge-gold">Scores</span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-num">Agent 4</div>
+        <div class="agent-name">Qualification</div>
+        <div class="agent-desc">Sends follow-up, extracts budget/timeline answers via LLM</div>
+        <span class="agent-badge badge-gold">Qualifies</span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-num">Agent 5</div>
+        <div class="agent-name">Routing</div>
+        <div class="agent-desc">Assigns rep, creates booking link, alerts Slack, logs CRM</div>
+        <span class="agent-badge badge-green">Routes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: DIVIDER — HOW EACH AGENT WORKS -->
+  <section class="slide slide--divider" style="background-image:radial-gradient(ellipse at 50% 50%, var(--accent-dim) 0%, transparent 40%);">
+    <div class="slide__number">02</div>
+    <div class="slide__label reveal" style="text-align:center;">Deep Dive</div>
+    <h2 class="slide__heading reveal" style="text-align:center;">How each agent<br>actually works</h2>
+  </section>
+
+  <!-- SLIDE 5: AGENTS 1–2 DETAIL -->
+  <section class="slide slide--split">
+    <div class="slide__panels">
+      <div class="slide__panel slide__panel--primary">
+        <div class="slide__label reveal">Agent 1</div>
+        <h2 class="slide__heading reveal">Intake Agent</h2>
+        <p class="slide__body reveal" style="margin-top:12px;">
+          The first gate. It checks that the email address is real and not from a disposable domain, normalizes capitalization on names and company names, and saves a clean record to the database. If the email has already been processed, it catches that too — no duplicates.
+        </p>
+        <ul class="slide__bullets reveal" style="margin-top:16px;">
+          <li>Blocks 20+ known disposable email providers</li>
+          <li>Normalizes: "john SMITH" → "John Smith"</li>
+          <li>Deduplication prevents double-processing</li>
+        </ul>
+      </div>
+      <div class="slide__panel slide__panel--secondary">
+        <div class="slide__label reveal">Agent 2</div>
+        <h2 class="slide__heading reveal">Enrichment Agent</h2>
+        <p class="slide__body reveal" style="margin-top:12px;">
+          Fills in the blanks. Takes the email domain and looks up the company — industry, employee count, revenue range, and location. Known companies are matched from a database. Unknown companies get synthetic but realistic data generated automatically.
+        </p>
+        <ul class="slide__bullets reveal" style="margin-top:16px;">
+          <li>Looks up by email domain first</li>
+          <li>Falls back to keyword-based industry detection</li>
+          <li>Simulates Clearbit / Apollo.io in production</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: SCORING BREAKDOWN -->
+  <section class="slide" style="background-image:radial-gradient(ellipse at 70% 30%, var(--accent-dim) 0%, transparent 50%);">
+    <div class="slide__label reveal">Agent 3 — Scoring</div>
+    <h2 class="slide__heading reveal">Every lead gets a score from 0 to 100</h2>
+    <p class="slide__body reveal" style="margin-top:8px;">Points are awarded based on how closely the lead matches the ideal customer profile. Clear cutoffs determine what happens next.</p>
+    <div class="reveal" style="display:grid; grid-template-columns:3fr 2fr; gap:clamp(16px,3vw,40px); margin-top:clamp(12px,2vh,24px); align-items:start;">
+      <table class="score-table">
+        <thead><tr><th>Criteria</th><th>Points</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td>50–500 employees</td><td style="color:var(--accent);">+25</td><td style="color:var(--text-dim); font-family:var(--font-mono); font-size:0.85em;">Sweet spot — not too small, not enterprise</td></tr>
+          <tr><td>Target industry</td><td style="color:var(--accent);">+20</td><td style="color:var(--text-dim); font-family:var(--font-mono); font-size:0.85em;">SaaS, FinTech, HealthTech, etc.</td></tr>
+          <tr><td>Director+ title</td><td style="color:var(--accent);">+20</td><td style="color:var(--text-dim); font-family:var(--font-mono); font-size:0.85em;">Has decision-making authority</td></tr>
+          <tr><td>US-based</td><td style="color:var(--accent);">+10</td><td style="color:var(--text-dim); font-family:var(--font-mono); font-size:0.85em;">Primary target market</td></tr>
+          <tr><td>Budget indicated</td><td style="color:var(--accent);">+25</td><td style="color:var(--text-dim); font-family:var(--font-mono); font-size:0.85em;">Strongest buying signal on the form</td></tr>
+        </tbody>
+      </table>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="slide__kpi" style="border-color:rgba(74,222,128,0.3); background:var(--green-dim);">
+          <div class="slide__kpi-val" style="color:var(--green);">80–100</div>
+          <div class="slide__kpi-label">SQL — Sales Ready</div>
+          <div class="slide__kpi-sub">Routed to a rep immediately</div>
+        </div>
+        <div class="slide__kpi" style="border-color:rgba(212,167,58,0.3); background:var(--accent-dim);">
+          <div class="slide__kpi-val" style="color:var(--accent);">60–79</div>
+          <div class="slide__kpi-label">MQL — Promising</div>
+          <div class="slide__kpi-sub">Qualifies further via email</div>
+        </div>
+        <div class="slide__kpi" style="border-color:rgba(248,113,113,0.2); background:var(--red-dim);">
+          <div class="slide__kpi-val" style="color:var(--red);">&lt; 60</div>
+          <div class="slide__kpi-label">Disqualified</div>
+          <div class="slide__kpi-sub">Filtered out, no rep time wasted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: AGENTS 4–5 DETAIL -->
+  <section class="slide slide--split">
+    <div class="slide__panels">
+      <div class="slide__panel slide__panel--primary">
+        <div class="slide__label reveal">Agent 4</div>
+        <h2 class="slide__heading reveal">Qualification Agent</h2>
+        <p class="slide__body reveal" style="margin-top:12px;">
+          For leads that scored 60 or higher, this agent sends a follow-up email asking four BANT questions — Budget, Authority, Need, and Timeline. The lead's reply is then parsed by an LLM (or rule-based fallback) to extract structured answers and adjust the final score.
+        </p>
+        <ul class="slide__bullets reveal" style="margin-top:16px;">
+          <li>Uses GPT-4o-mini when an API key is present</li>
+          <li>Falls back to regex pattern matching automatically</li>
+          <li>Score can increase up to +35 points from strong answers</li>
+        </ul>
+      </div>
+      <div class="slide__panel slide__panel--secondary">
+        <div class="slide__label reveal">Agent 5</div>
+        <h2 class="slide__heading reveal">Routing Agent</h2>
+        <p class="slide__body reveal" style="margin-top:12px;">
+          Only SQL-tier leads reach this agent. It round-robins assignment across the sales team, generates a unique booking link with a Calendly-style URL, fires a Slack alert with the full lead summary, and logs everything to HubSpot or Salesforce. All integrations are simulated when keys aren't configured.
+        </p>
+        <ul class="slide__bullets reveal" style="margin-top:16px;">
+          <li>Round-robin rep assignment — no manual coordination</li>
+          <li>Booking link generated per lead</li>
+          <li>HubSpot, Salesforce, Slack all supported</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: HOW FAKE DATA WAS USED FOR TESTING -->
+  <section class="slide" style="background-image:radial-gradient(ellipse at 30% 70%, var(--blue-dim) 0%, transparent 50%);">
+    <div class="slide__label reveal">Testing & Development</div>
+    <h2 class="slide__heading reveal">No real company needed —<br>here's how testing worked</h2>
+    <div class="test-steps reveal">
+      <div class="test-step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Synthetic lead generation with Faker</div>
+          <div class="step-desc">A Python script generates realistic B2B demo form submissions — names, company email addresses, job titles, budgets, and timelines. Each run produces hundreds of unique, plausible leads. Seed is fixed so results are reproducible.</div>
+        </div>
+      </div>
+      <div class="test-step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Mock company enrichment database</div>
+          <div class="step-desc">Instead of paying for Clearbit or Apollo, a JSON file contains realistic company profiles keyed by email domain. Unknown companies get synthetic data generated on the fly — weighted by industry to match real-world distributions.</div>
+        </div>
+      </div>
+      <div class="test-step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">Pre-written qualification responses</div>
+          <div class="step-desc">10 realistic "email reply" scenarios cover the full range — from a CEO with $100K+ budget who needs this immediately, to a pre-Series A startup with no budget and board approval required. The LLM or rule engine processes each one.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: ROI / HOURS SAVED -->
+  <section class="slide" style="background-image:radial-gradient(ellipse at 60% 40%, var(--green-dim) 0%, transparent 45%);">
+    <div class="slide__label reveal">Business Impact</div>
+    <h2 class="slide__heading reveal">The rep hours this system saves<br>add up fast</h2>
+    <p class="slide__body reveal" style="margin-top:8px;">Based on a realistic B2B SaaS company receiving 300 demo requests per month, with a $70/hr average rep cost.</p>
+    <div class="roi-grid reveal">
+      <div class="roi-card highlight">
+        <div class="roi-val" style="color:var(--green);">120h</div>
+        <div class="roi-label">Rep hours saved monthly</div>
+        <div class="roi-note">300 leads × 40% unqualified × 1hr each = 120 hours that never need to be touched</div>
+      </div>
+      <div class="roi-card highlight">
+        <div class="roi-val" style="color:var(--accent);">$8,400</div>
+        <div class="roi-label">Monthly labor value recovered</div>
+        <div class="roi-note">120 hours × $70/hr — that's labor that can now go toward closing, not sorting</div>
+      </div>
+      <div class="roi-card">
+        <div class="roi-val" style="color:var(--blue);">&lt;15 min</div>
+        <div class="roi-label">Speed-to-lead</div>
+        <div class="roi-note">Down from 6–24 hours of manual review. Faster response dramatically improves close rates.</div>
+      </div>
+      <div class="roi-card">
+        <div class="roi-val" style="color:var(--text);">100%</div>
+        <div class="roi-label">Consistent scoring</div>
+        <div class="roi-note">Every lead is evaluated against the same rubric, every time. No gut-feel variation between reps.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10: SKILLS USED -->
+  <section class="slide" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent-dim) 0%, transparent 40%);">
+    <div class="slide__label reveal">Skills Demonstrated</div>
+    <h2 class="slide__heading reveal">What went into building this</h2>
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <div class="skill-cat">Backend</div>
+        <div class="skill-items">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">FastAPI</span>
+          <span class="skill-tag">SQLAlchemy</span>
+          <span class="skill-tag">SQLite</span>
+          <span class="skill-tag">Pydantic</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">AI / LLM</div>
+        <div class="skill-items">
+          <span class="skill-tag">OpenAI API</span>
+          <span class="skill-tag">GPT-4o-mini</span>
+          <span class="skill-tag">Prompt Engineering</span>
+          <span class="skill-tag">Structured Extraction</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Multi-Agent Design</div>
+        <div class="skill-items">
+          <span class="skill-tag">Agent Orchestration</span>
+          <span class="skill-tag">Pipeline Architecture</span>
+          <span class="skill-tag">Fallback Logic</span>
+          <span class="skill-tag">State Management</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Data & Viz</div>
+        <div class="skill-items">
+          <span class="skill-tag">Streamlit</span>
+          <span class="skill-tag">Plotly</span>
+          <span class="skill-tag">Pandas</span>
+          <span class="skill-tag">Faker</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Integrations</div>
+        <div class="skill-items">
+          <span class="skill-tag">HubSpot</span>
+          <span class="skill-tag">Salesforce</span>
+          <span class="skill-tag">Slack Webhooks</span>
+          <span class="skill-tag">Calendly</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">Engineering</div>
+        <div class="skill-items">
+          <span class="skill-tag">REST API Design</span>
+          <span class="skill-tag">OOP</span>
+          <span class="skill-tag">Regex Parsing</span>
+          <span class="skill-tag">Logging</span>
+          <span class="skill-tag">CLI Tools</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11: CLOSING / GITHUB -->
+  <section class="slide slide--close">
+    <div class="slide__label reveal">View the Source</div>
+    <div class="slide__display reveal" style="color:var(--accent);">See it<br>in action</div>
+    <p class="slide__body reveal" style="margin-top:clamp(12px,2.5vh,28px); max-width:560px;">
+      The full codebase — all five agents, the Streamlit dashboard, data generators, mock enrichment database, and FastAPI backend — is on GitHub.
+    </p>
+    <a class="gh-link reveal" href="https://github.com/bkarras12/SalesProp" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+      </svg>
+      View on GitHub
+    </a>
+  </section>
+
+</div><!-- /deck -->
+
+<script>
+  // SlideEngine
+  function SlideEngine(){
+    this.deck=document.querySelector('.deck');
+    this.slides=[].slice.call(document.querySelectorAll('.slide'));
+    this.current=0;
+    this.total=this.slides.length;
+    this.buildChrome();
+    this.bindEvents();
+    this.observe();
+    this.update();
+  }
+  SlideEngine.prototype.buildChrome=function(){
+    var bar=document.createElement('div');bar.className='deck-progress';document.body.appendChild(bar);this.bar=bar;
+    var dots=document.createElement('div');dots.className='deck-dots';var self=this;
+    this.slides.forEach(function(_,i){var d=document.createElement('button');d.className='deck-dot';d.title='Slide '+(i+1);d.onclick=function(){self.goTo(i);};dots.appendChild(d);});
+    document.body.appendChild(dots);this.dots=[].slice.call(dots.children);
+    var ctr=document.createElement('div');ctr.className='deck-counter';document.body.appendChild(ctr);this.counter=ctr;
+    var hints=document.createElement('div');hints.className='deck-hints';hints.textContent='← → or scroll to navigate';document.body.appendChild(hints);this.hints=hints;
+    this.hintTimer=setTimeout(function(){hints.classList.add('faded');},4000);
+  };
+  SlideEngine.prototype.bindEvents=function(){
+    var self=this;
+    document.addEventListener('keydown',function(e){
+      if(['ArrowDown','ArrowRight',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();self.next();}
+      else if(['ArrowUp','ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();self.prev();}
+      else if(e.key==='Home'){e.preventDefault();self.goTo(0);}
+      else if(e.key==='End'){e.preventDefault();self.goTo(self.total-1);}
+      self.fadeHints();
+    });
+    var tY;
+    this.deck.addEventListener('touchstart',function(e){tY=e.touches[0].clientY;},{passive:true});
+    this.deck.addEventListener('touchend',function(e){var dy=tY-e.changedTouches[0].clientY;if(Math.abs(dy)>50){dy>0?self.next():self.prev();}});
+  };
+  SlideEngine.prototype.observe=function(){
+    var self=this;
+    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
+    this.slides.forEach(function(s){obs.observe(s);});
+  };
+  SlideEngine.prototype.goTo=function(i){this.slides[Math.max(0,Math.min(i,this.total-1))].scrollIntoView({behavior:'smooth'});};
+  SlideEngine.prototype.next=function(){if(this.current<this.total-1)this.goTo(this.current+1);};
+  SlideEngine.prototype.prev=function(){if(this.current>0)this.goTo(this.current-1);};
+  SlideEngine.prototype.update=function(){
+    this.bar.style.width=((this.current+1)/this.total*100)+'%';
+    var c=this.current;this.dots.forEach(function(d,i){d.classList.toggle('active',i===c);});
+    this.counter.textContent=(this.current+1)+' / '+this.total;
+  };
+  SlideEngine.prototype.fadeHints=function(){clearTimeout(this.hintTimer);this.hints.classList.add('faded');};
+
+  new SlideEngine();
+</script>
+
+</body>
+</html>
