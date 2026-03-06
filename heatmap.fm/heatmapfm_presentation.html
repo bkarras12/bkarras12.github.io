@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>heatmap.fm — Portfolio Presentation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a0f;
+      --surface:   #111118;
+      --border:    #2a2a35;
+      --green:     #22c55e;
+      --green-dim: #166534;
+      --text:      #e4e4e7;
+      --muted:     #71717a;
+      --code-bg:   #16161f;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 56px;
+    }
+    .nav-brand {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--green);
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      padding: 5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-child { border-bottom: none; }
+
+    /* ── HERO ── */
+    #hero {
+      padding-top: 8rem;
+      padding-bottom: 5rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+      color: var(--green);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+    h1 span { color: var(--green); }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--green);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      margin-left: 0.75rem;
+    }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); opacity: 1; }
+
+    /* ── SECTION HEADERS ── */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      color: var(--text);
+    }
+    p { color: var(--muted); margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── SCREENSHOT PLACEHOLDER ── */
+    .screenshot {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+    .screenshot-bar {
+      background: #18181f;
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ef4444; }
+    .dot-y { background: #f59e0b; }
+    .dot-g { background: #22c55e; }
+    .screenshot-url {
+      margin-left: 0.75rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: monospace;
+    }
+    .screenshot-body {
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+
+    }
+    .screenshot-body img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .screenshot-icon {
+      font-size: 2rem;
+      opacity: 0.3;
+    }
+    .screenshot-hint {
+      font-size: 0.78rem;
+      opacity: 0.5;
+      font-style: italic;
+    }
+
+    /* ── FEATURE GRID ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(34,197,94,0.4); }
+    .feature-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .feature-card h3 { margin-bottom: 0.4rem; }
+    .feature-card p { font-size: 0.875rem; }
+
+    /* ── TECH STACK ── */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .stack-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .stack-card-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 0.75rem;
+    }
+    .stack-items { display: flex; flex-direction: column; gap: 0.3rem; }
+    .stack-item {
+      font-size: 0.85rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .stack-item::before {
+      content: '';
+      width: 4px; height: 4px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── CODE ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+      overflow-x: auto;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+    }
+    .code-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .k { color: #c084fc; } /* keyword */
+    .s { color: #86efac; } /* string */
+    .c { color: #52525b; } /* comment */
+    .f { color: #67e8f9; } /* function */
+    .n { color: #fde68a; } /* number / const */
+    .o { color: var(--text); } /* operator */
+
+    /* ── ARCHITECTURE ── */
+    .arch-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 2rem 0;
+    }
+    .arch-step {
+      display: flex;
+      gap: 1.25rem;
+      position: relative;
+    }
+    .arch-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 44px;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .arch-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--green);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-bottom: 1.5rem;
+    }
+    .arch-content { padding-top: 0.5rem; padding-bottom: 1rem; }
+    .arch-content h3 { font-size: 1rem; }
+    .arch-content p { font-size: 0.875rem; }
+
+    /* ── SKILLS HIGHLIGHT ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .skill-badge {
+      display: inline-block;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .skill-card h3 { margin-bottom: 0.5rem; }
+    .skill-card p { font-size: 0.875rem; }
+
+    /* ── METRICS ── */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .metric {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .metric-val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .metric-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .container { padding: 0 1rem; }
+      section { padding: 3.5rem 0; }
+      .btn-outline { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav>
+  <span class="nav-brand">heatmap.fm</span>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#engineering">Engineering</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Full-Stack Web Application</div>
+    <h1>Your listening history,<br/><span>mapped and visualized</span></h1>
+    <p class="hero-sub">
+      heatmap.fm connects to Spotify and turns your top 100 artists into
+      interactive geographic, temporal, and genre visualizations — shareable with anyone.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">React 19</span>
+      <span class="tag">Node.js / Express</span>
+      <span class="tag">D3.js</span>
+      <span class="tag">Leaflet</span>
+      <span class="tag">Spotify OAuth 2.0 + PKCE</span>
+      <span class="tag">Redis</span>
+      <span class="tag">MusicBrainz API</span>
+      <span class="tag">Tailwind CSS</span>
+    </div>
+    <div>
+      <a class="btn" href="https://github.com/bkarras12/heatmap.fm" target="_blank">View on GitHub</a>
+      <a class="btn btn-outline" href="#overview">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ OVERVIEW ══════════════════ -->
+<section id="overview">
+  <div class="container">
+    <div class="section-label">Overview</div>
+    <h2>What is heatmap.fm?</h2>
+    <p>
+      heatmap.fm is a full-stack music visualization web app that authenticates with
+      Spotify and fetches your top 100 artists across three time windows (last 4 weeks,
+      6 months, or all-time). It enriches each artist with geographic and historical
+      metadata, then renders three distinct interactive visualizations.
+    </p>
+    <p>
+      No account creation. No permanent data storage. Sessions live in Redis for one hour —
+      after that, everything is gone. Share links expire after 30 days.
+    </p>
+
+
+
+    <div class="metrics-row">
+      <div class="metric">
+        <div class="metric-val">100</div>
+        <div class="metric-label">Artists fetched per session</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">3</div>
+        <div class="metric-label">Interactive visualizations</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">3</div>
+        <div class="metric-label">Time range filters</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">30d</div>
+        <div class="metric-label">Share link TTL</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FEATURES ══════════════════ -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">Features</div>
+    <h2>Three ways to see your taste</h2>
+    <p>Each visualization is powered by a different library and tells a different story about your listening habits.</p>
+
+    <!-- Geo Heatmap -->
+    <h3 style="margin-top:2.5rem; font-size:1.3rem;">Geographic Heatmap</h3>
+    <p>
+      An interactive world map (Leaflet + CARTO dark tiles) overlaid with a green heat gradient.
+      US artists are pinpointed at the <strong style="color:var(--text)">state level</strong> —
+      not just "somewhere in America." Circle markers group artists by region; clicking one reveals
+      the top artists from that location.
+    </p>
+
+    <!-- SCREENSHOT: Geographic Heatmap -->
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="heatmapfm_dashpic.PNG">heatmap.fm → Geographic Heatmap</span>
+      </div>
+      <div class="screenshot-body">
+          <img src="pics/heatmapfm_dashpic.PNG" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;" />      </div>
+    </div>
+
+    <!-- Era Grid -->
+    <h3 style="margin-top:2rem; font-size:1.3rem;">Era Grid</h3>
+    <p>
+      A D3.js bar grid spanning the 1920s through 2020s. Each decade cell is shaded from near-black
+      to bright green based on how many plays come from artists who emerged in that era.
+      Hovering a cell shows the top 3 artists from that decade.
+    </p>
+
+    <!-- SCREENSHOT: Era Grid -->
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="">heatmap.fm → Era Grid</span>
+      </div>
+      <div class="screenshot-body">
+          <img src="pics/heatmapfm_erasgrid.PNG" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;" />      </div>
+
+      </div>
+    </div>
+
+    <!-- Genre Bubbles -->
+    <h3 style="margin-top:2rem; font-size:1.3rem;">Genre Bubbles</h3>
+    <p>
+      A D3 circle-packing layout rendering your top 40 genres as bubbles. Bubble size reflects
+      listening intensity; bubble color represents the dominant continent of origin for that genre's
+      artists — so listeners with mostly North American artists will see mostly blue bubbles.
+      Hovering shows the genre's region and sample artists.
+    </p>
+
+    <!-- SCREENSHOT: Genre Bubbles -->
+    <div class="screenshot">
+      <div class="screenshot-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="screenshot-url">heatmap.fm → Genre Bubbles</span>
+      </div>
+      <div class="screenshot-body">
+        <img src="pics/genrebubbles.PNG" alt="Genre Bubbles view" style="width: 40%; height: auto;" />
+      </div>
+    </div>
+
+    <!-- Additional features -->
+    <div class="feature-grid" style="margin-top:2.5rem;">
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h3>Shareable Links</h3>
+        <p>Generate an 8-character short link that lets anyone view your visualization — no login required. Links expire after 30 days via Redis TTL.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📥</div>
+        <h3>PNG Export</h3>
+        <p>Export any visualization as a high-DPI PNG using html2canvas. Filenames include a timestamp to prevent overwrites.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🕐</div>
+        <h3>Time Range Filters</h3>
+        <p>Switch between last 4 weeks, 6 months, or all-time — all three visualizations update instantly from the same dataset.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Privacy First</h3>
+        <p>No user database, no email, no passwords. Your Spotify token lives in Redis for one hour and is then gone permanently.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ARCHITECTURE ══════════════════ -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-label">Architecture</div>
+    <h2>How it works end-to-end</h2>
+    <p>A stateless full-stack pipeline — no permanent database, no user accounts.</p>
+
+    <div class="arch-flow" style="margin-top:2.5rem;">
+
+      <div class="arch-step">
+        <div class="arch-num">1</div>
+        <div class="arch-content">
+          <h3>Spotify OAuth 2.0 with PKCE</h3>
+          <p>
+            The user clicks "Connect with Spotify." The backend generates a cryptographic
+            <strong style="color:var(--text)">code verifier</strong>, hashes it into a
+            <strong style="color:var(--text)">code challenge</strong> (SHA-256 → base64url),
+            and stores the verifier in Redis with a 10-minute TTL. The user is redirected to
+            Spotify's authorization screen. On callback, the code is exchanged for tokens —
+            the verifier proves the request is legitimate, even without exposing the client secret.
+          </p>
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-num">2</div>
+        <div class="arch-content">
+          <h3>Session creation &amp; persistence</h3>
+          <p>
+            After token exchange, the backend generates a random 32-char session ID and stores
+            <code style="color:var(--green); font-size:0.85em">{ access_token, refresh_token, expires_at }</code>
+            in Redis with a 1-hour TTL. The session ID is passed to the frontend via query param,
+            saved to <code style="color:var(--green); font-size:0.85em">localStorage</code>,
+            and sent with every subsequent request as an <code style="color:var(--green); font-size:0.85em">X-Session-ID</code> header.
+          </p>
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-num">3</div>
+        <div class="arch-content">
+          <h3>Fetch top 100 artists from Spotify</h3>
+          <p>
+            Two parallel requests hit Spotify's <code style="color:var(--green); font-size:0.85em">/me/top/artists</code>
+            endpoint (offset 0 and offset 50, 50 artists each) using
+            <code style="color:var(--green); font-size:0.85em">Promise.all</code>.
+            Results are merged and assigned a relative play_count rank (position 1 = 100 points, position 100 = 1 point).
+          </p>
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-num">4</div>
+        <div class="arch-content">
+          <h3>Geo-data enrichment pipeline</h3>
+          <p>
+            For each artist, the backend checks a static JSON cache first (O(1), ~200 artists pre-mapped).
+            On a cache miss, it queries the MusicBrainz API — throttled to exactly 1 request per 1.1 seconds
+            using <code style="color:var(--green); font-size:0.85em">p-throttle</code> to respect their
+            API policy. MusicBrainz returns <code style="color:var(--green); font-size:0.85em">iso-3166-1-codes</code>
+            (country) and <code style="color:var(--green); font-size:0.85em">iso-3166-2-codes</code> (US state).
+            Coordinates are looked up from bundled JSON files and merged onto the artist object.
+          </p>
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-num">5</div>
+        <div class="arch-content">
+          <h3>Visualization rendering</h3>
+          <p>
+            The enriched artist array is returned to the React frontend. Each visualization component
+            receives the same data prop and independently filters, aggregates, and renders using
+            D3.js (Era Grid, Genre Bubbles) or Leaflet (Geographic Heatmap). Switching views is
+            instant — no additional network requests.
+          </p>
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-num">6</div>
+        <div class="arch-content">
+          <h3>Sharing &amp; export</h3>
+          <p>
+            Clicking Share serializes the current artist array + active view to Redis with an
+            8-character nanoid key and a 30-day TTL. The resulting URL is copied to the clipboard.
+            Anyone visiting the share link loads the data without authenticating.
+            Export uses <code style="color:var(--green); font-size:0.85em">html2canvas</code>
+            at 2x render scale to capture the live DOM element and trigger a browser PNG download.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ STACK ══════════════════ -->
+<section id="stack">
+  <div class="container">
+    <div class="section-label">Tech Stack</div>
+    <h2>Built with modern tooling</h2>
+
+    <div class="stack-grid">
+      <div class="stack-card">
+        <div class="stack-card-label">Frontend</div>
+        <div class="stack-items">
+          <span class="stack-item">React 19</span>
+          <span class="stack-item">Vite 7</span>
+          <span class="stack-item">Tailwind CSS 4</span>
+          <span class="stack-item">D3.js 7</span>
+          <span class="stack-item">Leaflet 1.9 + react-leaflet 5</span>
+          <span class="stack-item">leaflet.heat</span>
+          <span class="stack-item">html2canvas</span>
+        </div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-label">Backend</div>
+        <div class="stack-items">
+          <span class="stack-item">Node.js (ES Modules)</span>
+          <span class="stack-item">Express 5</span>
+          <span class="stack-item">Upstash Redis</span>
+          <span class="stack-item">express-rate-limit</span>
+          <span class="stack-item">p-throttle</span>
+          <span class="stack-item">nanoid</span>
+          <span class="stack-item">dotenv</span>
+        </div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-label">External APIs</div>
+        <div class="stack-items">
+          <span class="stack-item">Spotify Web API</span>
+          <span class="stack-item">MusicBrainz API</span>
+          <span class="stack-item">CARTO Dark tile layer</span>
+          <span class="stack-item">OpenStreetMap</span>
+        </div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-label">Auth &amp; Security</div>
+        <div class="stack-items">
+          <span class="stack-item">OAuth 2.0 with PKCE</span>
+          <span class="stack-item">Redis session store</span>
+          <span class="stack-item">Rate limiting (30 req/min)</span>
+          <span class="stack-item">CSRF state tokens</span>
+          <span class="stack-item">Server-side token storage</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ENGINEERING ══════════════════ -->
+<section id="engineering">
+  <div class="container">
+    <div class="section-label">Engineering Highlights</div>
+    <h2>The interesting parts</h2>
+
+    <div class="skills-grid">
+
+      <div class="skill-card">
+        <div class="skill-badge">Security</div>
+        <h3>OAuth 2.0 + PKCE</h3>
+        <p>
+          Implements the full PKCE flow from scratch — generating a random code verifier,
+          deriving a SHA-256 challenge, and validating both sides of the exchange.
+          The client secret never touches the browser. State tokens prevent CSRF attacks.
+        </p>
+        <div class="code-label" style="margin-top:1rem;">backend/routes/auth.js</div>
+        <div class="code-block">
+<span class="k">const</span> <span class="n">codeVerifier</span> = generateRandomString(<span class="n">64</span>);
+<span class="k">const</span> <span class="n">codeChallenge</span> = <span class="k">await</span> generateCodeChallenge(codeVerifier);
+<span class="c">// SHA-256 hash → base64url encode</span>
+<span class="k">await</span> setSession(<span class="s">`auth_state::${state}`</span>, { codeVerifier }, <span class="n">600</span>);</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-badge">API Design</div>
+        <h3>Parallel Spotify pagination</h3>
+        <p>
+          Spotify's API caps at 50 artists per request. To get 100, two requests are fired
+          in parallel using <code style="color:var(--green)">Promise.all</code>, then merged
+          — halving the wait time vs. sequential fetching.
+        </p>
+        <div class="code-label" style="margin-top:1rem;">backend/services/spotifyService.js</div>
+        <div class="code-block">
+<span class="k">const</span> [page1, page2] = <span class="k">await</span> Promise.<span class="f">all</span>([
+  <span class="f">fetchPage</span>(<span class="n">0</span>),
+  <span class="f">fetchPage</span>(<span class="n">50</span>),
+]);
+<span class="k">const</span> allArtists = [...page1, ...page2];</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-badge">Data Pipeline</div>
+        <h3>Cache-first geo enrichment</h3>
+        <p>
+          A static JSON cache handles most artists instantly (O(1)). Cache misses fall back
+          to a live MusicBrainz query, throttled to 1 req/sec. Each artist gets lat/lng,
+          a decade label, and a <code style="color:var(--green)">geo_source</code> tag for traceability.
+        </p>
+        <div class="code-label" style="margin-top:1rem;">backend/routes/data.js</div>
+        <div class="code-block">
+<span class="k">const</span> coords =
+  (stateCode && stateCoords[stateCode]) ||
+  (countryCode ? countryCoords[countryCode] : <span class="k">null</span>);</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-badge">Geo Precision</div>
+        <h3>State-level US resolution</h3>
+        <p>
+          US artists resolve to their home state centroid (e.g., California, Tennessee, New York)
+          using ISO 3166-2 codes from MusicBrainz, rather than collapsing 90+ artists onto
+          a single pin at the US geographic center.
+        </p>
+        <div class="code-label" style="margin-top:1rem;">GeoHeatmap.jsx grouping key</div>
+        <div class="code-block">
+<span class="c">// Group by state (US) or country (everyone else)</span>
+<span class="k">const</span> key = artist.state_code || artist.country_code;</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-badge">Infrastructure</div>
+        <h3>Stateless Redis architecture</h3>
+        <p>
+          No SQL database. Sessions, auth state, and share data all live in Upstash Redis
+          with explicit TTLs. If Redis is unavailable, an in-memory fallback Map
+          keeps the app running in development.
+        </p>
+        <div class="code-label" style="margin-top:1rem;">backend/services/redisService.js</div>
+        <div class="code-block">
+<span class="c">// Upstash Redis — serverless, no TCP needed</span>
+<span class="k">await</span> redis.<span class="f">set</span>(sessionId, data, { ex: ttl });
+<span class="k">await</span> redis.<span class="f">get</span>(sessionId);</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-badge">Rate Limiting</div>
+        <h3>Two-layer throttling</h3>
+        <p>
+          The API is protected by <code style="color:var(--green)">express-rate-limit</code>
+          at 30 requests/minute per IP. MusicBrainz calls are separately throttled to exactly
+          1 request per 1.1 seconds with <code style="color:var(--green)">p-throttle</code>
+          to satisfy their API policy and avoid bans.
+        </p>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-badge">Visualization</div>
+        <h3>D3 + Leaflet side-by-side</h3>
+        <p>
+          Three visualizations, two libraries. D3's pack/scale APIs power the Era Grid
+          (band scale + sequential color) and Genre Bubbles (circle packing). Leaflet handles
+          the interactive tile map with a custom heat layer and dynamic circle markers.
+        </p>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-badge">UX</div>
+        <h3>Shareable + exportable</h3>
+        <p>
+          Any visualization can be shared via a public 8-char link (no login needed for viewers)
+          or downloaded as a 2x scale PNG using <code style="color:var(--green)">html2canvas</code>
+          capturing the live DOM. Both features work on all three visualizations.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+  <p>heatmap.fm — Built by Brady Karras &nbsp;·&nbsp;
+    <a href="https://github.com/bkarras12/heatmap.fm" style="color:var(--green); text-decoration:none;" target="_blank">github.com/bkarras12/heatmap.fm</a>
+  </p>
+</footer>
+
+</body>
+</html>
