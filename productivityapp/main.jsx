@@ -748,8 +748,8 @@ const App = () => {
   // Persist Theme: Check LocalStorage for 'app-theme'
   const [isDarkMode, setIsDarkMode] = React.useState(() => {
     const savedTheme = localStorage.getItem("app-theme");
-    // If no saved theme, default to false (light mode)
-    return savedTheme === "dark";
+    // If no saved theme, default to true (night mode)
+    return savedTheme !== "light";
   });
 
   // --- Feature Hooks ---
