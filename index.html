@@ -164,6 +164,85 @@
     color: var(--link-hover);
     border-bottom-color: rgba(126, 196, 161, 0.7);
   }
+
+  /* About Me dropdown */
+  .about-me-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+
+  .about-me-btn {
+    background: rgba(75, 111, 89, 0.20);
+    color: var(--link-color);
+    border: 1px solid rgba(126, 196, 161, 0.45);
+    padding: 0.6rem 1.4rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    font-family: inherit;
+  }
+
+  .about-me-btn:hover {
+    background: rgba(126, 196, 161, 0.12);
+    color: var(--link-hover);
+    box-shadow: 0 0 0 4px rgba(75, 111, 89, 0.22);
+  }
+
+  .about-me-btn.active {
+    background: rgba(126, 196, 161, 0.15);
+    color: var(--link-hover);
+  }
+
+  .about-me-dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+    margin-top: 1rem;
+    text-align: left;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00)), var(--surface-2);
+    border: 1px solid rgba(34, 49, 40, 0.9);
+    border-radius: var(--radius);
+    padding: 0 1.5rem;
+    box-shadow: var(--shadow);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .about-me-dropdown.open {
+    max-height: 600px;
+    opacity: 1;
+    padding: 1.5rem;
+  }
+
+  .about-me-dropdown h3 {
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .about-me-dropdown p {
+    color: var(--muted-text);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+
+  .about-me-dropdown .section-label {
+    display: inline-block;
+    background: rgba(75, 111, 89, 0.20);
+    color: #cfe0d7;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid rgba(126, 196, 161, 0.22);
+    margin-bottom: 0.6rem;
+  }
 </style>
 
 <!-- --------------------------------------------------------------------------------- -->
@@ -173,7 +252,31 @@
     <div class="container">
         <header>
             <h1>Brady W Karras</h1>
-           
+
+            <div class="about-me-wrapper">
+                <button class="about-me-btn" onclick="toggleAbout()" id="aboutBtn">About Me</button>
+            </div>
+
+            <div class="about-me-dropdown" id="aboutDropdown">
+                <span class="section-label">Bio</span>
+                <p>
+                    I'm Brady Karras — a builder at the intersection of AI, data, and software engineering.
+                    I specialize in designing agentic AI systems, full-stack applications, and data-driven solutions
+                    that turn complex problems into streamlined workflows. From autonomous news aggregators and
+                    AI-powered lead scoring pipelines to SEO content engines and machine learning models, I'm
+                    driven by making technology that works smarter so people can too.
+                </p>
+
+                <span class="section-label">Career Goals</span>
+                <p>
+                    I'm pursuing a career where I can apply AI engineering and automation at scale —
+                    whether that's building intelligent agent systems, architecting data pipelines,
+                    or shipping products that leverage machine learning to drive real business impact.
+                    I'm looking for roles in AI/ML engineering, solutions engineering, or software development
+                    where I can combine technical depth with creative problem-solving to help teams
+                    move faster and deliver more.
+                </p>
+            </div>
         </header>
 
         <div class="project-grid">
@@ -337,5 +440,13 @@
 
 
 
+<script>
+function toggleAbout() {
+    var dropdown = document.getElementById('aboutDropdown');
+    var btn = document.getElementById('aboutBtn');
+    dropdown.classList.toggle('open');
+    btn.classList.toggle('active');
+}
+</script>
 </body>
 </html>
