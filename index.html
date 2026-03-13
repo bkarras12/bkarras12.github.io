@@ -5,25 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brady W Karras | Portfolio</title>
     <link rel="icon" type="image/x-icon" href="BradyK_logo-Icon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
   :root {
-    /* Dark moss professional palette */
-    --bg-color: #0b0f0c;          /* near-black moss */
-    --surface-1: #101814;         /* page surface */
-    --surface-2: #141f19;         /* card surface */
-    --border-color: #223128;      /* subtle moss border */
-    --text-color: #e7eee9;        /* primary text */
-    --muted-text: #a7b6ad;        /* secondary text */
+    --bg-deep: #06060e;
+    --bg-surface: #0c0c18;
+    --card-bg: rgba(14, 14, 30, 0.65);
+    --card-border: rgba(255, 255, 255, 0.06);
+    --card-border-hover: rgba(0, 212, 170, 0.35);
 
-    --accent-color: #4b6f59;      /* dark moss */
-    --accent-glow: rgba(75, 111, 89, 0.35);
+    --text-primary: #eaf0f6;
+    --text-secondary: #8a92a6;
+    --text-muted: #565e72;
 
-    --link-color: #7ec4a1;        /* moss-mint */
-    --link-hover: #9be7bf;
+    --accent-cyan: #00d4aa;
+    --accent-violet: #7c5cfc;
+    --accent-pink: #e44fbb;
+    --accent-blue: #3b82f6;
 
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-    --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.6);
-    --radius: 12px;
+    --glow-cyan: rgba(0, 212, 170, 0.15);
+    --glow-violet: rgba(124, 92, 252, 0.15);
+    --glow-pink: rgba(228, 79, 187, 0.12);
+
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font-display: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
 
   * {
@@ -32,440 +41,918 @@
     box-sizing: border-box;
   }
 
+  html { scroll-behavior: smooth; }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background:
-      radial-gradient(900px 500px at 15% 10%, rgba(75, 111, 89, 0.18), transparent 60%),
-      radial-gradient(700px 400px at 85% 25%, rgba(126, 196, 161, 0.10), transparent 55%),
-      linear-gradient(180deg, var(--bg-color), #070a08 70%);
-    color: var(--text-color);
+    font-family: var(--font-display);
+    background: var(--bg-deep);
+    color: var(--text-primary);
     line-height: 1.6;
-    padding: 2rem;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  header {
-    text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem 0;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    color: var(--text-color);
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
-  }
-
-  p.subtitle {
-    font-size: 1.15rem;
-    color: var(--muted-text);
-  }
-
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-
-  .project-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00)) , var(--surface-2);
-    border: 1px solid rgba(34, 49, 40, 0.9);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
+  /* ── Animated background ── */
+  .bg-effects {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
     overflow: hidden;
   }
 
-  /* Subtle unique “moss sheen” */
-  .project-card::before {
+  .bg-effects::before {
     content: "";
     position: absolute;
-    inset: -2px;
-    background: radial-gradient(600px 220px at 20% 0%, rgba(126,196,161,0.10), transparent 55%);
+    width: 900px;
+    height: 900px;
+    top: -200px;
+    left: -150px;
+    background: radial-gradient(circle, rgba(0, 212, 170, 0.12) 0%, transparent 65%);
+    animation: floatA 18s ease-in-out infinite;
+  }
+
+  .bg-effects::after {
+    content: "";
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    bottom: -100px;
+    right: -200px;
+    background: radial-gradient(circle, rgba(124, 92, 252, 0.10) 0%, transparent 65%);
+    animation: floatB 22s ease-in-out infinite;
+  }
+
+  .bg-orb {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(228, 79, 187, 0.06) 0%, transparent 60%);
+    animation: floatC 25s ease-in-out infinite;
+  }
+
+  @keyframes floatA {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(80px, 60px) scale(1.1); }
+    66% { transform: translate(-40px, 30px) scale(0.95); }
+  }
+  @keyframes floatB {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-60px, -40px) scale(1.05); }
+    66% { transform: translate(40px, -60px) scale(0.9); }
+  }
+  @keyframes floatC {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-45%, -55%) scale(1.15); }
+  }
+
+  /* Noise overlay */
+  .noise {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
     pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
   }
 
-  .project-card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-hover);
-    border-color: rgba(126, 196, 161, 0.35);
-  }
-
-  .card-header h3 {
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-    letter-spacing: -0.01em;
-  }
-
-  .tag {
-    display: inline-block;
-    background: rgba(75, 111, 89, 0.20);
-    color: #cfe0d7;
-    padding: 0.25rem 0.65rem;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    margin-bottom: 1rem;
-    font-weight: 700;
-    border: 1px solid rgba(126, 196, 161, 0.22);
-  }
-
-  .card-desc {
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
-    color: var(--muted-text);
-  }
-
-  .card-link {
-    text-decoration: none;
-    color: var(--link-color);
-    font-weight: 800;
-    border: 1px solid rgba(126, 196, 161, 0.45);
-    background: rgba(16, 24, 20, 0.55);
-    padding: 0.55rem 1rem;
-    border-radius: 10px;
-    text-align: center;
-    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
-    box-shadow: 0 0 0 rgba(0,0,0,0);
-  }
-
-  .card-link:hover {
-    background: rgba(126, 196, 161, 0.12);
-    color: var(--link-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 0 0 4px rgba(75, 111, 89, 0.22);
-  }
-
-  footer {
-    margin-top: 4rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: rgba(167, 182, 173, 0.9);
-  }
-
-  footer a {
-    color: rgba(167, 182, 173, 0.95);
-    margin: 0 10px;
-    text-decoration: none;
-    border-bottom: 1px dotted rgba(167, 182, 173, 0.45);
-  }
-
-  footer a:hover {
-    color: var(--link-hover);
-    border-bottom-color: rgba(126, 196, 161, 0.7);
-  }
-
-  /* About Me dropdown */
-  .about-me-wrapper {
+  /* ── Container ── */
+  .container {
     position: relative;
+    z-index: 2;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .header-label {
     display: inline-block;
-    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    background: rgba(0, 212, 170, 0.08);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 6vw, 4rem);
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 50%, var(--accent-violet) 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 6s ease-in-out infinite;
+    margin-bottom: 0.5rem;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .header-sub {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* ── About Me ── */
+  .about-me-wrapper {
+    margin-top: 1.5rem;
   }
 
   .about-me-btn {
-    background: rgba(75, 111, 89, 0.20);
-    color: var(--link-color);
-    border: 1px solid rgba(126, 196, 161, 0.45);
-    padding: 0.6rem 1.4rem;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    background: rgba(0, 212, 170, 0.06);
+    border: 1px solid rgba(0, 212, 170, 0.25);
+    padding: 0.6rem 1.6rem;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-    font-family: inherit;
+    transition: all 0.3s ease;
   }
 
   .about-me-btn:hover {
-    background: rgba(126, 196, 161, 0.12);
-    color: var(--link-hover);
-    box-shadow: 0 0 0 4px rgba(75, 111, 89, 0.22);
+    background: rgba(0, 212, 170, 0.12);
+    border-color: rgba(0, 212, 170, 0.45);
+    box-shadow: 0 0 20px rgba(0, 212, 170, 0.1);
   }
 
   .about-me-btn.active {
-    background: rgba(126, 196, 161, 0.15);
-    color: var(--link-hover);
+    background: rgba(0, 212, 170, 0.1);
+    border-color: var(--accent-cyan);
   }
 
   .about-me-dropdown {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease, opacity 0.3s ease;
     opacity: 0;
-    margin-top: 1rem;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, padding 0.4s ease;
     text-align: left;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00)), var(--surface-2);
-    border: 1px solid rgba(34, 49, 40, 0.9);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius);
-    padding: 0 1.5rem;
-    box-shadow: var(--shadow);
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
+    padding: 0 1.8rem;
+    max-width: 680px;
+    margin: 1.25rem auto 0;
   }
 
   .about-me-dropdown.open {
     max-height: 600px;
     opacity: 1;
-    padding: 1.5rem;
-  }
-
-  .about-me-dropdown h3 {
-    color: var(--text-color);
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-  }
-
-  .about-me-dropdown p {
-    color: var(--muted-text);
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-    line-height: 1.7;
+    padding: 1.8rem;
   }
 
   .about-me-dropdown .section-label {
     display: inline-block;
-    background: rgba(75, 111, 89, 0.20);
-    color: #cfe0d7;
-    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-violet);
+    background: rgba(124, 92, 252, 0.1);
+    border: 1px solid rgba(124, 92, 252, 0.2);
+    padding: 0.2rem 0.7rem;
     border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    border: 1px solid rgba(126, 196, 161, 0.22);
     margin-bottom: 0.6rem;
   }
-</style>
 
-<!-- --------------------------------------------------------------------------------- -->
+  .about-me-dropdown p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.75;
+  }
+
+  /* ── Sections ── */
+  .portfolio-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transition: all 0.3s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .section-header:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Section-specific accent colors */
+  .section-featured .section-header::before {
+    background: linear-gradient(180deg, var(--accent-cyan), var(--accent-violet));
+  }
+  .section-featured .section-header:hover {
+    box-shadow: 0 0 30px rgba(0, 212, 170, 0.06);
+  }
+
+  .section-ai .section-header::before {
+    background: linear-gradient(180deg, var(--accent-violet), var(--accent-pink));
+  }
+  .section-ai .section-header:hover {
+    box-shadow: 0 0 30px rgba(124, 92, 252, 0.06);
+  }
+
+  .section-data .section-header::before {
+    background: linear-gradient(180deg, var(--accent-blue), var(--accent-cyan));
+  }
+  .section-data .section-header:hover {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.06);
+  }
+
+  .section-experimental .section-header::before {
+    background: linear-gradient(180deg, var(--accent-pink), #f59e0b);
+  }
+  .section-experimental .section-header:hover {
+    box-shadow: 0 0 30px rgba(228, 79, 187, 0.06);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-icon {
+    font-size: 1.2rem;
+    width: 2rem;
+    text-align: center;
+  }
+
+  .section-title h2 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .section-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    margin-left: 0.5rem;
+  }
+
+  .chevron {
+    width: 20px;
+    height: 20px;
+    color: var(--text-muted);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+  }
+
+  .section-header.collapsed .chevron {
+    transform: rotate(-90deg);
+  }
+
+  .section-content {
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    max-height: 2000px;
+    opacity: 1;
+  }
+
+  .section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  /* Gradient divider between sections */
+  .section-divider {
+    height: 1px;
+    margin: 0 1.5rem 2.5rem;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 170, 0.15), rgba(124, 92, 252, 0.15), transparent);
+  }
+
+  /* ── Project Grid ── */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem 0.25rem 0.5rem;
+  }
+
+  /* ── Cards ── */
+  .project-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    background: radial-gradient(400px 200px at 30% 0%, rgba(255,255,255,0.03), transparent 60%);
+    pointer-events: none;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--card-border-hover);
+    box-shadow:
+      0 20px 40px rgba(0, 0, 0, 0.4),
+      0 0 40px var(--glow-cyan);
+  }
+
+  /* Section-specific card hover glows */
+  .section-ai .project-card:hover {
+    border-color: rgba(124, 92, 252, 0.35);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px var(--glow-violet);
+  }
+
+  .section-data .project-card:hover {
+    border-color: rgba(59, 130, 246, 0.35);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px rgba(59, 130, 246, 0.15);
+  }
+
+  .section-experimental .project-card:hover {
+    border-color: rgba(228, 79, 187, 0.35);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px var(--glow-pink);
+  }
+
+  .card-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    margin-bottom: 0.85rem;
+    margin-right: 0.3rem;
+  }
+
+  /* Tag color variants */
+  .tag-cyan {
+    color: var(--accent-cyan);
+    background: rgba(0, 212, 170, 0.08);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+  }
+
+  .tag-violet {
+    color: var(--accent-violet);
+    background: rgba(124, 92, 252, 0.08);
+    border: 1px solid rgba(124, 92, 252, 0.2);
+  }
+
+  .tag-blue {
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+
+  .tag-pink {
+    color: var(--accent-pink);
+    background: rgba(228, 79, 187, 0.08);
+    border: 1px solid rgba(228, 79, 187, 0.2);
+  }
+
+  .tag-amber {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+
+  .card-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 1.4rem;
+    color: var(--text-secondary);
+  }
+
+  .card-desc b {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .card-link {
+    display: block;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-align: center;
+    padding: 0.65rem 1.2rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    margin-top: auto;
+  }
+
+  .link-cyan {
+    color: var(--accent-cyan);
+    background: rgba(0, 212, 170, 0.06);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+  }
+  .link-cyan:hover {
+    background: rgba(0, 212, 170, 0.14);
+    border-color: rgba(0, 212, 170, 0.5);
+    box-shadow: 0 0 24px rgba(0, 212, 170, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .link-violet {
+    color: var(--accent-violet);
+    background: rgba(124, 92, 252, 0.06);
+    border: 1px solid rgba(124, 92, 252, 0.2);
+  }
+  .link-violet:hover {
+    background: rgba(124, 92, 252, 0.14);
+    border-color: rgba(124, 92, 252, 0.5);
+    box-shadow: 0 0 24px rgba(124, 92, 252, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .link-blue {
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+  .link-blue:hover {
+    background: rgba(59, 130, 246, 0.14);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .link-pink {
+    color: var(--accent-pink);
+    background: rgba(228, 79, 187, 0.06);
+    border: 1px solid rgba(228, 79, 187, 0.2);
+  }
+  .link-pink:hover {
+    background: rgba(228, 79, 187, 0.14);
+    border-color: rgba(228, 79, 187, 0.5);
+    box-shadow: 0 0 24px rgba(228, 79, 187, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .link-disabled {
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: default;
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  footer p {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-links {
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    color: var(--accent-cyan);
+  }
+
+  /* ── Entrance animations ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .portfolio-section:nth-child(1) { animation-delay: 0.1s; }
+  .portfolio-section:nth-child(2) { animation-delay: 0.15s; }
+  .portfolio-section:nth-child(3) { animation-delay: 0.2s; }
+  .portfolio-section:nth-child(4) { animation-delay: 0.25s; }
+
+  .project-card {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  /* Stagger cards within each section */
+  .project-card:nth-child(1) { animation-delay: 0.1s; }
+  .project-card:nth-child(2) { animation-delay: 0.18s; }
+  .project-card:nth-child(3) { animation-delay: 0.26s; }
+  .project-card:nth-child(4) { animation-delay: 0.34s; }
+  .project-card:nth-child(5) { animation-delay: 0.42s; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .container { padding: 1.5rem 1rem 3rem; }
+    header { padding: 2rem 0 1.5rem; }
+    .project-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+    .section-header { padding: 0.85rem 1rem; }
+    .section-title h2 { font-size: 1.05rem; }
+  }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>Brady W Karras</h1>
+<div class="bg-effects"><div class="bg-orb"></div></div>
+<div class="noise"></div>
 
-            <div class="about-me-wrapper">
-                <button class="about-me-btn" onclick="toggleAbout()" id="aboutBtn">About Me</button>
-            </div>
+<main class="container">
+    <header class="fade-in">
+        <div class="header-label">Portfolio</div>
+        <h1>Brady W Karras</h1>
+        <p class="header-sub">AI Engineering &middot; Automation &middot; Full-Stack Development</p>
 
-            <div class="about-me-dropdown" id="aboutDropdown">
-                <span class="section-label">Bio</span>
-                <p>
-                    I'm Brady Karras — a builder at the intersection of AI, data, and software engineering.
-                    I specialize in designing agentic AI systems, full-stack applications, and data-driven solutions
-                    that turn complex problems into streamlined workflows. From autonomous news aggregators and
-                    AI-powered lead scoring pipelines to SEO content engines and machine learning models, I'm
-                    driven by making technology that works smarter so people can too.
-                </p>
-
-                <span class="section-label">Career Goals</span>
-                <p>
-                    I'm pursuing a career where I can apply AI engineering and automation at scale —
-                    whether that's building intelligent agent systems, architecting data pipelines,
-                    or shipping products that leverage machine learning to drive real business impact.
-                    I'm looking for roles in AI/ML engineering, solutions engineering, or software development
-                    where I can combine technical depth with creative problem-solving to help teams
-                    move faster and deliver more.
-                </p>
-            </div>
-        </header>
-
-        <div class="project-grid">
-
-            
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">Agentic AI & Workflow Automation</span>
-                    <h3>TLDR News</h3>
-                    <p class="card-desc">
-                   Daily updating website ran my autonomous AI agents that gives a TLDR report on all the world news and seperates by topic.
-                        Also includes seniment analysis and Future outlooks reasoned from OpenAI called on by AI agents.
-                    
-                    </p>
-                </div>
-                <a href="https://bkarras12.github.io/TLDR-NEWS/news/reports.html" class="card-link">View Project Overview</a>
-            </article>
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">Workflow Automation + Sales Tech</span>
-                    <h3>AI Lead qualification and scoring system</h3>
-                    <p class="card-desc">
-                        Five autonomous AI agents that process inbound B2B demo requests end-to-end — enriching company data, scoring leads 
-                        against an ideal customer profile, and routing sales-ready opportunities directly to reps. 
-                        Eliminates manual lead review and cuts response time from hours to minutes.
-                    </p>
-                    <b>The link leads to a presentation. The actual app is a desktop app :) </b>
-                </div>
-                <a href="/SalesPropPresentation.html" class="card-link">View Presentation</a>
-            </article>
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">Agentic AI + Workflow Automation</span>
-                    <h3>SalesContext AI</h3>
-                    <p class="card-desc">
-                        This workflow automation automates the work needed when prepping for a meeting with a client. The workflow ingests the company for scouting,
-                        your product, and local area to generate a battle card for the sales strategy, a meeting cheat sheet, and an optional competitive analysis between you and a rival.
-                        This is just the MVP. Future versions to come
-                    </p>
-                    <b>Try it out for free :)</b>
-                </div>
-                <a href="https://salescontext-ai.vercel.app/" class="card-link">Go to site</a>
-            </article>
-            
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">App Development</span>
-                    <h3>QueryPilot</h3>
-                    <p class="card-desc">
-                        A natural language SQL analytics tool that converts plain English business questions into executable SQL queries powered by AI and DuckDB.
-                        Ask questions about revenue, churn, customer cohorts, or support metrics and get back query results with dynamic visualizations and AI-generated insights — no SQL knowledge required.
-                    </p>
-                </div>
-                <a href="https://querypilot-one.vercel.app/" class="card-link">Go to site</a>
-            </article>
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">App Development</span>
-                    <h3>Picgradr</h3>
-                    <p class="card-desc">
-            PicGradr is a full-stack AI-powered web application that delivers real-time, structured feedback on dating profile photos. Built with LangChain agent orchestration
-                        and a responsive frontend, it uses multimodal AI to evaluate images, returning suggestions whether it is a good photo to include or not.
-                    </p>
-                </div>
-                <a href="picgradr/" class="card-link">View Repository</a>
-            </article>
-
-            
-            
-
-
-            
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">Agentic AI & Workflow Automation</span>
-                    <h3>Brief Engine - AI powered SEO artifact generator</h3>
-                    <p class="card-desc">
-                    A network of AI agents working together to run a site that companies can use to generate SEO smart content to help bring traffic to their brand.
-                    The user submits input about their company then selects what SEO artifact they want. Once the input is submitted, an AI agent utilizes a research agent and a writer agent. 
-                    The researcher agent conducts market analysis on the user's brand. Based on that market analysis, the writer agent crafts the requested artifact for the customer.
-                    </p>
-                </div>
-                <a href="https://brief-engine-web-app.onrender.com/" class="card-link">View Site</a>
-            </article>
-
-
-            
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">Agentic AI</span> <span class="tag">Workflow Automation</span>
-                    <h3>Agentic Analysis Report</h3>
-                    <p class="card-desc">
-                        This is the output from an <b>Agentic AI</b> project that I have worked on to automate basic Data analysis reports
-                        Stakeholder-ready summary page for the Tips dataset with key findings and recommendations.
-                    </p>
-                </div>
-                <a href="/agentic_analysis.html" class="card-link">View Project</a>
-            </article>
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">Web App</span>
-                    <h3>Heatmap.fm</h3>
-                    <p class="card-desc">
-                        Calls an API from spotify to show you what international geographic regions best represents your music taste. 
-                        Builds a heatmap based on where your top 100 most listened to artists are based. Data pulled from spotify & Musicbrainz.
-                        There is also a grid display of music eras and bubble chart for genres. Not, the accuracy of the data from Musicbrainz is prone to mistakes.
-                        NOTE: I have included a demo presentation which will link to the repo. I am avoiding database costs.
-                    </p>
-                </div>
-                <a href="heatmap.fm/heatmapfm_presentation.html" class="card-link">View Demo Presentation</a>
-            </article>
-            
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">Data</span>
-                    <h3>Class Data Visualization</h3>
-                    <p class="card-desc">
-                        Dashboard and presentation created to help answer questions to a school about their staff and classes. Created with Tableau.
-                    </p>
-                </div>
-                <a href="assets/Karras_presentation_project.pdf" class="card-link">View Report</a>
-            </article>
-
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">App Development</span>
-                    <h3>Your next Mountain</h3>
-                    <p class="card-desc">
-                        A simple productivity app that I created and actively use with inspirations of stoic philosophies.
-                    </p>
-                </div>
-                <a href="/productivityapp/" class="card-link">View Project</a>
-            </article>
-
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">ML model</span>
-                    <h3>College Football Linear Regression Model</h3>
-                    <p class="card-desc">
-                    Project where I developed a ML model to predict the outcome and spreads of college football games.
-                    </p>
-                </div>
-                <a href="/CFB_linear_reg/" class="card-link">View Project Overview</a>
-            </article>
-
-            
-            <article class="project-card">
-                <div class="card-header">
-                    <span class="tag">Data</span>
-                    <h3>Web page traffic Visualization</h3>
-                    <p class="card-desc">
-                        Tableau workbook used to track the incoming web traffic to a website.
-                    </p>
-                </div>
-                <a href="assets/web_data_visualization.pdf" class="card-link">View Report</a>
-            </article>
-
-            
-
-            
-
-
-            
-
-            
-
+        <div class="about-me-wrapper">
+            <button class="about-me-btn" onclick="toggleAbout()" id="aboutBtn">About Me</button>
         </div>
 
-        <footer>
-            <p>&copy; 2026 Brady W Karras</p>
-            <br>
-            <a href="https://github.com/bkarras12">GitHub</a>
-            <a href="www.linkedin.com/in/brady-karras">LinkedIn</a>
-        </footer>
+        <div class="about-me-dropdown" id="aboutDropdown">
+            <span class="section-label">Bio</span>
+            <p>
+                I'm Brady Karras — a builder at the intersection of AI, data, and software engineering.
+                I specialize in designing agentic AI systems, full-stack applications, and data-driven solutions
+                that turn complex problems into streamlined workflows. From autonomous news aggregators and
+                AI-powered lead scoring pipelines to SEO content engines and machine learning models, I'm
+                driven by making technology that works smarter so people can too.
+            </p>
+            <span class="section-label">Career Goals</span>
+            <p>
+                I'm pursuing a career where I can apply AI engineering and automation at scale —
+                whether that's building intelligent agent systems, architecting data pipelines,
+                or shipping products that leverage machine learning to drive real business impact.
+                I'm looking for roles in AI/ML engineering, solutions engineering, or software development
+                where I can combine technical depth with creative problem-solving to help teams
+                move faster and deliver more.
+            </p>
+        </div>
+    </header>
+
+    <!-- ═══════════ FEATURED PROJECTS ═══════════ -->
+    <div class="portfolio-section section-featured fade-in">
+        <div class="section-header" role="button" tabindex="0" aria-expanded="true" onclick="toggleSection(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection(this)}">
+            <div class="section-title">
+                <span class="section-icon" aria-hidden="true">&#9733;</span>
+                <h2>Featured Projects</h2>
+                <span class="section-count">4</span>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+        <div class="section-content">
+            <div class="project-grid">
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-cyan">Agentic AI + Sales Tech</span>
+                        <h3>SalesContext AI</h3>
+                        <p class="card-desc">
+                            Automates meeting prep for sales reps. Ingest a company for scouting,
+                            your product, and local area to generate a battle card, meeting cheat sheet,
+                            and optional competitive analysis. Just the MVP — future versions to come.
+                        </p>
+                        <b style="color:var(--accent-cyan); font-size:0.82rem;">Try it out for free :)</b>
+                    </div>
+                    <a href="https://salescontext-ai.vercel.app/" class="card-link link-cyan">Go to Site</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-cyan">Agentic AI + Automation</span>
+                        <h3>TLDR News</h3>
+                        <p class="card-desc">
+                            Daily updating website run by autonomous AI agents delivering TLDR reports
+                            on world news, separated by topic. Includes sentiment analysis and
+                            future outlooks reasoned by OpenAI agents.
+                        </p>
+                    </div>
+                    <a href="https://bkarras12.github.io/TLDR-NEWS/news/reports.html" class="card-link link-cyan">View Project</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-cyan">Agentic AI + SEO</span>
+                        <h3>Brief Engine</h3>
+                        <p class="card-desc">
+                            A network of AI agents powering an SEO artifact generator. Submit company info,
+                            select an artifact type, and a research agent conducts market analysis while
+                            a writer agent crafts the content. End-to-end automated.
+                        </p>
+                    </div>
+                    <a href="https://brief-engine-web-app.onrender.com/" class="card-link link-cyan">View Site</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-cyan">App Development</span>
+                        <h3>QueryPilot</h3>
+                        <p class="card-desc">
+                            Natural language SQL analytics tool that converts plain English business questions
+                            into executable queries powered by AI and DuckDB. Get results with dynamic
+                            visualizations and AI-generated insights — no SQL knowledge required.
+                        </p>
+                    </div>
+                    <a href="https://querypilot-one.vercel.app/" class="card-link link-cyan">Go to Site</a>
+                </article>
+
+            </div>
+        </div>
     </div>
 
+    <div class="section-divider"></div>
 
+    <!-- ═══════════ AI / AUTOMATION ═══════════ -->
+    <div class="portfolio-section section-ai fade-in">
+        <div class="section-header" role="button" tabindex="0" aria-expanded="true" onclick="toggleSection(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection(this)}">
+            <div class="section-title">
+                <span class="section-icon" aria-hidden="true">&#9881;</span>
+                <h2>AI / Automation</h2>
+                <span class="section-count">5</span>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+        <div class="section-content">
+            <div class="project-grid">
 
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-violet">Workflow Automation + Sales</span>
+                        <h3>AI Lead Qualification & Scoring</h3>
+                        <p class="card-desc">
+                            Five autonomous AI agents process inbound B2B demo requests end-to-end — enriching
+                            company data, scoring leads against an ideal customer profile, and routing
+                            sales-ready opportunities directly to reps. Cuts response time from hours to minutes.
+                        </p>
+                        <b style="color:var(--accent-violet); font-size:0.82rem;">Link leads to a presentation. The actual app is a desktop app :)</b>
+                    </div>
+                    <a href="/SalesPropPresentation.html" class="card-link link-violet">View Presentation</a>
+                </article>
 
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-violet">Agentic AI</span>
+                        <h3>Agentic Analysis Report</h3>
+                        <p class="card-desc">
+                            Output from an agentic AI project that automates basic data analysis reports.
+                            Stakeholder-ready summary with key findings and recommendations,
+                            generated entirely by AI agents.
+                        </p>
+                    </div>
+                    <a href="/agentic_analysis.html" class="card-link link-violet">View Project</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-violet">App Development</span>
+                        <h3>PicGradr</h3>
+                        <p class="card-desc">
+                            Full-stack AI-powered web app delivering real-time, structured feedback on dating
+                            profile photos. Built with LangChain agent orchestration and multimodal AI
+                            to evaluate images and return actionable suggestions.
+                        </p>
+                    </div>
+                    <a href="picgradr/" class="card-link link-violet">View Repository</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-violet">AI + Developer Tools</span>
+                        <h3>RepoSage</h3>
+                        <p class="card-desc">
+                            AI-powered codebase onboarding and documentation platform built with Claude.
+                            Analyze any GitHub repo and generate a comprehensive onboarding guide
+                            so new developers can ramp up fast.
+                        </p>
+                    </div>
+                    <a href="#" class="card-link link-disabled">Coming Soon</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-violet">AI + Competitive Intel</span>
+                        <h3>BriefStack</h3>
+                        <p class="card-desc">
+                            Competitive intelligence SaaS for B2B sales teams. Monitors competitor websites,
+                            job postings, and press — delivers weekly Claude-generated briefings
+                            to keep your team one step ahead.
+                        </p>
+                    </div>
+                    <a href="#" class="card-link link-disabled">Coming Soon</a>
+                </article>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ═══════════ DATA / ANALYTICS ═══════════ -->
+    <div class="portfolio-section section-data fade-in">
+        <div class="section-header" role="button" tabindex="0" aria-expanded="true" onclick="toggleSection(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection(this)}">
+            <div class="section-title">
+                <span class="section-icon" aria-hidden="true">&#9636;</span>
+                <h2>Data / Analytics</h2>
+                <span class="section-count">4</span>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+        <div class="section-content">
+            <div class="project-grid">
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-blue">Web App</span>
+                        <h3>Heatmap.fm</h3>
+                        <p class="card-desc">
+                            Calls Spotify's API to map where your music taste comes from geographically.
+                            Builds a heatmap from your top 100 artists' origins, plus era grids and
+                            genre bubble charts. Data from Spotify &amp; MusicBrainz.
+                        </p>
+                        <b style="color:var(--accent-blue); font-size:0.82rem;">NOTE: Demo presentation links to repo. Avoiding database costs.</b>
+                    </div>
+                    <a href="heatmap.fm/heatmapfm_presentation.html" class="card-link link-blue">View Demo</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-blue">ML Model</span>
+                        <h3>College Football ML Model</h3>
+                        <p class="card-desc">
+                            Machine learning model built to predict outcomes and spreads
+                            of college football games using linear regression.
+                        </p>
+                    </div>
+                    <a href="/CFB_linear_reg/" class="card-link link-blue">View Project</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-blue">Data Visualization</span>
+                        <h3>Class Data Visualization</h3>
+                        <p class="card-desc">
+                            Dashboard and presentation created to answer questions for a school
+                            about their staff and classes. Built with Tableau.
+                        </p>
+                    </div>
+                    <a href="assets/Karras_presentation_project.pdf" class="card-link link-blue">View Report</a>
+                </article>
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-blue">Data Visualization</span>
+                        <h3>Web Page Traffic Visualization</h3>
+                        <p class="card-desc">
+                            Tableau workbook tracking incoming web traffic patterns
+                            and user behavior for a website.
+                        </p>
+                    </div>
+                    <a href="assets/web_data_visualization.pdf" class="card-link link-blue">View Report</a>
+                </article>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ═══════════ EXPERIMENTAL / OTHER ═══════════ -->
+    <div class="portfolio-section section-experimental fade-in">
+        <div class="section-header" role="button" tabindex="0" aria-expanded="true" onclick="toggleSection(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection(this)}">
+            <div class="section-title">
+                <span class="section-icon" aria-hidden="true">&#9889;</span>
+                <h2>Experimental / Other Builds</h2>
+                <span class="section-count">1</span>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+        <div class="section-content">
+            <div class="project-grid">
+
+                <article class="project-card">
+                    <div class="card-header">
+                        <span class="tag tag-pink">App Development</span>
+                        <h3>Your Next Mountain</h3>
+                        <p class="card-desc">
+                            A simple productivity app I created and actively use,
+                            inspired by stoic philosophies.
+                        </p>
+                    </div>
+                    <a href="/productivityapp/" class="card-link link-pink">View Project</a>
+                </article>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="fade-in" style="animation-delay: 0.35s;">
+        <p>&copy; 2026 Brady W Karras</p>
+        <div class="footer-links">
+            <a href="https://github.com/bkarras12">GitHub</a>
+            <a href="https://www.linkedin.com/in/brady-karras">LinkedIn</a>
+        </div>
+    </footer>
+</main>
 
 <script>
 function toggleAbout() {
@@ -473,6 +960,14 @@ function toggleAbout() {
     var btn = document.getElementById('aboutBtn');
     dropdown.classList.toggle('open');
     btn.classList.toggle('active');
+}
+
+function toggleSection(header) {
+    header.classList.toggle('collapsed');
+    var content = header.nextElementSibling;
+    content.classList.toggle('collapsed');
+    var expanded = !header.classList.contains('collapsed');
+    header.setAttribute('aria-expanded', expanded);
 }
 </script>
 </body>
