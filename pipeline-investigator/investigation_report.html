@@ -3,56 +3,413 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pipeline Investigation Report</title>
+<title>Pipeline Investigation Report | Brady Karras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #1e293b; line-height: 1.6; }
-    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1rem; }
-    header { background: #0f172a; color: #f8fafc; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; }
-    header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
-    header .subtitle { color: #94a3b8; font-size: 0.875rem; }
-    .intro { color: #94a3b8; font-size: 0.9rem; margin-top: 1rem; line-height: 1.5; }
-    .intro strong { color: #f8fafc; }
-    .summary { display: flex; gap: 0.75rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
-    .summary-badge { color: #fff; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-    .summary-stat { color: #94a3b8; font-size: 0.875rem; }
-    .card { background: #fff; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 1.25rem; overflow: hidden; }
-    .card-header { padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
-    .severity-badge { color: #fff; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; }
-    .severity-desc { font-weight: 500; font-style: italic; }
-    .category-label { font-size: 0.9rem; font-weight: 600; margin-left: 0.5rem; }
-    .meta { display: flex; gap: 1rem; font-size: 0.8rem; color: #64748b; flex-wrap: wrap; }
-    .section { padding: 1rem 1.25rem; border-top: 1px solid #f1f5f9; }
-    .section h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.5rem; }
-    .section p { font-size: 0.925rem; }
-    .technical { color: #475569; font-size: 0.875rem; background: #f8fafc; padding: 0.75rem 1rem; border-radius: 6px; border-left: 3px solid #94a3b8; }
-    .check-intro { color: #64748b; font-size: 0.85rem; margin-bottom: 0.75rem; }
-    .check-desc { color: #94a3b8; font-size: 0.8rem; font-style: italic; }
-    .diag-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-    .diag-table td { padding: 0.6rem 0.5rem; vertical-align: top; border-bottom: 1px solid #f1f5f9; }
-    .diag-table td:first-child { width: 4rem; text-align: center; }
-    .badge { padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
-    .detail { color: #64748b; font-size: 0.825rem; }
-    .evidence { margin-top: 0.4rem; padding: 0.5rem 0.75rem; background: #f8fafc; border-radius: 6px; font-size: 0.8rem; color: #475569; word-break: break-word; }
-    .recs { padding-left: 1.25rem; font-size: 0.9rem; }
-    .recs li { margin-bottom: 0.35rem; }
-    .time-saved { padding: 0.75rem 1.25rem; background: #f0fdf4; color: #166534; font-size: 0.85rem; font-weight: 500; border-top: 1px solid #dcfce7; }
-    footer { text-align: center; color: #94a3b8; font-size: 0.8rem; margin-top: 2rem; }
-    .demo-banner { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #e2e8f0; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid #334155; }
-    .demo-banner h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: #f8fafc; }
-    .demo-banner p { font-size: 0.9rem; line-height: 1.7; color: #94a3b8; margin-bottom: 0.75rem; }
-    .demo-banner p:last-child { margin-bottom: 0; }
-    .demo-banner strong { color: #e2e8f0; }
-    .demo-banner .demo-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #f59e0b; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 0.2rem 0.6rem; border-radius: 4px; margin-bottom: 0.75rem; }
-    .demo-banner ul { list-style: none; padding: 0; margin: 0.5rem 0; }
-    .demo-banner li { font-size: 0.875rem; color: #94a3b8; padding: 0.2rem 0; padding-left: 1.25rem; position: relative; }
-    .demo-banner li::before { content: "->"; position: absolute; left: 0; color: #3b82f6; }
-    .demo-banner a { color: #3b82f6; text-decoration: none; }
-    .demo-banner a:hover { text-decoration: underline; }
+:root {
+    --bg: #0a0a12;
+    --bg-card: #12121e;
+    --bg-surface: #1a1a2e;
+    --bg-elevated: #22223a;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --text: #e8eaf0;
+    --text-secondary: #8b8fa8;
+    --text-muted: #5a5e76;
+    --red: #ef4444;
+    --red-bg: rgba(239,68,68,0.08);
+    --red-border: rgba(239,68,68,0.2);
+    --orange: #f97316;
+    --orange-bg: rgba(249,115,22,0.08);
+    --orange-border: rgba(249,115,22,0.2);
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,0.08);
+    --green-border: rgba(34,197,94,0.2);
+    --blue: #3b82f6;
+    --blue-bg: rgba(59,130,246,0.08);
+    --blue-border: rgba(59,130,246,0.2);
+    --amber: #f59e0b;
+    --cyan: #06b6d4;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+.page { max-width: 880px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+
+/* ── Demo banner ── */
+.demo-banner {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem 2.25rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+.demo-banner::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amber), var(--blue), var(--cyan));
+}
+.demo-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.25);
+    padding: 0.25rem 0.7rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+.demo-banner h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+.demo-banner p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
+}
+.demo-banner p:last-child { margin-bottom: 0; }
+.demo-banner strong { color: var(--text); }
+.demo-banner ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0;
+}
+.demo-banner li {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    padding: 0.25rem 0 0.25rem 1.5rem;
+    position: relative;
+}
+.demo-banner li::before {
+    content: "\2192";
+    position: absolute;
+    left: 0;
+    color: var(--cyan);
+}
+.demo-banner a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+.demo-banner a:hover { text-decoration: underline; }
+
+/* ── Header ── */
+.report-header {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem 2.25rem;
+    margin-bottom: 2rem;
+}
+.report-header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+}
+.report-header .sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+.summary-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+}
+.pill {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    color: #fff;
+}
+.pill-red { background: var(--red); }
+.pill-orange { background: var(--orange); }
+.stat {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-left: 0.25rem;
+}
+.intro-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 1.25rem;
+    line-height: 1.7;
+}
+.intro-text strong { color: var(--text); }
+
+/* ── Issue cards ── */
+.issue-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: border-color 0.3s;
+}
+.issue-card:hover { border-color: var(--border-hover); }
+
+.issue-top {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.issue-title-group { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.sev-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.65rem;
+    border-radius: 6px;
+    color: #fff;
+    flex-shrink: 0;
+}
+.sev-critical { background: var(--red); }
+.sev-high { background: var(--orange); }
+.sev-medium { background: var(--amber); }
+.issue-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+.issue-meta {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.775rem;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+.issue-meta strong { color: var(--text-secondary); }
+
+.sev-line {
+    padding: 0 2rem;
+    margin-bottom: 0.25rem;
+}
+.sev-line span {
+    display: inline-block;
+    font-size: 0.775rem;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.issue-section {
+    padding: 1.25rem 2rem;
+    border-top: 1px solid var(--border);
+}
+.issue-section h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+}
+.issue-section p {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+}
+
+.technical-block {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--text-muted);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* ── Diagnostic checks ── */
+.checks-intro {
+    font-size: 0.825rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+.check-item {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+}
+.check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.check-row:hover { background: var(--bg-elevated); }
+.check-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+}
+.badge-fail { color: var(--red); background: var(--red-bg); border: 1px solid var(--red-border); }
+.badge-pass { color: var(--green); background: var(--green-bg); border: 1px solid var(--green-border); }
+.badge-warn { color: var(--amber); background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); }
+.check-info { flex: 1; min-width: 0; }
+.check-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+}
+.check-purpose {
+    font-size: 0.775rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 0.15rem;
+}
+.check-result {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.35rem;
+    line-height: 1.5;
+}
+.check-chevron {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    transition: transform 0.2s;
+    width: 16px;
+    height: 16px;
+}
+.check-item.open .check-chevron { transform: rotate(180deg); }
+.check-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+.check-item.open .check-detail { max-height: 500px; }
+.evidence-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.3rem 1rem;
+    padding: 0.75rem 1rem 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.775rem;
+}
+.ev-key {
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+.ev-val {
+    color: var(--text-secondary);
+    word-break: break-word;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.725rem;
+}
+
+/* ── Recommendations ── */
+.recs-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: rec;
+}
+.recs-list li {
+    counter-increment: rec;
+    padding: 0.6rem 0 0.6rem 2.25rem;
+    position: relative;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    border-bottom: 1px solid var(--border);
+}
+.recs-list li:last-child { border-bottom: none; }
+.recs-list li::before {
+    content: counter(rec);
+    position: absolute;
+    left: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0.65rem;
+}
+
+/* ── Time saved ── */
+.time-saved {
+    padding: 1rem 2rem;
+    background: var(--green-bg);
+    border-top: 1px solid var(--green-border);
+    font-size: 0.825rem;
+    color: var(--green);
+    font-weight: 500;
+}
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    padding-top: 2rem;
+    font-size: 0.775rem;
+    color: var(--text-muted);
+}
+footer a {
+    color: var(--blue);
+    text-decoration: none;
+}
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+    .page { padding: 1.5rem 1rem 3rem; }
+    .demo-banner, .report-header, .issue-section { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .issue-top { padding: 1.25rem; }
+    .issue-meta { font-size: 0.7rem; }
+    .evidence-grid { grid-template-columns: 1fr; }
+    .ev-key { white-space: normal; }
+}
 </style>
 </head>
 <body>
-<div class="container">
+<div class="page">
+
     <div class="demo-banner">
         <span class="demo-tag">Portfolio Demo</span>
         <h2>About This Report</h2>
@@ -75,321 +432,276 @@
         </ul>
         <p>
             The tool is built entirely in Python with zero external dependencies (stdlib only).
-            Everything below was generated automatically -- the root cause classifications, the
+            Everything below was generated automatically &mdash; the root cause classifications, the
             diagnostic evidence, and the fix recommendations.
         </p>
-        <p>
-            <a href="https://github.com/bkarras12/pipeline-investigator">View source code on GitHub</a>
+        <p><a href="https://github.com/bkarras12/pipeline-investigator">View source code on GitHub &rarr;</a></p>
+    </div>
+
+    <div class="report-header">
+        <h1>Pipeline Investigation Report</h1>
+        <div class="sub">Pipeline Investigator v1.0 &mdash; 2026-03-14</div>
+        <div class="summary-row">
+            <span class="pill pill-red">2 CRITICAL</span>
+            <span class="pill pill-orange">2 HIGH</span>
+            <span class="stat">4 issues found</span>
+            <span class="stat">&bull; ~175 min saved vs. manual debugging</span>
+        </div>
+        <p class="intro-text">
+            This report was generated automatically by analyzing pipeline run history, staging data, and production tables.
+            We found <strong>4 issues</strong> that need attention. Each issue below includes a plain-English explanation,
+            the technical root cause, diagnostic evidence, and specific steps to fix it.
         </p>
     </div>
-    <header>
-        <h1>Pipeline Investigation Report</h1>
-        <div class="subtitle">Automated by Pipeline Investigator v1.0 &mdash; 2026-03-14 13:22:23</div>
-        <div class="summary">
-            <span class="summary-badge" style="background:#dc2626">2 CRITICAL</span> <span class="summary-badge" style="background:#ea580c">2 HIGH</span> 
-            <span class="summary-stat">4 issue(s) found</span>
-            <span class="summary-stat">&bull; ~175 min saved vs. manual debugging</span>
+
+    <!-- ═══ ISSUE 1: Schema Drift ═══ -->
+    <div class="issue-card">
+        <div class="issue-top">
+            <div class="issue-title-group">
+                <span class="sev-badge sev-critical">CRITICAL</span>
+                <span class="issue-name">Issue #1: Column Mapping Broke</span>
+            </div>
+            <div class="issue-meta">
+                <span>Pipeline: <strong>daily_orders_etl</strong></span>
+                <span>Stage: <strong>Data Transformation</strong></span>
+            </div>
         </div>
-        <p class='intro'>This report was generated automatically by analyzing pipeline run history, staging data, and production tables. We found <strong>4 issue(s)</strong> that need attention. Each issue below includes a plain-English explanation, the technical root cause, diagnostic evidence, and specific steps to fix it.</p>
-    </header>
-    
-            <div class="card">
-                <div class="card-header" style="border-left:4px solid #dc2626;background:#fef2f2">
-                    <div>
-                        <span class="severity-badge" style="background:#dc2626">CRITICAL</span>
-                        <span class="category-label">Issue #1: Column Mapping Broke</span>
+        <div class="sev-line"><span>Needs immediate attention &mdash; data is being lost or corrupted</span></div>
+
+        <div class="issue-section">
+            <h3>What Happened</h3>
+            <p>The system that sends us order data changed its format without warning. Our pipeline expected a column called "total" but it was renamed to something else. As a result, every order in this batch came in without a dollar amount.</p>
+        </div>
+
+        <div class="issue-section">
+            <h3>Technical Root Cause</h3>
+            <div class="technical-block">Source system schema changed (column renamed/added). The ETL column mapping broke, causing NULL values in the 'total' field for all ingested rows. The transform stage crashed on the missing expected column name.</div>
+        </div>
+
+        <div class="issue-section">
+            <h3>What We Checked</h3>
+            <p class="checks-intro">5 automated diagnostic checks were run against the pipeline data. Click any check to see the raw evidence.</p>
+
+            <div class="check-item" onclick="this.classList.toggle('open')">
+                <div class="check-row">
+                    <span class="check-badge badge-fail">FAIL</span>
+                    <div class="check-info">
+                        <div class="check-name">Missing Values Check</div>
+                        <div class="check-purpose">Scanned incoming data for empty fields that should never be empty.</div>
+                        <div class="check-result">350 NULL values found across 2 columns. Worst: null_total (200 NULLs out of 925 rows).</div>
                     </div>
-                    <div class="meta">
-                        <span>Pipeline: <strong>daily_orders_etl</strong></span>
-                        <span>Failed at: <strong>Data Transformation</strong></span>
-                        <span>Run date: <strong>all</strong></span>
+                    <svg class="check-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="check-detail">
+                    <div class="evidence-grid">
+                        <span class="ev-key">Missing value breakdown</span><span class="ev-val">null_customer_id: 150, null_total: 200</span>
+                        <span class="ev-key">Total incoming rows</span><span class="ev-val">925</span>
                     </div>
-                </div>
-                <div class="severity-desc" style="background:#fef2f2;color:#dc2626;padding:0.5rem 1.25rem;font-size:0.825rem;border-top:1px solid #dc262620">
-                    Needs immediate attention &mdash; data is being lost or corrupted
-                </div>
-                <div class="section">
-                    <h3>What Happened</h3>
-                    <p>The system that sends us order data changed its format without warning. Our pipeline expected a column called &#x27;total&#x27; but it was renamed. As a result, every order in this batch came in without a dollar amount.</p>
-                </div>
-                <div class="section">
-                    <h3>Technical Root Cause</h3>
-                    <p class="technical">Source system schema changed (column renamed/added). The ETL column mapping broke, causing NULL values in the &#x27;total&#x27; field for all ingested rows. The transform stage crashed on the missing expected column name.</p>
-                </div>
-                <div class="section">
-                    <h3>What We Checked</h3>
-                    <p class="check-intro">We ran 5 automated diagnostic checks against the pipeline data. Here's what each one found:</p>
-                    <table class="diag-table">
-                        <tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Missing Values Check</strong>
-                        <span class="check-desc">&mdash; Scanned all incoming data for empty fields that should never be empty (order IDs, customer IDs, dates, and dollar amounts).</span><br>
-                        <span class="detail">350 NULL values found across 2 column(s). Worst: null_total (200 NULLs out of 925 rows).</span>
-                        <div class="evidence"><strong>Missing value breakdown:</strong> null_customer_id: 150, null_total: 200<br><strong>Total incoming rows:</strong> 925</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Duplicate Records Check</strong>
-                        <span class="check-desc">&mdash; Checked whether the same order appeared more than once in the incoming data, which can happen when network issues trigger automatic retries.</span><br>
-                        <span class="detail">20 order_ids appear multiple times. Worst: 3 copies of a single order. Total excess rows: 40.</span>
-                        <div class="evidence"><strong>Orders with duplicates:</strong> 20<br><strong>Most copies of a single order:</strong> 3<br><strong>Extra rows from duplication:</strong> 40<br><strong>Example order ID:</strong> ORD-DUP-0100<br><strong>Timestamps showing retry pattern:</strong> 2024-11-01 02:00:00, 2024-11-01 02:00:30, 2024-11-01 02:01:05<br><strong>Caused by automatic retry:</strong> Yes</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Data Format Check</strong>
-                        <span class="check-desc">&mdash; Verified that dollar amounts are stored as actual numbers, not as text with currency symbols or commas that would be misread.</span><br>
-                        <span class="detail">20 rows have non-numeric &#x27;total&#x27; values that would cast to 0.0 or NULL. Samples: [&#x27;$1,229.34&#x27;, &#x27;$1,272.63&#x27;, &#x27;$1,283.63&#x27;, &#x27;$1,336.73&#x27;, &#x27;$1,354.71&#x27;]</span>
-                        <div class="evidence"><strong>Rows with bad formatting:</strong> 20<br><strong>Example values found:</strong> $1,229.34, $1,272.63, $1,283.63, $1,336.73, $1,354.71<br><strong>Pattern detected:</strong> Currency symbols, commas, or text prefixes in numeric field</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Column Mapping Check</strong>
-                        <span class="check-desc">&mdash; Checked whether all expected data columns are present and populated. Missing columns usually mean the source system changed its data format.</span><br>
-                        <span class="detail">200 rows have NULL totals — consistent with a column mapping failure from schema drift.</span>
-                        <div class="evidence"><strong>Rows missing dollar amounts:</strong> 200<br><strong>Error message from pipeline logs:</strong> KeyError: &#x27;total&#x27; — column not found in source payload. Source schema may have changed. Expected columns: [order_id, customer_id, order_date, status, payment_method, total]. Received columns: [order_id, customer_id, order_date, status, payment_method, order_total, currency].<br><strong>Most likely cause:</strong> Source schema change — column renamed or added</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Production Impact Check</strong>
-                        <span class="check-desc">&mdash; Looked at the live production database to see if any bad data actually made it through and is affecting reports and analytics.</span><br>
-                        <span class="detail">175 production orders have $0.00 across all monetary fields. Estimated revenue undercount: $25,158.00 (based on $143.76 avg order value).</span>
-                        <div class="evidence"><strong>Orders showing $0.00:</strong> 175<br><strong>Normal average order value:</strong> $143.76<br><strong>Estimated revenue impact ($):</strong> $25,158.00</div>
-                    </td>
-                </tr>
-                    </table>
-                </div>
-                <div class="section">
-                    <h3>How to Fix This</h3>
-                    <ol class="recs"><li>Add schema validation to the ingest stage — compare incoming columns against expected schema before processing.</li><li>Implement a schema registry that tracks source system schemas and alerts on drift.</li><li>Add a pre-flight check: SELECT column_name FROM information_schema WHERE table = source_table, compare to expected.</li><li>Set up source system change notifications with the POS team to catch upstream changes before they break the pipeline.</li></ol>
-                </div>
-                <div class="time-saved">
-                    This automated diagnosis saves roughly 45 minutes
-                    compared to manually searching through logs, staging tables, and production data.
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header" style="border-left:4px solid #ea580c;background:#fff7ed">
-                    <div>
-                        <span class="severity-badge" style="background:#ea580c">HIGH</span>
-                        <span class="category-label">Issue #2: Missing Customer Data</span>
+
+            <div class="check-item" onclick="this.classList.toggle('open')">
+                <div class="check-row">
+                    <span class="check-badge badge-fail">FAIL</span>
+                    <div class="check-info">
+                        <div class="check-name">Duplicate Records Check</div>
+                        <div class="check-purpose">Checked whether the same order appeared more than once in incoming data.</div>
+                        <div class="check-result">20 order IDs appear multiple times. Worst: 3 copies of a single order. 40 excess rows total.</div>
                     </div>
-                    <div class="meta">
-                        <span>Pipeline: <strong>daily_orders_etl</strong></span>
-                        <span>Failed at: <strong>Database Loading</strong></span>
-                        <span>Run date: <strong>all</strong></span>
+                    <svg class="check-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="check-detail">
+                    <div class="evidence-grid">
+                        <span class="ev-key">Orders with duplicates</span><span class="ev-val">20</span>
+                        <span class="ev-key">Most copies of one order</span><span class="ev-val">3</span>
+                        <span class="ev-key">Extra rows</span><span class="ev-val">40</span>
+                        <span class="ev-key">Example order</span><span class="ev-val">ORD-DUP-0100</span>
+                        <span class="ev-key">Retry timestamps</span><span class="ev-val">02:00:00, 02:00:30, 02:01:05</span>
+                        <span class="ev-key">Caused by retry</span><span class="ev-val">Yes</span>
                     </div>
-                </div>
-                <div class="severity-desc" style="background:#fff7ed;color:#ea580c;padding:0.5rem 1.25rem;font-size:0.825rem;border-top:1px solid #ea580c20">
-                    Should be fixed soon &mdash; the pipeline is blocked
-                </div>
-                <div class="section">
-                    <h3>What Happened</h3>
-                    <p>One of our data sources started sending orders without customer information attached. Our validation checks didn&#x27;t catch it because they only look at dollar amounts, not customer IDs. The pipeline failed when it tried to save these incomplete orders to the production database.</p>
-                </div>
-                <div class="section">
-                    <h3>Technical Root Cause</h3>
-                    <p class="technical">Upstream data source (wholesale channel) began sending orders without customer_id. Ingestion and validation stages did not catch the NULLs. The load stage failed on a foreign key constraint when attempting to insert into the production orders table.</p>
-                </div>
-                <div class="section">
-                    <h3>What We Checked</h3>
-                    <p class="check-intro">We ran 5 automated diagnostic checks against the pipeline data. Here's what each one found:</p>
-                    <table class="diag-table">
-                        <tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Missing Values Check</strong>
-                        <span class="check-desc">&mdash; Scanned all incoming data for empty fields that should never be empty (order IDs, customer IDs, dates, and dollar amounts).</span><br>
-                        <span class="detail">350 NULL values found across 2 column(s). Worst: null_total (200 NULLs out of 925 rows).</span>
-                        <div class="evidence"><strong>Missing value breakdown:</strong> null_customer_id: 150, null_total: 200<br><strong>Total incoming rows:</strong> 925</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Duplicate Records Check</strong>
-                        <span class="check-desc">&mdash; Checked whether the same order appeared more than once in the incoming data, which can happen when network issues trigger automatic retries.</span><br>
-                        <span class="detail">20 order_ids appear multiple times. Worst: 3 copies of a single order. Total excess rows: 40.</span>
-                        <div class="evidence"><strong>Orders with duplicates:</strong> 20<br><strong>Most copies of a single order:</strong> 3<br><strong>Extra rows from duplication:</strong> 40<br><strong>Example order ID:</strong> ORD-DUP-0100<br><strong>Timestamps showing retry pattern:</strong> 2024-11-01 02:00:00, 2024-11-01 02:00:30, 2024-11-01 02:01:05<br><strong>Caused by automatic retry:</strong> Yes</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Data Format Check</strong>
-                        <span class="check-desc">&mdash; Verified that dollar amounts are stored as actual numbers, not as text with currency symbols or commas that would be misread.</span><br>
-                        <span class="detail">20 rows have non-numeric &#x27;total&#x27; values that would cast to 0.0 or NULL. Samples: [&#x27;$1,229.34&#x27;, &#x27;$1,272.63&#x27;, &#x27;$1,283.63&#x27;, &#x27;$1,336.73&#x27;, &#x27;$1,354.71&#x27;]</span>
-                        <div class="evidence"><strong>Rows with bad formatting:</strong> 20<br><strong>Example values found:</strong> $1,229.34, $1,272.63, $1,283.63, $1,336.73, $1,354.71<br><strong>Pattern detected:</strong> Currency symbols, commas, or text prefixes in numeric field</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Column Mapping Check</strong>
-                        <span class="check-desc">&mdash; Checked whether all expected data columns are present and populated. Missing columns usually mean the source system changed its data format.</span><br>
-                        <span class="detail">200 rows have NULL totals — consistent with a column mapping failure from schema drift.</span>
-                        <div class="evidence"><strong>Rows missing dollar amounts:</strong> 200<br><strong>Error message from pipeline logs:</strong> KeyError: &#x27;total&#x27; — column not found in source payload. Source schema may have changed. Expected columns: [order_id, customer_id, order_date, status, payment_method, total]. Received columns: [order_id, customer_id, order_date, status, payment_method, order_total, currency].<br><strong>Most likely cause:</strong> Source schema change — column renamed or added</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Production Impact Check</strong>
-                        <span class="check-desc">&mdash; Looked at the live production database to see if any bad data actually made it through and is affecting reports and analytics.</span><br>
-                        <span class="detail">175 production orders have $0.00 across all monetary fields. Estimated revenue undercount: $25,158.00 (based on $143.76 avg order value).</span>
-                        <div class="evidence"><strong>Orders showing $0.00:</strong> 175<br><strong>Normal average order value:</strong> $143.76<br><strong>Estimated revenue impact ($):</strong> $25,158.00</div>
-                    </td>
-                </tr>
-                    </table>
-                </div>
-                <div class="section">
-                    <h3>How to Fix This</h3>
-                    <ol class="recs"><li>Add NOT NULL validation for customer_id in the validate stage — currently only checks &#x27;total&#x27;.</li><li>Implement a data quality gate: reject batches where &gt;5% of critical fields are NULL.</li><li>Add source-specific validation rules — wholesale channel should map to a default wholesale customer if customer_id is missing.</li><li>Set up alerting on NULL rate spikes per column per source system.</li></ol>
-                </div>
-                <div class="time-saved">
-                    This automated diagnosis saves roughly 30 minutes
-                    compared to manually searching through logs, staging tables, and production data.
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header" style="border-left:4px solid #ea580c;background:#fff7ed">
-                    <div>
-                        <span class="severity-badge" style="background:#ea580c">HIGH</span>
-                        <span class="category-label">Issue #3: Duplicate Orders</span>
+
+            <div class="check-item" onclick="this.classList.toggle('open')">
+                <div class="check-row">
+                    <span class="check-badge badge-fail">FAIL</span>
+                    <div class="check-info">
+                        <div class="check-name">Data Format Check</div>
+                        <div class="check-purpose">Verified that dollar amounts are stored as numbers, not formatted text.</div>
+                        <div class="check-result">20 rows have non-numeric "total" values that would silently cast to $0.00.</div>
                     </div>
-                    <div class="meta">
-                        <span>Pipeline: <strong>daily_orders_etl</strong></span>
-                        <span>Failed at: <strong>Data Validation</strong></span>
-                        <span>Run date: <strong>all</strong></span>
+                    <svg class="check-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="check-detail">
+                    <div class="evidence-grid">
+                        <span class="ev-key">Bad rows</span><span class="ev-val">20</span>
+                        <span class="ev-key">Example values</span><span class="ev-val">$1,229.34 &middot; $1,272.63 &middot; $1,283.63 &middot; $1,336.73 &middot; $1,354.71</span>
+                        <span class="ev-key">Pattern</span><span class="ev-val">Currency symbols, commas, or text prefixes in numeric field</span>
                     </div>
-                </div>
-                <div class="severity-desc" style="background:#fff7ed;color:#ea580c;padding:0.5rem 1.25rem;font-size:0.825rem;border-top:1px solid #ea580c20">
-                    Should be fixed soon &mdash; the pipeline is blocked
-                </div>
-                <div class="section">
-                    <h3>What Happened</h3>
-                    <p>A network hiccup caused the same batch of orders to be sent multiple times. Our system should have caught the duplicates, but a bug in the deduplication logic let them slip through because each copy had a slightly different timestamp.</p>
-                </div>
-                <div class="section">
-                    <h3>Technical Root Cause</h3>
-                    <p class="technical">Network timeout triggered retry mechanism, causing the ingestion batch to be sent 3 times. The dedup logic failed because it keys on (order_id, order_date) but retried rows have different ingested_at timestamps. 40 excess rows in staging.</p>
-                </div>
-                <div class="section">
-                    <h3>What We Checked</h3>
-                    <p class="check-intro">We ran 5 automated diagnostic checks against the pipeline data. Here's what each one found:</p>
-                    <table class="diag-table">
-                        <tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Missing Values Check</strong>
-                        <span class="check-desc">&mdash; Scanned all incoming data for empty fields that should never be empty (order IDs, customer IDs, dates, and dollar amounts).</span><br>
-                        <span class="detail">350 NULL values found across 2 column(s). Worst: null_total (200 NULLs out of 925 rows).</span>
-                        <div class="evidence"><strong>Missing value breakdown:</strong> null_customer_id: 150, null_total: 200<br><strong>Total incoming rows:</strong> 925</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Duplicate Records Check</strong>
-                        <span class="check-desc">&mdash; Checked whether the same order appeared more than once in the incoming data, which can happen when network issues trigger automatic retries.</span><br>
-                        <span class="detail">20 order_ids appear multiple times. Worst: 3 copies of a single order. Total excess rows: 40.</span>
-                        <div class="evidence"><strong>Orders with duplicates:</strong> 20<br><strong>Most copies of a single order:</strong> 3<br><strong>Extra rows from duplication:</strong> 40<br><strong>Example order ID:</strong> ORD-DUP-0100<br><strong>Timestamps showing retry pattern:</strong> 2024-11-01 02:00:00, 2024-11-01 02:00:30, 2024-11-01 02:01:05<br><strong>Caused by automatic retry:</strong> Yes</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Data Format Check</strong>
-                        <span class="check-desc">&mdash; Verified that dollar amounts are stored as actual numbers, not as text with currency symbols or commas that would be misread.</span><br>
-                        <span class="detail">20 rows have non-numeric &#x27;total&#x27; values that would cast to 0.0 or NULL. Samples: [&#x27;$1,229.34&#x27;, &#x27;$1,272.63&#x27;, &#x27;$1,283.63&#x27;, &#x27;$1,336.73&#x27;, &#x27;$1,354.71&#x27;]</span>
-                        <div class="evidence"><strong>Rows with bad formatting:</strong> 20<br><strong>Example values found:</strong> $1,229.34, $1,272.63, $1,283.63, $1,336.73, $1,354.71<br><strong>Pattern detected:</strong> Currency symbols, commas, or text prefixes in numeric field</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Column Mapping Check</strong>
-                        <span class="check-desc">&mdash; Checked whether all expected data columns are present and populated. Missing columns usually mean the source system changed its data format.</span><br>
-                        <span class="detail">200 rows have NULL totals — consistent with a column mapping failure from schema drift.</span>
-                        <div class="evidence"><strong>Rows missing dollar amounts:</strong> 200<br><strong>Error message from pipeline logs:</strong> KeyError: &#x27;total&#x27; — column not found in source payload. Source schema may have changed. Expected columns: [order_id, customer_id, order_date, status, payment_method, total]. Received columns: [order_id, customer_id, order_date, status, payment_method, order_total, currency].<br><strong>Most likely cause:</strong> Source schema change — column renamed or added</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Production Impact Check</strong>
-                        <span class="check-desc">&mdash; Looked at the live production database to see if any bad data actually made it through and is affecting reports and analytics.</span><br>
-                        <span class="detail">175 production orders have $0.00 across all monetary fields. Estimated revenue undercount: $25,158.00 (based on $143.76 avg order value).</span>
-                        <div class="evidence"><strong>Orders showing $0.00:</strong> 175<br><strong>Normal average order value:</strong> $143.76<br><strong>Estimated revenue impact ($):</strong> $25,158.00</div>
-                    </td>
-                </tr>
-                    </table>
-                </div>
-                <div class="section">
-                    <h3>How to Fix This</h3>
-                    <ol class="recs"><li>Fix the dedup logic: key on order_id alone (not order_id + order_date), or use a hash of the full row.</li><li>Add idempotency keys to the ingestion layer — reject rows where order_id already exists in staging for the same run_date.</li><li>Implement a batch receipt log: if a batch ID was already processed, skip the retry.</li><li>Add row count validation: if today&#x27;s batch is &gt;2x the trailing 7-day average, pause and alert.</li></ol>
-                </div>
-                <div class="time-saved">
-                    This automated diagnosis saves roughly 40 minutes
-                    compared to manually searching through logs, staging tables, and production data.
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header" style="border-left:4px solid #dc2626;background:#fef2f2">
-                    <div>
-                        <span class="severity-badge" style="background:#dc2626">CRITICAL</span>
-                        <span class="category-label">Issue #4: Data Format Corruption</span>
+
+            <div class="check-item" onclick="this.classList.toggle('open')">
+                <div class="check-row">
+                    <span class="check-badge badge-fail">FAIL</span>
+                    <div class="check-info">
+                        <div class="check-name">Column Mapping Check</div>
+                        <div class="check-purpose">Checked whether all expected data columns are present and populated.</div>
+                        <div class="check-result">200 rows have NULL totals &mdash; consistent with a column mapping failure from schema drift.</div>
                     </div>
-                    <div class="meta">
-                        <span>Pipeline: <strong>daily_orders_etl</strong></span>
-                        <span>Failed at: <strong>After Loading (Silent Failure)</strong></span>
-                        <span>Run date: <strong>all</strong></span>
+                    <svg class="check-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="check-detail">
+                    <div class="evidence-grid">
+                        <span class="ev-key">Rows missing totals</span><span class="ev-val">200</span>
+                        <span class="ev-key">Pipeline error</span><span class="ev-val">KeyError: 'total' &mdash; column not found in source payload. Expected: [order_id, customer_id, order_date, status, payment_method, total]. Received: [order_id, customer_id, order_date, status, payment_method, order_total, currency].</span>
+                        <span class="ev-key">Likely cause</span><span class="ev-val">Source schema change &mdash; column renamed or added</span>
                     </div>
-                </div>
-                <div class="severity-desc" style="background:#fef2f2;color:#dc2626;padding:0.5rem 1.25rem;font-size:0.825rem;border-top:1px solid #dc262620">
-                    Needs immediate attention &mdash; data is being lost or corrupted
-                </div>
-                <div class="section">
-                    <h3>What Happened</h3>
-                    <p>A payment provider started sending dollar amounts as text (like &quot;$142.50&quot; or &quot;USD 89.00&quot;) instead of plain numbers. The database silently converted these to $0.00 without raising any errors. The pipeline looked completely healthy, but revenue data was wrong. This is the most dangerous type of failure because nothing appears broken.</p>
-                </div>
-                <div class="section">
-                    <h3>Technical Root Cause</h3>
-                    <p class="technical">New payments provider sends totals as formatted strings with currency symbols and commas ($142.50, USD 89.00, 1,234.56). SQLite&#x27;s CAST(total AS REAL) silently converts these to 0.0, causing revenue data loss. Pipeline reports success — this is a silent data corruption issue.</p>
-                </div>
-                <div class="section">
-                    <h3>What We Checked</h3>
-                    <p class="check-intro">We ran 5 automated diagnostic checks against the pipeline data. Here's what each one found:</p>
-                    <table class="diag-table">
-                        <tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Missing Values Check</strong>
-                        <span class="check-desc">&mdash; Scanned all incoming data for empty fields that should never be empty (order IDs, customer IDs, dates, and dollar amounts).</span><br>
-                        <span class="detail">350 NULL values found across 2 column(s). Worst: null_total (200 NULLs out of 925 rows).</span>
-                        <div class="evidence"><strong>Missing value breakdown:</strong> null_customer_id: 150, null_total: 200<br><strong>Total incoming rows:</strong> 925</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Duplicate Records Check</strong>
-                        <span class="check-desc">&mdash; Checked whether the same order appeared more than once in the incoming data, which can happen when network issues trigger automatic retries.</span><br>
-                        <span class="detail">20 order_ids appear multiple times. Worst: 3 copies of a single order. Total excess rows: 40.</span>
-                        <div class="evidence"><strong>Orders with duplicates:</strong> 20<br><strong>Most copies of a single order:</strong> 3<br><strong>Extra rows from duplication:</strong> 40<br><strong>Example order ID:</strong> ORD-DUP-0100<br><strong>Timestamps showing retry pattern:</strong> 2024-11-01 02:00:00, 2024-11-01 02:00:30, 2024-11-01 02:01:05<br><strong>Caused by automatic retry:</strong> Yes</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Data Format Check</strong>
-                        <span class="check-desc">&mdash; Verified that dollar amounts are stored as actual numbers, not as text with currency symbols or commas that would be misread.</span><br>
-                        <span class="detail">20 rows have non-numeric &#x27;total&#x27; values that would cast to 0.0 or NULL. Samples: [&#x27;$1,229.34&#x27;, &#x27;$1,272.63&#x27;, &#x27;$1,283.63&#x27;, &#x27;$1,336.73&#x27;, &#x27;$1,354.71&#x27;]</span>
-                        <div class="evidence"><strong>Rows with bad formatting:</strong> 20<br><strong>Example values found:</strong> $1,229.34, $1,272.63, $1,283.63, $1,336.73, $1,354.71<br><strong>Pattern detected:</strong> Currency symbols, commas, or text prefixes in numeric field</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Column Mapping Check</strong>
-                        <span class="check-desc">&mdash; Checked whether all expected data columns are present and populated. Missing columns usually mean the source system changed its data format.</span><br>
-                        <span class="detail">200 rows have NULL totals — consistent with a column mapping failure from schema drift.</span>
-                        <div class="evidence"><strong>Rows missing dollar amounts:</strong> 200<br><strong>Error message from pipeline logs:</strong> KeyError: &#x27;total&#x27; — column not found in source payload. Source schema may have changed. Expected columns: [order_id, customer_id, order_date, status, payment_method, total]. Received columns: [order_id, customer_id, order_date, status, payment_method, order_total, currency].<br><strong>Most likely cause:</strong> Source schema change — column renamed or added</div>
-                    </td>
-                </tr><tr>
-                    <td><span class="badge" style="background:#fef2f2;color:#dc2626">Failed</span></td>
-                    <td><strong>Production Impact Check</strong>
-                        <span class="check-desc">&mdash; Looked at the live production database to see if any bad data actually made it through and is affecting reports and analytics.</span><br>
-                        <span class="detail">175 production orders have $0.00 across all monetary fields. Estimated revenue undercount: $25,158.00 (based on $143.76 avg order value).</span>
-                        <div class="evidence"><strong>Orders showing $0.00:</strong> 175<br><strong>Normal average order value:</strong> $143.76<br><strong>Estimated revenue impact ($):</strong> $25,158.00</div>
-                    </td>
-                </tr>
-                    </table>
-                </div>
-                <div class="section">
-                    <h3>How to Fix This</h3>
-                    <ol class="recs"><li>Add type validation in the validate stage: attempt CAST and reject rows that produce 0.0 from non-zero input strings.</li><li>Implement a cleaning function: strip currency symbols ($, USD, €), remove commas, then cast. Apply before the transform stage.</li><li>Add a revenue sanity check post-load: compare today&#x27;s loaded revenue to trailing average. Alert if deviation &gt;30%.</li><li>Coordinate with the payments provider to enforce numeric-only format in their API contract.</li></ol>
-                </div>
-                <div class="time-saved">
-                    This automated diagnosis saves roughly 60 minutes
-                    compared to manually searching through logs, staging tables, and production data.
                 </div>
             </div>
-    <footer>Generated by Pipeline Investigator &mdash; automated root cause analysis for data pipelines</footer>
+
+            <div class="check-item" onclick="this.classList.toggle('open')">
+                <div class="check-row">
+                    <span class="check-badge badge-fail">FAIL</span>
+                    <div class="check-info">
+                        <div class="check-name">Production Impact Check</div>
+                        <div class="check-purpose">Checked if bad data made it into the live production database.</div>
+                        <div class="check-result">175 production orders show $0.00. Estimated revenue undercount: $25,158.</div>
+                    </div>
+                    <svg class="check-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="check-detail">
+                    <div class="evidence-grid">
+                        <span class="ev-key">$0.00 orders</span><span class="ev-val">175</span>
+                        <span class="ev-key">Avg healthy order</span><span class="ev-val">$143.76</span>
+                        <span class="ev-key">Revenue impact</span><span class="ev-val">$25,158.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="issue-section">
+            <h3>How to Fix This</h3>
+            <ol class="recs-list">
+                <li>Add schema validation to the ingest stage &mdash; compare incoming columns against expected schema before processing.</li>
+                <li>Implement a schema registry that tracks source system schemas and alerts on drift.</li>
+                <li>Add a pre-flight check: compare source table columns to expected column list before ingestion.</li>
+                <li>Set up source system change notifications with the POS team to catch upstream changes before they break the pipeline.</li>
+            </ol>
+        </div>
+        <div class="time-saved">This automated diagnosis saves roughly 45 minutes compared to manual investigation.</div>
+    </div>
+
+    <!-- ═══ ISSUE 2: Null Flood ═══ -->
+    <div class="issue-card">
+        <div class="issue-top">
+            <div class="issue-title-group">
+                <span class="sev-badge sev-high">HIGH</span>
+                <span class="issue-name">Issue #2: Missing Customer Data</span>
+            </div>
+            <div class="issue-meta">
+                <span>Pipeline: <strong>daily_orders_etl</strong></span>
+                <span>Stage: <strong>Database Loading</strong></span>
+            </div>
+        </div>
+        <div class="sev-line"><span>Should be fixed soon &mdash; the pipeline is blocked</span></div>
+
+        <div class="issue-section">
+            <h3>What Happened</h3>
+            <p>One of our data sources started sending orders without customer information attached. Our validation checks didn't catch it because they only look at dollar amounts, not customer IDs. The pipeline failed when it tried to save these incomplete orders to the production database.</p>
+        </div>
+        <div class="issue-section">
+            <h3>Technical Root Cause</h3>
+            <div class="technical-block">Upstream data source (wholesale channel) began sending orders without customer_id. Ingestion and validation stages did not catch the NULLs. The load stage failed on a foreign key constraint when attempting to insert into the production orders table.</div>
+        </div>
+        <div class="issue-section">
+            <h3>How to Fix This</h3>
+            <ol class="recs-list">
+                <li>Add NOT NULL validation for customer_id in the validate stage &mdash; currently only checks 'total'.</li>
+                <li>Implement a data quality gate: reject batches where &gt;5% of critical fields are NULL.</li>
+                <li>Add source-specific validation rules &mdash; wholesale channel should map to a default wholesale customer if customer_id is missing.</li>
+                <li>Set up alerting on NULL rate spikes per column per source system.</li>
+            </ol>
+        </div>
+        <div class="time-saved">This automated diagnosis saves roughly 30 minutes compared to manual investigation.</div>
+    </div>
+
+    <!-- ═══ ISSUE 3: Duplicates ═══ -->
+    <div class="issue-card">
+        <div class="issue-top">
+            <div class="issue-title-group">
+                <span class="sev-badge sev-high">HIGH</span>
+                <span class="issue-name">Issue #3: Duplicate Orders</span>
+            </div>
+            <div class="issue-meta">
+                <span>Pipeline: <strong>daily_orders_etl</strong></span>
+                <span>Stage: <strong>Data Validation</strong></span>
+            </div>
+        </div>
+        <div class="sev-line"><span>Should be fixed soon &mdash; the pipeline is blocked</span></div>
+
+        <div class="issue-section">
+            <h3>What Happened</h3>
+            <p>A network hiccup caused the same batch of orders to be sent multiple times. Our system should have caught the duplicates, but a bug in the deduplication logic let them slip through because each copy had a slightly different timestamp.</p>
+        </div>
+        <div class="issue-section">
+            <h3>Technical Root Cause</h3>
+            <div class="technical-block">Network timeout triggered retry mechanism, causing the ingestion batch to be sent 3 times. The dedup logic failed because it keys on (order_id, order_date) but retried rows have different ingested_at timestamps. 40 excess rows in staging.</div>
+        </div>
+        <div class="issue-section">
+            <h3>How to Fix This</h3>
+            <ol class="recs-list">
+                <li>Fix the dedup logic: key on order_id alone (not order_id + order_date), or use a hash of the full row.</li>
+                <li>Add idempotency keys to the ingestion layer &mdash; reject rows where order_id already exists in staging for the same run_date.</li>
+                <li>Implement a batch receipt log: if a batch ID was already processed, skip the retry.</li>
+                <li>Add row count validation: if today's batch is &gt;2x the trailing 7-day average, pause and alert.</li>
+            </ol>
+        </div>
+        <div class="time-saved">This automated diagnosis saves roughly 40 minutes compared to manual investigation.</div>
+    </div>
+
+    <!-- ═══ ISSUE 4: Type Corruption ═══ -->
+    <div class="issue-card">
+        <div class="issue-top">
+            <div class="issue-title-group">
+                <span class="sev-badge sev-critical">CRITICAL</span>
+                <span class="issue-name">Issue #4: Data Format Corruption</span>
+            </div>
+            <div class="issue-meta">
+                <span>Pipeline: <strong>daily_orders_etl</strong></span>
+                <span>Stage: <strong>After Loading (Silent Failure)</strong></span>
+            </div>
+        </div>
+        <div class="sev-line"><span>Needs immediate attention &mdash; data is being lost or corrupted</span></div>
+
+        <div class="issue-section">
+            <h3>What Happened</h3>
+            <p>A payment provider started sending dollar amounts as text (like "$142.50" or "USD 89.00") instead of plain numbers. The database silently converted these to $0.00 without raising any errors. The pipeline looked completely healthy, but revenue data was wrong. This is the most dangerous type of failure because nothing appears broken.</p>
+        </div>
+        <div class="issue-section">
+            <h3>Technical Root Cause</h3>
+            <div class="technical-block">New payments provider sends totals as formatted strings with currency symbols and commas ($142.50, USD 89.00, 1,234.56). SQLite's CAST(total AS REAL) silently converts these to 0.0, causing revenue data loss. Pipeline reports success &mdash; this is a silent data corruption issue.</div>
+        </div>
+        <div class="issue-section">
+            <h3>How to Fix This</h3>
+            <ol class="recs-list">
+                <li>Add type validation in the validate stage: attempt CAST and reject rows that produce 0.0 from non-zero input strings.</li>
+                <li>Implement a cleaning function: strip currency symbols ($, USD, &euro;), remove commas, then cast. Apply before the transform stage.</li>
+                <li>Add a revenue sanity check post-load: compare today's loaded revenue to trailing average. Alert if deviation &gt;30%.</li>
+                <li>Coordinate with the payments provider to enforce numeric-only format in their API contract.</li>
+            </ol>
+        </div>
+        <div class="time-saved">This automated diagnosis saves roughly 60 minutes compared to manual investigation.</div>
+    </div>
+
+    <footer>
+        Generated by <a href="https://github.com/bkarras12/pipeline-investigator">Pipeline Investigator</a> &mdash; automated root cause analysis for data pipelines
+        <br><a href="/">&larr; Back to portfolio</a>
+    </footer>
+
 </div>
+<script>
+// Diagnostic check expand/collapse is handled by onclick on .check-item
+</script>
 </body>
 </html>
