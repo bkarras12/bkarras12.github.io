@@ -795,6 +795,46 @@ body::before {
   margin-top: 4px;
 }
 
+/* ─── Screenshot frames ───────────────────────── */
+.ss-frame {
+  width: 100%;
+  display: block;
+  border: 1px solid var(--border-mid);
+  box-shadow: 0 0 0 1px rgba(0,212,255,0.04), 0 12px 40px rgba(0,0,0,0.5);
+  max-height: 52vh;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* ─── Output tab switcher ──────────────────────── */
+.ss-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.ss-tab {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: var(--text-lo);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.ss-tab.active  { color: var(--accent); border-bottom-color: var(--accent); }
+.ss-tab:hover:not(.active) { color: var(--text-mid); }
+
+.ss-panel       { display: none; }
+.ss-panel.active { display: block; }
+
 /* ─── Responsive ───────────────────────────────── */
 @media (max-width: 768px) {
   .slide {
@@ -1368,68 +1408,29 @@ body::before {
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
 
-      <!-- Left: problem input -->
-      <div style="display: flex; flex-direction: column; gap: 12px;">
+      <!-- Left: intake screenshot -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
         <h2 class="r display-title" style="font-size: clamp(1.2rem, 2.5vw, 1.7rem); margin-bottom: 4px;">
           PROBLEM<br><span class="accent-word">INTAKE</span>
         </h2>
-
-        <div class="r" style="background: var(--surface-2); border: 1px solid var(--accent); box-shadow: 0 0 0 1px var(--accent), inset 0 0 24px rgba(0,212,255,0.03); padding: 16px 18px;">
-          <p style="font-size: 0.8rem; color: var(--text-mid); line-height: 1.75;">
-            We need to build an AI-powered support platform for our B2B SaaS product.
-            We serve 8,000 enterprise customers and process ~500,000 tickets per year.
-            Our goal is to automatically deflect Tier 1 tickets and provide AI-assisted
-            response suggestions for human agents on Tier 2+ issues.
-          </p>
-        </div>
-
-        <div class="r" style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <span class="pill pill-cyan">scale: growth</span>
-          <span class="pill pill-amber">budget: moderate</span>
-          <span class="pill pill-violet">team: small</span>
-          <span class="pill pill-green">timeline: months</span>
-        </div>
-
-        <div class="r" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-          <div style="height: 1px; flex: 1; background: linear-gradient(90deg, var(--accent), transparent);"></div>
-          <span style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--accent-dim);">→ GENERATING DISCOVERY QUESTIONS</span>
+        <p class="r" style="font-size: 0.78rem; color: var(--text-mid); line-height: 1.6;">
+          Plain-language problem input with five one-click demo scenarios.
+        </p>
+        <div class="r">
+          <img src="images/architect-ai/aai-ss-1.PNG" class="ss-frame" alt="ArchitectAI intake screen">
         </div>
       </div>
 
-      <!-- Right: discovery Q&A -->
+      <!-- Right: discovery screenshot -->
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <h2 class="r display-title" style="font-size: clamp(1.2rem, 2.5vw, 1.7rem); margin-bottom: 4px;">
           DISCOVERY<br><span style="color: var(--amber);">QUESTIONS</span>
         </h2>
-
-        <div class="r q-item" style="flex-direction: column; gap: 6px; align-items: flex-start;">
-          <div style="display: flex; gap: 10px; align-items: flex-start;">
-            <span class="q-num">Q01</span>
-            <p class="q-text">Does your product store regulated data (SOC 2, GDPR, HIPAA)? What are your data residency requirements?</p>
-          </div>
-          <div style="padding-left: 36px; font-family: var(--mono); font-size: 0.68rem; color: var(--green); letter-spacing: 0.04em;">
-            ↳ "SOC 2 Type II required. EU customer data must remain in-region."
-          </div>
-        </div>
-
-        <div class="r q-item" style="flex-direction: column; gap: 6px; align-items: flex-start;">
-          <div style="display: flex; gap: 10px; align-items: flex-start;">
-            <span class="q-num">Q02</span>
-            <p class="q-text">Does the AI layer need to integrate with an existing helpdesk (Zendesk, Salesforce Service Cloud), or is this greenfield support infrastructure?</p>
-          </div>
-          <div style="padding-left: 36px; font-family: var(--mono); font-size: 0.68rem; color: var(--green); letter-spacing: 0.04em;">
-            ↳ "We're on Zendesk — AI sits on top of it, not a replacement."
-          </div>
-        </div>
-
-        <div class="r q-item" style="flex-direction: column; gap: 6px; align-items: flex-start;">
-          <div style="display: flex; gap: 10px; align-items: flex-start;">
-            <span class="q-num">Q03</span>
-            <p class="q-text">Will the AI need to reason over product documentation and historical ticket data, or work from a fixed script and FAQ only?</p>
-          </div>
-          <div style="padding-left: 36px; font-family: var(--mono); font-size: 0.68rem; color: var(--green); letter-spacing: 0.04em;">
-            ↳ "Needs to learn from 3 years of ticket history + our full docs."
-          </div>
+        <p class="r" style="font-size: 0.78rem; color: var(--text-mid); line-height: 1.6;">
+          AI-generated follow-ups — each one changes the architecture if answered differently.
+        </p>
+        <div class="r">
+          <img src="images/architect-ai/aai-ss-2.PNG" class="ss-frame" alt="ArchitectAI discovery questions">
         </div>
       </div>
 
@@ -1448,88 +1449,22 @@ body::before {
       ARCHITECTURE<br><span class="accent-word">RECOMMENDATION</span>
     </h2>
 
-    <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; align-items: start;">
+    <div class="r ss-tabs" id="outputTabs">
+      <button class="ss-tab active" data-tab="0">◈ DIAGRAM</button>
+      <button class="ss-tab" data-tab="1">≡ BRIEF</button>
+      <button class="ss-tab" data-tab="2">⊞ STACK</button>
+    </div>
 
-      <!-- Left: tech stack -->
-      <div class="r" style="display: flex; flex-direction: column; gap: 6px;">
-        <p style="font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber-dim); margin-bottom: 4px;">Tech Stack</p>
-
-        <div style="display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--border);overflow:hidden;">
-          <div style="width:3px;background:#60a5fa;opacity:.7;flex-shrink:0;"></div>
-          <div style="padding:8px 14px;"><div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:#60a5fa;opacity:.8;margin-bottom:2px;">FRONTEND</div><div style="font-family:var(--mono);font-size:.7rem;color:var(--text-hi);">Next.js 16 on Vercel — agent dashboard + customer portal</div></div>
-        </div>
-        <div style="display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--border);overflow:hidden;">
-          <div style="width:3px;background:var(--accent);opacity:.7;flex-shrink:0;"></div>
-          <div style="padding:8px 14px;"><div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.8;margin-bottom:2px;">API LAYER</div><div style="font-family:var(--mono);font-size:.7rem;color:var(--text-hi);">FastAPI on Railway EU — SOC 2 compliant, EU data plane</div></div>
-        </div>
-        <div style="display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--border);overflow:hidden;">
-          <div style="width:3px;background:var(--amber);opacity:.7;flex-shrink:0;"></div>
-          <div style="padding:8px 14px;"><div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);opacity:.8;margin-bottom:2px;">AI ENGINE</div><div style="font-family:var(--mono);font-size:.7rem;color:var(--text-hi);">GPT-4o + LangChain — RAG pipeline over tickets &amp; docs</div></div>
-        </div>
-        <div style="display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--border);overflow:hidden;">
-          <div style="width:3px;background:var(--green);opacity:.7;flex-shrink:0;"></div>
-          <div style="padding:8px 14px;"><div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);opacity:.8;margin-bottom:2px;">VECTOR DB</div><div style="font-family:var(--mono);font-size:.7rem;color:var(--text-hi);">Pinecone — semantic search over 3 years of ticket history</div></div>
-        </div>
-        <div style="display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--border);overflow:hidden;">
-          <div style="width:3px;background:var(--amber);opacity:.7;flex-shrink:0;"></div>
-          <div style="padding:8px 14px;"><div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);opacity:.8;margin-bottom:2px;">DATABASE</div><div style="font-family:var(--mono);font-size:.7rem;color:var(--text-hi);">PostgreSQL 16 on Neon EU — GDPR data residency</div></div>
-        </div>
-        <div style="display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--border);overflow:hidden;">
-          <div style="width:3px;background:var(--violet);opacity:.7;flex-shrink:0;"></div>
-          <div style="padding:8px 14px;"><div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);opacity:.8;margin-bottom:2px;">INTEGRATION</div><div style="font-family:var(--mono);font-size:.7rem;color:var(--text-hi);">Zendesk Apps Framework + Webhooks — native sidebar UI</div></div>
-        </div>
-        <div style="display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--border);overflow:hidden;">
-          <div style="width:3px;background:#94a3b8;opacity:.7;flex-shrink:0;"></div>
-          <div style="padding:8px 14px;"><div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;opacity:.8;margin-bottom:2px;">OBSERVABILITY</div><div style="font-family:var(--mono);font-size:.7rem;color:var(--text-hi);">Datadog — SOC 2 audit logs, EU data plane</div></div>
-        </div>
+    <div id="outputPanels">
+      <div class="ss-panel active">
+        <img src="images/architect-ai/aai-ss-3.PNG" class="ss-frame" alt="Architecture diagram view">
       </div>
-
-      <!-- Right: solution brief excerpt -->
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-
-        <div class="r" style="background: var(--surface); border: 1px solid var(--border); padding: 16px 18px;">
-          <p style="font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--amber); padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 10px;">SOLUTION BRIEF EXCERPT</p>
-          <p style="font-size: 0.75rem; color: var(--text-mid); line-height: 1.75; margin-bottom: 10px;">
-            A Zendesk-native RAG pipeline that classifies incoming tickets and routes
-            Tier 1 to autonomous AI resolution, while surfacing confidence-scored
-            response suggestions to agents on Tier 2+ issues inside the Zendesk sidebar.
-          </p>
-          <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px;">
-            <div style="font-size: 0.72rem; color: var(--text-mid); display: flex; gap: 8px;">
-              <span style="color: var(--accent); flex-shrink:0; font-family: var(--mono);">•</span>
-              Pinecone retrieval over 3 years of tickets handles novel questions without scripted fallback
-            </div>
-            <div style="font-size: 0.72rem; color: var(--text-mid); display: flex; gap: 8px;">
-              <span style="color: var(--accent); flex-shrink:0; font-family: var(--mono);">•</span>
-              Railway EU + Neon EU satisfies GDPR residency without infrastructure overhead a small team can't absorb
-            </div>
-            <div style="font-size: 0.72rem; color: var(--text-mid); display: flex; gap: 8px;">
-              <span style="color: var(--accent); flex-shrink:0; font-family: var(--mono);">•</span>
-              Zendesk Apps Framework keeps AI invisible to customers — zero UX disruption to existing workflows
-            </div>
-          </div>
-          <p style="font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; color: var(--amber-dim); margin-bottom: 5px;">ALTERNATIVE APPROACH</p>
-          <p style="font-size: 0.72rem; color: var(--text-lo); line-height: 1.65;">
-            Self-managed Weaviate on AWS ECS (VPC-isolated) if SOC 2 requires
-            infrastructure-level controls. The LangChain layer is provider-agnostic —
-            the swap is isolated to the vector storage component.
-          </p>
-        </div>
-
-        <!-- Mini architecture schematic -->
-        <div class="r" style="background: var(--surface); border: 1px solid var(--border); padding: 14px 16px;">
-          <p style="font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px;">SYSTEM DIAGRAM</p>
-          <div style="font-family: var(--mono); font-size: 0.63rem; color: var(--accent-dim); line-height: 2; letter-spacing: 0.02em;">
-            <span style="color: var(--text-lo);">Zendesk</span> <span style="color:var(--border-hi);">──→</span> <span style="color:var(--accent)">API Gateway</span> <span style="color:var(--border-hi);">──→</span> <span style="color: var(--amber);">AI Engine</span><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#94a3b8;">Agent UI</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--green);">Pinecone</span> <span style="color:var(--border-hi);">↔</span> <span style="color:var(--amber);">Neon DB</span><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
-            <span style="color:var(--text-lo);">&nbsp; Tier 1: Auto-resolve &nbsp;&nbsp; Tier 2+: Suggest</span>
-          </div>
-        </div>
-
+      <div class="ss-panel">
+        <img src="images/architect-ai/aa-ss-4.PNG" class="ss-frame" alt="Solution brief view">
       </div>
-
+      <div class="ss-panel">
+        <img src="images/architect-ai/aai-ss-5.PNG" class="ss-frame" alt="Tech stack view">
+      </div>
     </div>
   </section>
 
@@ -1726,6 +1661,18 @@ body::before {
 
   /* Init */
   updateUI(0);
+
+  /* Output tab switcher */
+  const outputTabs   = document.querySelectorAll('#outputTabs .ss-tab');
+  const outputPanels = document.querySelectorAll('#outputPanels .ss-panel');
+  outputTabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => {
+      outputTabs.forEach(t => t.classList.remove('active'));
+      outputPanels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      outputPanels[i].classList.add('active');
+    });
+  });
 })();
 </script>
 </body>
