@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArchitectAI — Portfolio Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ─── Tokens ──────────────────────────────────── */
+:root {
+  --bg:         #04080f;
+  --surface:    #070e1c;
+  --surface-2:  #0a1624;
+  --surface-3:  #0f2030;
+  --border:     rgba(0, 185, 230, 0.1);
+  --border-mid: rgba(0, 185, 230, 0.22);
+  --border-hi:  rgba(0, 212, 255, 0.5);
+  --accent:     #00d4ff;
+  --accent-dim: rgba(0, 212, 255, 0.6);
+  --amber:      #f59e0b;
+  --amber-dim:  rgba(245, 158, 11, 0.55);
+  --green:      #34d399;
+  --violet:     #a78bfa;
+  --rose:       #fb7185;
+  --text-hi:    #ddeef5;
+  --text-mid:   rgba(150, 200, 225, 0.72);
+  --text-lo:    rgba(85, 140, 175, 0.45);
+  --mono:       'IBM Plex Mono', ui-monospace, monospace;
+  --sans:       'IBM Plex Sans', system-ui, sans-serif;
+}
+
+/* ─── Reset ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text-hi);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ─── Dot-grid background ─────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0, 185, 230, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Deck & Slides ───────────────────────────── */
+.deck {
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slide {
+  height: 100dvh;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(36px, 6vh, 72px) clamp(32px, 7vw, 110px);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(32px) scale(0.99);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.slide.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Reveal children */
+.slide .r {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide.visible .r { opacity: 1; transform: none; }
+.slide.visible .r:nth-child(1) { transition-delay: 0.08s; }
+.slide.visible .r:nth-child(2) { transition-delay: 0.16s; }
+.slide.visible .r:nth-child(3) { transition-delay: 0.24s; }
+.slide.visible .r:nth-child(4) { transition-delay: 0.32s; }
+.slide.visible .r:nth-child(5) { transition-delay: 0.40s; }
+.slide.visible .r:nth-child(6) { transition-delay: 0.48s; }
+.slide.visible .r:nth-child(7) { transition-delay: 0.56s; }
+.slide.visible .r:nth-child(8) { transition-delay: 0.64s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide, .slide .r { transition: none; opacity: 1; transform: none; }
+}
+
+/* ─── Navigation dots ─────────────────────────── */
+.nav-dots {
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+}
+
+.nav-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-mid);
+  cursor: pointer;
+  border: none;
+  transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+.nav-dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ─── Slide counter ───────────────────────────── */
+.slide-counter {
+  position: fixed;
+  bottom: 22px;
+  right: 28px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--text-lo);
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* ─── Back link ───────────────────────────────── */
+.back-link {
+  position: fixed;
+  top: 18px;
+  left: 22px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--text-lo);
+  text-decoration: none;
+  z-index: 100;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.back-link:hover { color: var(--accent-dim); }
+
+/* ─── Shared typography ───────────────────────── */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.eyebrow-line {
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--amber-dim);
+  flex-shrink: 0;
+}
+
+.display-title {
+  font-family: var(--mono);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--text-hi);
+}
+
+.accent-word { color: var(--accent); }
+
+.body-text {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  color: var(--text-mid);
+  line-height: 1.75;
+  max-width: 640px;
+}
+
+/* ─── Slide accent glow ───────────────────────── */
+.glow-tl::after, .glow-br::before, .glow-tr::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glow-tl::after {
+  width: 500px; height: 500px;
+  top: -180px; left: -120px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.07) 0%, transparent 65%);
+}
+
+.glow-br::before {
+  width: 400px; height: 400px;
+  bottom: -120px; right: -80px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.07) 0%, transparent 65%);
+}
+
+.glow-tr::after {
+  width: 450px; height: 450px;
+  top: -120px; right: -80px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.06) 0%, transparent 65%);
+}
+
+/* ─── Tag pills ────────────────────────────────── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+}
+
+.pill-cyan   { color: var(--accent);  background: rgba(0,212,255,0.07);  border: 1px solid rgba(0,212,255,0.2); }
+.pill-amber  { color: var(--amber);   background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2); }
+.pill-violet { color: var(--violet);  background: rgba(167,139,250,0.07);border: 1px solid rgba(167,139,250,0.2); }
+.pill-green  { color: var(--green);   background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.2); }
+
+/* ─── Divider ──────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), rgba(0,212,255,0.1), transparent);
+  margin: 20px 0;
+}
+
+/* ─── Flow Steps (Slide 3) ─────────────────────── */
+.flow-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin-top: 4px;
+}
+
+.flow-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+.flow-step + .flow-step::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 20px;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--border-mid), transparent);
+  transform: translateX(-50%);
+}
+
+.step-num {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.step-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  margin-right: 12px;
+}
+
+.step-card h4 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--text-hi);
+  margin-bottom: 8px;
+}
+
+.step-card p {
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  padding-top: 36px;
+  flex-shrink: 0;
+  width: 24px;
+}
+
+.flow-arrow span {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--border-mid);
+}
+
+/* ─── Output Cards (Slide 5) ───────────────────── */
+.output-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.output-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.output-icon {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.output-card h4 {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-hi);
+  text-transform: uppercase;
+}
+
+.output-card p {
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+.output-example {
+  margin-top: auto;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--accent-dim);
+  line-height: 1.6;
+}
+
+/* ─── Constraint Controls Demo (Slide 6) ──────── */
+.constraint-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 22px 24px;
+  max-width: 480px;
+}
+
+.constraint-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.constraint-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.c-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+}
+
+.c-value {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--accent);
+}
+
+.c-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 16px;
+}
+
+.c-segment {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.c-line {
+  flex: 1;
+  height: 1px;
+}
+
+.c-node {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid transparent;
+}
+
+.c-node.filled {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 7px var(--accent);
+}
+
+.c-node.active {
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(0,212,255,0.3);
+}
+
+.c-node.empty {
+  background: transparent;
+  border-color: var(--border-mid);
+}
+
+.c-line.filled  { background: var(--accent); }
+.c-line.empty   { background: var(--border); }
+
+.c-option-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.c-opt {
+  font-family: var(--mono);
+  font-size: 0.53rem;
+  letter-spacing: 0.06em;
+  flex: 1;
+  text-align: center;
+}
+.c-opt:first-child { text-align: left; }
+.c-opt:last-child  { text-align: right; }
+.c-opt.active { color: var(--accent-dim); }
+.c-opt.inactive { color: var(--text-lo); }
+
+/* ─── Use Case Cards (Slide 7) ─────────────────── */
+.usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.usecase-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s;
+}
+
+.usecase-card:hover {
+  border-color: var(--border-mid);
+}
+
+.usecase-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.usecase-card h4 {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-hi);
+  text-transform: uppercase;
+}
+
+.usecase-card p {
+  font-size: 0.78rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+/* ─── Scenario List (Slide 8) ──────────────────── */
+.scenario-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  max-width: 540px;
+}
+
+.scenario-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.scenario-num {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-dim);
+  flex-shrink: 0;
+  width: 24px;
+}
+
+.scenario-name {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-hi);
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+
+.scenario-desc {
+  font-size: 0.72rem;
+  color: var(--text-lo);
+}
+
+/* ─── Tech Stack (Slide 9) ─────────────────────── */
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+  max-width: 700px;
+}
+
+.stack-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.stack-left-bar {
+  width: 2px;
+  align-self: stretch;
+  flex-shrink: 0;
+  border-radius: 1px;
+}
+
+.stack-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+  margin-bottom: 3px;
+}
+
+.stack-tech {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-hi);
+}
+
+/* ─── Slide-specific background accents ────────── */
+.slide-hero::after {
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Large decorative numeral for problem slide */
+.bg-numeral {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: clamp(120px, 18vw, 200px);
+  font-weight: 600;
+  color: rgba(0, 212, 255, 0.03);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.04em;
+}
+
+/* ─── Cursor blink ─────────────────────────────── */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.82em;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-left: 4px;
+  animation: blink 1s step-start infinite;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ─── Problem bullets ──────────────────────────── */
+.problem-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 580px;
+}
+
+.problem-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 13px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid rgba(251, 113, 133, 0.4);
+}
+
+.problem-item p {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.problem-item p b {
+  color: var(--text-hi);
+  font-weight: 600;
+}
+
+/* ─── CTA Slide ────────────────────────────────── */
+.cta-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.cta-btn {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.65rem 1.5rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  transition: background 0.18s, box-shadow 0.18s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cta-btn:hover {
+  background: rgba(0, 212, 255, 0.07);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.18);
+}
+
+.cta-btn-ghost {
+  border-color: var(--border-mid);
+  color: var(--text-mid);
+}
+
+.cta-btn-ghost:hover {
+  background: rgba(255,255,255,0.03);
+  box-shadow: none;
+  border-color: var(--border-hi);
+}
+
+/* ─── Scroll hint ──────────────────────────────── */
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(5px); }
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--text-lo);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  animation: bounce-down 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.scroll-hint svg {
+  stroke: var(--text-lo);
+}
+
+/* ─── Code snippet ─────────────────────────────── */
+.code-block {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 14px 18px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--accent-dim);
+  line-height: 1.75;
+  max-width: 480px;
+}
+
+/* ─── Discovery Q card ─────────────────────────── */
+.discovery-card {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.q-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.q-num {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-dim);
+  flex-shrink: 0;
+  margin-top: 2px;
+  width: 26px;
+}
+
+.q-text {
+  font-size: 0.83rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.q-impact {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.09em;
+  color: var(--amber-dim);
+  margin-top: 4px;
+}
+
+/* ─── Responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+  .slide {
+    padding: 28px 20px;
+    justify-content: flex-start;
+    padding-top: 48px;
+    overflow-y: auto;
+  }
+  .flow-steps    { flex-direction: column; }
+  .output-grid   { grid-template-columns: 1fr; }
+  .usecase-grid  { grid-template-columns: 1fr; }
+  .stack-grid    { grid-template-columns: 1fr; }
+  .flow-arrow    { display: none; }
+  .nav-dots      { display: none; }
+  .bg-numeral    { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+<!-- Slide counter -->
+<div class="slide-counter" id="slideCounter">01 / 10</div>
+
+<!-- Back to portfolio -->
+<a href="/" class="back-link">← Portfolio</a>
+
+<!-- ═══ DECK ═════════════════════════════════════ -->
+<div class="deck" id="deck">
+
+
+  <!-- ═══ SLIDE 1: HERO ═══ -->
+  <section class="slide slide-hero" data-slide="1">
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      SE / TAM Portfolio Project
+    </div>
+
+    <h1 class="r display-title" style="font-size: clamp(2rem, 5.5vw, 3.2rem); margin-bottom: 16px;">
+      ARCHITECT<span class="accent-word">AI</span><span class="cursor"></span>
+    </h1>
+
+    <p class="r body-text" style="margin-bottom: 22px; font-size: clamp(1rem, 1.8vw, 1.15rem);">
+      An AI-powered solution architecture configurator for Solutions Engineers and
+      Technical Account Managers — turning a business problem into a complete
+      architecture recommendation in under 2 minutes.
+    </p>
+
+    <div class="r" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <span class="pill pill-cyan">GPT-4o</span>
+      <span class="pill pill-amber">FastAPI</span>
+      <span class="pill pill-violet">React + Vite</span>
+      <span class="pill pill-green">Mermaid.js</span>
+    </div>
+
+    <div class="r divider" style="max-width: 420px;"></div>
+
+    <p class="r" style="font-family: var(--mono); font-size: 0.68rem; color: var(--text-lo); letter-spacing: 0.08em;">
+      Intake → Discovery → Architecture in 3 structured steps
+    </p>
+
+    <div class="scroll-hint">
+      SCROLL
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke-width="1.5">
+        <polyline points="2,4 6,8 10,4"></polyline>
+      </svg>
+    </div>
+  </section>
+
+
+  <!-- ═══ SLIDE 2: THE PROBLEM ═══ -->
+  <section class="slide glow-br" data-slide="2">
+    <div class="bg-numeral">02</div>
+
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      The Problem Space
+    </div>
+
+    <h2 class="r display-title" style="font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin-bottom: 8px;">
+      SEs &amp; TAMs ANSWER<br>
+      <span class="accent-word">ARCHITECTURE QUESTIONS</span><br>
+      FROM MEMORY
+    </h2>
+
+    <p class="r body-text" style="margin-bottom: 20px; font-size: 0.9rem;">
+      Every discovery call surfaces "what would this look like in production?"
+      — and the answer is usually improvised.
+    </p>
+
+    <div class="r problem-list">
+      <div class="problem-item">
+        <p>
+          <b>Inconsistent recommendations</b> — different SEs propose different stacks
+          for the same problem context
+        </p>
+      </div>
+      <div class="problem-item">
+        <p>
+          <b>Slow constraint modeling</b> — "what if their budget is lower?" means
+          rebuilding the whole proposal from scratch
+        </p>
+      </div>
+      <div class="problem-item">
+        <p>
+          <b>Lost discovery context</b> — follow-up questions aren't structured, so
+          the rationale behind architectural choices gets lost
+        </p>
+      </div>
+      <div class="problem-item">
+        <p>
+          <b>No visual output</b> — whiteboard diagrams don't travel well into
+          written proposals or async stakeholder reviews
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ SLIDE 3: HOW IT WORKS ═══ -->
+  <section class="slide glow-tl" data-slide="3">
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      The Workflow
+    </div>
+
+    <h2 class="r display-title" style="font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 24px;">
+      THREE STEPS TO A<br>
+      <span class="accent-word">COMPLETE RECOMMENDATION</span>
+    </h2>
+
+    <div class="r flow-steps">
+
+      <div class="flow-step">
+        <div class="step-num">01 / INTAKE</div>
+        <div class="step-card">
+          <h4>Problem Description</h4>
+          <p>
+            Describe the business problem in plain language. Load a demo scenario
+            or type your own. Minimum context to get architecture-quality output.
+          </p>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><span>→</span></div>
+
+      <div class="flow-step">
+        <div class="step-num">02 / DISCOVERY</div>
+        <div class="step-card">
+          <h4>Structured Follow-Up</h4>
+          <p>
+            GPT-4o mini generates 2–3 targeted questions — each designed to change
+            the architecture recommendation if answered differently.
+          </p>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><span>→</span></div>
+
+      <div class="flow-step">
+        <div class="step-num">03 / ARCHITECTURE</div>
+        <div class="step-card">
+          <h4>Full Recommendation</h4>
+          <p>
+            GPT-4o returns a system diagram, tech stack with rationale, and a
+            500-word Solution Brief with trade-off analysis — structured via
+            OpenAI function calling.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ SLIDE 4: DISCOVERY ENGINE ═══ -->
+  <section class="slide glow-tr" data-slide="4">
+    <div class="bg-numeral" style="color: rgba(245,158,11,0.03);">04</div>
+
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      Discovery Engine
+    </div>
+
+    <h2 class="r display-title" style="font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 8px;">
+      QUESTIONS THAT<br>
+      <span style="color: var(--amber);">CHANGE THE ANSWER</span>
+    </h2>
+
+    <p class="r body-text" style="margin-bottom: 20px; font-size: 0.85rem;">
+      The discovery prompt is engineered so each question is architecture-changing —
+      not generic clarification. Example output for a SaaS B2B platform:
+    </p>
+
+    <div class="r discovery-card">
+      <div class="q-item">
+        <span class="q-num">Q01</span>
+        <div>
+          <p class="q-text">
+            Will you be storing personally identifiable information, requiring HIPAA or GDPR compliance?
+          </p>
+          <span class="q-impact">↳ CHANGES: data residency, encryption at rest, auth provider, audit logging</span>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">Q02</span>
+        <div>
+          <p class="q-text">
+            Are your workloads consistently distributed or do you expect significant traffic spikes
+            — for example, driven by seasonal demand or triggered events?
+          </p>
+          <span class="q-impact">↳ CHANGES: compute model, auto-scaling strategy, CDN layer, queue architecture</span>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-num">Q03</span>
+        <div>
+          <p class="q-text">
+            Do you have an existing engineering team and infrastructure, or is this greenfield
+            with a small founding team?
+          </p>
+          <span class="q-impact">↳ CHANGES: managed vs. self-hosted, IaC complexity, ops overhead assumptions</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ SLIDE 5: OUTPUT ═══ -->
+  <section class="slide glow-tl" data-slide="5">
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      Recommendation Output
+    </div>
+
+    <h2 class="r display-title" style="font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 20px;">
+      THREE VIEWS,<br>
+      <span class="accent-word">ONE RECOMMENDATION</span>
+    </h2>
+
+    <div class="r output-grid">
+
+      <div class="output-card">
+        <div class="output-icon">◈</div>
+        <h4>System Diagram</h4>
+        <p>
+          Mermaid.js architecture diagram rendered from GPT-4o's structured output.
+          Shows data flow between all major components.
+        </p>
+        <div class="output-example">
+          graph TD<br>
+          &nbsp; Client[Web Client] --&gt; CDN<br>
+          &nbsp; CDN --&gt; API[FastAPI Gateway]<br>
+          &nbsp; API --&gt; Auth[Auth Service]<br>
+          &nbsp; API --&gt; DB[(PostgreSQL)]<br>
+          &nbsp; API --&gt; Cache[(Redis)]
+        </div>
+      </div>
+
+      <div class="output-card">
+        <div class="output-icon">≡</div>
+        <h4>Solution Brief</h4>
+        <p>
+          450–600 word written brief covering architecture overview, key design
+          decisions, trade-offs, and one credible alternative approach.
+        </p>
+        <div class="output-example">
+          ## Architecture Overview<br>
+          ## Key Design Decisions<br>
+          &nbsp; • PostgreSQL 16 on RDS...<br>
+          &nbsp; • Redis 7 for session...<br>
+          ## Trade-offs<br>
+          ## Alternative Approach
+        </div>
+      </div>
+
+      <div class="output-card">
+        <div class="output-icon">⊞</div>
+        <h4>Tech Stack</h4>
+        <p>
+          5–8 architectural layers with specific technologies, versions, and
+          1–2 sentence rationale referencing the stated constraints.
+        </p>
+        <div class="output-example">
+          FRONTEND &nbsp; Next.js 16 on Vercel<br>
+          API LAYER &nbsp; FastAPI on Railway<br>
+          DATABASE &nbsp; PostgreSQL 16 on RDS<br>
+          CACHE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Redis 7 Cluster<br>
+          AUTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Clerk
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ SLIDE 6: CONSTRAINT CONTROLS ═══ -->
+  <section class="slide glow-br" data-slide="6">
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      Constraint Controls
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+
+      <div>
+        <h2 class="r display-title" style="font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 14px;">
+          REACTIVE<br>
+          <span class="accent-word">CONSTRAINT MODELING</span>
+        </h2>
+
+        <p class="r body-text" style="margin-bottom: 20px; font-size: 0.85rem;">
+          Adjust scale, budget, team size, or timeline on the results page.
+          The recommendation regenerates within 800ms — no re-running the
+          full flow.
+        </p>
+
+        <div class="r" style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-mid);">
+            <span style="color: var(--accent); font-family: var(--mono); font-size: 0.65rem;">→</span>
+            Startup → Enterprise changes compute, HA strategy, DR
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-mid);">
+            <span style="color: var(--accent); font-family: var(--mono); font-size: 0.65rem;">→</span>
+            Minimal budget moves from managed services to self-hosted OSS
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-mid);">
+            <span style="color: var(--accent); font-family: var(--mono); font-size: 0.65rem;">→</span>
+            Solo team removes specialist infrastructure (no Kafka, no k8s)
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-mid);">
+            <span style="color: var(--accent); font-family: var(--mono); font-size: 0.65rem;">→</span>
+            Weeks timeline defaults to maximally opinionated MVP stack
+          </div>
+        </div>
+      </div>
+
+      <!-- Constraint panel mockup -->
+      <div class="r constraint-demo">
+        <p style="font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber-dim); margin-bottom: 4px;">Constraints</p>
+
+        <!-- Scale: growth (2 of 3) -->
+        <div class="constraint-row">
+          <div class="constraint-label-row">
+            <span class="c-label">Scale</span>
+            <span class="c-value">growth</span>
+          </div>
+          <div class="c-track">
+            <div class="c-segment">
+              <div class="c-node filled"></div>
+              <div class="c-line filled"></div>
+            </div>
+            <div class="c-segment">
+              <div class="c-node active"></div>
+              <div class="c-line empty"></div>
+            </div>
+            <div class="c-segment">
+              <div class="c-node empty"></div>
+            </div>
+          </div>
+          <div class="c-option-row">
+            <span class="c-opt inactive">startup</span>
+            <span class="c-opt active">growth</span>
+            <span class="c-opt inactive">enterprise</span>
+          </div>
+        </div>
+
+        <!-- Budget: moderate (2 of 3) -->
+        <div class="constraint-row">
+          <div class="constraint-label-row">
+            <span class="c-label">Budget</span>
+            <span class="c-value">moderate</span>
+          </div>
+          <div class="c-track">
+            <div class="c-segment">
+              <div class="c-node filled"></div>
+              <div class="c-line filled"></div>
+            </div>
+            <div class="c-segment">
+              <div class="c-node active"></div>
+              <div class="c-line empty"></div>
+            </div>
+            <div class="c-segment">
+              <div class="c-node empty"></div>
+            </div>
+          </div>
+          <div class="c-option-row">
+            <span class="c-opt inactive">minimal</span>
+            <span class="c-opt active">moderate</span>
+            <span class="c-opt inactive">high</span>
+          </div>
+        </div>
+
+        <!-- Team: small (2 of 3) -->
+        <div class="constraint-row">
+          <div class="constraint-label-row">
+            <span class="c-label">Team size</span>
+            <span class="c-value">small</span>
+          </div>
+          <div class="c-track">
+            <div class="c-segment">
+              <div class="c-node filled"></div>
+              <div class="c-line filled"></div>
+            </div>
+            <div class="c-segment">
+              <div class="c-node active"></div>
+              <div class="c-line empty"></div>
+            </div>
+            <div class="c-segment">
+              <div class="c-node empty"></div>
+            </div>
+          </div>
+          <div class="c-option-row">
+            <span class="c-opt inactive">solo</span>
+            <span class="c-opt active">small</span>
+            <span class="c-opt inactive">large</span>
+          </div>
+        </div>
+
+        <!-- Timeline: months (2 of 3) -->
+        <div class="constraint-row">
+          <div class="constraint-label-row">
+            <span class="c-label">Timeline</span>
+            <span class="c-value">months</span>
+          </div>
+          <div class="c-track">
+            <div class="c-segment">
+              <div class="c-node filled"></div>
+              <div class="c-line filled"></div>
+            </div>
+            <div class="c-segment">
+              <div class="c-node active"></div>
+              <div class="c-line empty"></div>
+            </div>
+            <div class="c-segment">
+              <div class="c-node empty"></div>
+            </div>
+          </div>
+          <div class="c-option-row">
+            <span class="c-opt inactive">weeks</span>
+            <span class="c-opt active">months</span>
+            <span class="c-opt inactive">long-term</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ SLIDE 7: USE CASES ═══ -->
+  <section class="slide glow-tl" data-slide="7">
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      SE / TAM Use Cases
+    </div>
+
+    <h2 class="r display-title" style="font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 20px;">
+      WHERE THIS TOOL<br>
+      <span class="accent-word">FITS THE WORKFLOW</span>
+    </h2>
+
+    <div class="r usecase-grid">
+
+      <div class="usecase-card">
+        <div class="usecase-icon">🔍</div>
+        <h4>Pre-Sales Discovery</h4>
+        <p>
+          Load the prospect's problem before a call. Run through the discovery questions
+          to stress-test your architecture assumptions before you're live on a demo.
+        </p>
+      </div>
+
+      <div class="usecase-card">
+        <div class="usecase-icon">⚡</div>
+        <h4>Live Architecture Walkthroughs</h4>
+        <p>
+          Input a problem during a call and walk the prospect through the recommendation
+          in real time — diagram, rationale, and trade-off analysis all included.
+        </p>
+      </div>
+
+      <div class="usecase-card">
+        <div class="usecase-icon">📋</div>
+        <h4>Proposal Acceleration</h4>
+        <p>
+          Use the Solution Brief as a structured starting point for a formal proposal.
+          Eliminates the blank-page problem and ensures consistent sections every time.
+        </p>
+      </div>
+
+      <div class="usecase-card">
+        <div class="usecase-icon">🔄</div>
+        <h4>Constraint Sensitivity Modeling</h4>
+        <p>
+          When a prospect says "what if we only have half the budget?" — adjust the
+          slider and show the updated recommendation immediately, without leaving the page.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ SLIDE 8: DEMO SCENARIOS ═══ -->
+  <section class="slide glow-br" data-slide="8">
+    <div class="bg-numeral">08</div>
+
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      Interview-Ready
+    </div>
+
+    <h2 class="r display-title" style="font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 8px;">
+      5 PRELOADED<br>
+      <span class="accent-word">DEMO SCENARIOS</span>
+    </h2>
+
+    <p class="r body-text" style="margin-bottom: 18px; font-size: 0.85rem;">
+      Diverse domains — each producing a meaningfully different architecture output.
+      Load any scenario in one click, no setup required.
+    </p>
+
+    <div class="r scenario-list">
+
+      <div class="scenario-item">
+        <span class="scenario-num">01</span>
+        <span class="scenario-name">Customer Support Bot</span>
+        <span class="scenario-desc">AI / NLP / real-time</span>
+      </div>
+
+      <div class="scenario-item">
+        <span class="scenario-num">02</span>
+        <span class="scenario-name">B2B SaaS Platform</span>
+        <span class="scenario-desc">Multi-tenant / Auth / Billing</span>
+      </div>
+
+      <div class="scenario-item">
+        <span class="scenario-num">03</span>
+        <span class="scenario-name">E-Commerce Backend</span>
+        <span class="scenario-desc">Catalog / Payments / Fulfillment</span>
+      </div>
+
+      <div class="scenario-item">
+        <span class="scenario-num">04</span>
+        <span class="scenario-name">Data Pipeline</span>
+        <span class="scenario-desc">Ingestion / Transform / Analytics</span>
+      </div>
+
+      <div class="scenario-item">
+        <span class="scenario-num">05</span>
+        <span class="scenario-name">Two-Sided Marketplace</span>
+        <span class="scenario-desc">Listings / Transactions / Trust</span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ SLIDE 9: HOW IT'S BUILT ═══ -->
+  <section class="slide glow-tl" data-slide="9">
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      Technical Architecture
+    </div>
+
+    <h2 class="r display-title" style="font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 20px;">
+      THE META-ARCHITECTURE —<br>
+      <span class="accent-word">HOW ARCHITECTAI IS BUILT</span>
+    </h2>
+
+    <div class="r stack-grid">
+
+      <div class="stack-item">
+        <div class="stack-left-bar" style="background: #60a5fa;"></div>
+        <div>
+          <div class="stack-label">Frontend</div>
+          <div class="stack-tech">React + Vite + Tailwind CSS</div>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-left-bar" style="background: var(--accent);"></div>
+        <div>
+          <div class="stack-label">API Layer</div>
+          <div class="stack-tech">Python + FastAPI + Uvicorn</div>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-left-bar" style="background: var(--amber);"></div>
+        <div>
+          <div class="stack-label">AI / Discovery</div>
+          <div class="stack-tech">GPT-4o mini — JSON mode</div>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-left-bar" style="background: var(--amber);"></div>
+        <div>
+          <div class="stack-label">AI / Recommend</div>
+          <div class="stack-tech">GPT-4o — function calling (tool_use)</div>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-left-bar" style="background: var(--green);"></div>
+        <div>
+          <div class="stack-label">Diagrams</div>
+          <div class="stack-tech">Mermaid.js — rendered client-side</div>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-left-bar" style="background: var(--violet);"></div>
+        <div>
+          <div class="stack-label">Testing</div>
+          <div class="stack-tech">pytest + Vitest + testing-library</div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="r" style="margin-top: 16px; font-family: var(--mono); font-size: 0.65rem; color: var(--text-lo); letter-spacing: 0.06em;">
+      API key never touches the browser — all LLM calls are server-side
+    </p>
+  </section>
+
+
+  <!-- ═══ SLIDE 10: CTA ═══ -->
+  <section class="slide" data-slide="10" style="background: radial-gradient(ellipse at 30% 50%, rgba(0,212,255,0.04), transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.04), transparent 50%);">
+
+    <div class="r eyebrow">
+      <span class="eyebrow-line"></span>
+      SE / TAM Portfolio · Brady Karras
+    </div>
+
+    <h2 class="r display-title" style="font-size: clamp(1.6rem, 4vw, 2.6rem); margin-bottom: 16px;">
+      BUILT TO DEMONSTRATE<br>
+      <span class="accent-word">TECHNICAL DISCOVERY</span><br>
+      &amp; SOLUTION DESIGN
+    </h2>
+
+    <p class="r body-text" style="margin-bottom: 24px;">
+      ArchitectAI models the core SE/TAM competency — turning ambiguous requirements
+      into structured, rationale-backed architecture recommendations. It's also a
+      working portfolio artifact that can run live in any interview.
+    </p>
+
+    <div class="r" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; max-width: 520px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="color: var(--accent); font-family: var(--mono); font-size: 0.7rem;">✓</span>
+        <span style="font-size: 0.85rem; color: var(--text-mid);">Technical Discovery — structured follow-up that changes the recommendation</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="color: var(--accent); font-family: var(--mono); font-size: 0.7rem;">✓</span>
+        <span style="font-size: 0.85rem; color: var(--text-mid);">Solution Architecture — opinionated, constraint-aware tech stack recommendations</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="color: var(--accent); font-family: var(--mono); font-size: 0.7rem;">✓</span>
+        <span style="font-size: 0.85rem; color: var(--text-mid);">Visual Communication — Mermaid.js diagrams from structured LLM output</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="color: var(--accent); font-family: var(--mono); font-size: 0.7rem;">✓</span>
+        <span style="font-size: 0.85rem; color: var(--text-mid);">Technical Writing — Solution Brief with trade-off analysis and credible alternatives</span>
+      </div>
+    </div>
+
+    <div class="r cta-links">
+      <a href="https://github.com/bkarras12/ArchitectAI" class="cta-btn cta-btn-ghost" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub Repo
+      </a>
+      <a href="/" class="cta-btn">
+        ← Back to Portfolio
+      </a>
+    </div>
+
+    <div class="r" style="margin-top: 40px;">
+      <div class="divider" style="max-width: 200px;"></div>
+      <p style="font-family: var(--mono); font-size: 0.58rem; color: var(--text-lo); letter-spacing: 0.1em; margin-top: 10px;">
+        Run locally: uvicorn main:app --reload &amp;&amp; npm run dev → localhost:5173
+      </p>
+    </div>
+
+  </section>
+
+</div>
+<!-- END DECK -->
+
+<script>
+(function () {
+  const deck   = document.getElementById('deck');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const nav    = document.getElementById('navDots');
+  const counter = document.getElementById('slideCounter');
+  const total  = slides.length;
+  let current  = 0;
+
+  /* Build nav dots */
+  slides.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot';
+    btn.setAttribute('aria-label', `Go to slide ${i + 1}`);
+    btn.addEventListener('click', () => scrollToSlide(i));
+    nav.appendChild(btn);
+  });
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateUI(idx) {
+    current = idx;
+    document.querySelectorAll('.nav-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+    });
+    counter.textContent = `${pad(idx + 1)} / ${pad(total)}`;
+  }
+
+  function scrollToSlide(idx) {
+    slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* IntersectionObserver for visibility + reveal */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        const idx = slides.indexOf(entry.target);
+        if (idx !== -1) updateUI(idx);
+      }
+    });
+  }, { threshold: 0.45 });
+
+  slides.forEach(s => io.observe(s));
+
+  /* Keyboard navigation */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      if (current < total - 1) scrollToSlide(current + 1);
+    }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (current > 0) scrollToSlide(current - 1);
+    }
+  });
+
+  /* Init */
+  updateUI(0);
+})();
+</script>
+</body>
+</html>
