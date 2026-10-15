@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brady W Karras | Portfolio</title>
+    <meta name="description" content="Portfolio of Brady W Karras — AI engineering, automation, and full-stack development. Agentic AI systems, data tools, and web apps.">
+    <meta name="theme-color" content="#06060e">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Brady W Karras | Portfolio">
+    <meta property="og:description" content="AI Engineering · Automation · Full-Stack Development">
+    <meta property="og:url" content="https://bkarras12.github.io/">
+    <meta property="og:image" content="https://bkarras12.github.io/BradyK_logo-Icon.png">
     <link rel="icon" type="image/x-icon" href="BradyK_logo-Icon.ico">
+    <link rel="apple-touch-icon" href="BradyK_logo-Icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,34 +22,27 @@
     --bg-surface: #0c0c18;
     --card-bg: rgba(14, 14, 30, 0.65);
     --card-border: rgba(255, 255, 255, 0.06);
-    --card-border-hover: rgba(0, 212, 170, 0.35);
 
     --text-primary: #eaf0f6;
     --text-secondary: #8a92a6;
-    --text-muted: #565e72;
+    --text-muted: #6b7388;
 
     --accent-cyan: #00d4aa;
-    --accent-violet: #7c5cfc;
+    --accent-violet: #8b6dff;
     --accent-pink: #e44fbb;
-    --accent-blue: #3b82f6;
-
-    --glow-cyan: rgba(0, 212, 170, 0.15);
-    --glow-violet: rgba(124, 92, 252, 0.15);
-    --glow-pink: rgba(228, 79, 187, 0.12);
+    --accent-blue: #4b8ff7;
+    --accent-amber: #f59e0b;
 
     --radius: 16px;
     --radius-sm: 10px;
     --font-display: 'Outfit', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
 
   body {
     font-family: var(--font-display);
@@ -50,7 +51,39 @@
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
+
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -3rem;
+    z-index: 100;
+    background: var(--accent-cyan);
+    color: var(--bg-deep);
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: top 0.2s ease;
+  }
+  .skip-link:focus { top: 1rem; }
 
   /* ── Animated background ── */
   .bg-effects {
@@ -61,34 +94,31 @@
     overflow: hidden;
   }
 
-  .bg-effects::before {
+  .bg-effects::before,
+  .bg-effects::after,
+  .bg-orb {
     content: "";
     position: absolute;
-    width: 900px;
-    height: 900px;
-    top: -200px;
-    left: -150px;
+    border-radius: 50%;
+  }
+
+  .bg-effects::before {
+    width: 900px; height: 900px;
+    top: -200px; left: -150px;
     background: radial-gradient(circle, rgba(0, 212, 170, 0.12) 0%, transparent 65%);
     animation: floatA 18s ease-in-out infinite;
   }
 
   .bg-effects::after {
-    content: "";
-    position: absolute;
-    width: 800px;
-    height: 800px;
-    bottom: -100px;
-    right: -200px;
+    width: 800px; height: 800px;
+    bottom: -100px; right: -200px;
     background: radial-gradient(circle, rgba(124, 92, 252, 0.10) 0%, transparent 65%);
     animation: floatB 22s ease-in-out infinite;
   }
 
   .bg-orb {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    top: 40%;
-    left: 50%;
+    width: 600px; height: 600px;
+    top: 40%; left: 50%;
     transform: translate(-50%, -50%);
     background: radial-gradient(circle, rgba(228, 79, 187, 0.06) 0%, transparent 60%);
     animation: floatC 25s ease-in-out infinite;
@@ -109,7 +139,6 @@
     50% { transform: translate(-45%, -55%) scale(1.15); }
   }
 
-  /* Noise overlay */
   .noise {
     position: fixed;
     inset: 0;
@@ -117,8 +146,70 @@
     pointer-events: none;
     opacity: 0.025;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
     background-size: 256px 256px;
+  }
+
+  /* ── Top nav ── */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(6, 6, 14, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  .topnav.scrolled {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+    background: rgba(6, 6, 14, 0.85);
+  }
+
+  .topnav-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0.85rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .brand img { width: 28px; height: 28px; border-radius: 8px; }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+
+  .nav-links a {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   /* ── Container ── */
@@ -127,18 +218,19 @@
     z-index: 2;
     max-width: 1080px;
     margin: 0 auto;
-    padding: 2.5rem 2rem 4rem;
+    padding: 1rem 2rem 4rem;
   }
 
-  /* ── Header ── */
-  header {
+  /* ── Header / hero ── */
+  header.hero {
     text-align: center;
-    padding: 3rem 0 2.5rem;
-    margin-bottom: 1rem;
+    padding: 3.5rem 0 2.5rem;
   }
 
   .header-label {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
     font-weight: 500;
@@ -152,19 +244,30 @@
     margin-bottom: 1.25rem;
   }
 
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.6);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.55); }
+    70%, 100% { box-shadow: 0 0 0 8px rgba(0, 212, 170, 0); }
+  }
+
   h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.8rem, 6vw, 4rem);
+    font-size: clamp(2.6rem, 7vw, 4.25rem);
     font-weight: 900;
     letter-spacing: -0.035em;
-    line-height: 1.1;
+    line-height: 1.08;
     background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 50%, var(--accent-violet) 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: shimmer 6s ease-in-out infinite;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
   }
 
   @keyframes shimmer {
@@ -175,63 +278,106 @@
   .header-sub {
     font-size: 1.1rem;
     color: var(--text-secondary);
-    font-weight: 400;
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
   }
 
-  /* ── About Me ── */
-  .about-me-wrapper {
-    margin-top: 1.5rem;
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
   }
 
-  .about-me-btn {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--font-display);
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--accent-cyan);
-    background: rgba(0, 212, 170, 0.06);
-    border: 1px solid rgba(0, 212, 170, 0.25);
-    padding: 0.6rem 1.6rem;
+    text-decoration: none;
+    padding: 0.65rem 1.4rem;
     border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+  .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .btn-primary {
+    color: var(--bg-deep);
+    background: linear-gradient(135deg, var(--accent-cyan), #2fe0c0);
+    border-color: transparent;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #18e0ba, #4ff0d2);
+    border-color: transparent;
+    box-shadow: 0 0 28px rgba(0, 212, 170, 0.3);
   }
 
-  .about-me-btn:hover {
-    background: rgba(0, 212, 170, 0.12);
-    border-color: rgba(0, 212, 170, 0.45);
-    box-shadow: 0 0 20px rgba(0, 212, 170, 0.1);
-  }
-
-  .about-me-btn.active {
-    background: rgba(0, 212, 170, 0.1);
+  .btn-ghost[aria-expanded="true"] {
     border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
   }
 
-  .about-me-dropdown {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, padding 0.4s ease;
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 2.25rem;
+    font-family: var(--font-mono);
+  }
+  .stat strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .stat span {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── Collapsible (grid-rows trick: no fixed max-height to clip content) ── */
+  .collapsible {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.45s var(--ease), opacity 0.35s ease;
+  }
+  .collapsible > .collapsible-inner { min-height: 0; overflow: hidden; }
+  .collapsible.collapsed { grid-template-rows: 0fr; opacity: 0; }
+  .collapsible.collapsed > .collapsible-inner { visibility: hidden; transition: visibility 0s 0.45s; }
+
+  /* ── About Me ── */
+  .about-me {
     text-align: left;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .about-card {
+    margin-top: 1.25rem;
     background: var(--card-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--card-border);
     border-radius: var(--radius);
-    padding: 0 1.8rem;
-    max-width: 680px;
-    margin: 1.25rem auto 0;
-  }
-
-  .about-me-dropdown.open {
-    max-height: 600px;
-    opacity: 1;
     padding: 1.8rem;
   }
 
-  .about-me-dropdown .section-label {
+  .section-label {
     display: inline-block;
     font-family: var(--font-mono);
     font-size: 0.7rem;
@@ -246,29 +392,116 @@
     margin-bottom: 0.6rem;
   }
 
-  .about-me-dropdown p {
+  .about-card p {
     color: var(--text-secondary);
-    font-size: 0.92rem;
-    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
     line-height: 1.75;
+    margin-bottom: 1.2rem;
   }
+  .about-card p:last-child { margin-bottom: 0; }
+
+  /* ── Search ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem 0 2rem;
+  }
+  .search {
+    position: relative;
+    flex: 1;
+  }
+  .search svg {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    width: 16px; height: 16px;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .search input {
+    width: 100%;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem 0.75rem 2.6rem;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .search input::placeholder { color: var(--text-muted); }
+  .search input:focus {
+    outline: none;
+    border-color: rgba(0, 212, 170, 0.45);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .search kbd {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.1rem 0.45rem;
+  }
+  .search input:focus ~ kbd,
+  .search input:not(:placeholder-shown) ~ kbd { display: none; }
+
+  .toggle-all {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .toggle-all:hover { color: var(--text-primary); border-color: rgba(255, 255, 255, 0.2); }
+
+  .no-results {
+    display: none;
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2rem 0 3rem;
+  }
+  .no-results.show { display: block; }
 
   /* ── Sections ── */
   .portfolio-section {
+    --accent: var(--accent-cyan);
+    --accent-rgb: 0, 212, 170;
+    --accent-2: var(--accent-violet);
     margin-bottom: 2.5rem;
   }
+  .portfolio-section[hidden] { display: none; }
+  .searching .section-divider { display: none; }
+
+  .section-ai           { --accent: var(--accent-violet); --accent-rgb: 139, 109, 255; --accent-2: var(--accent-pink); }
+  .section-data         { --accent: var(--accent-blue);   --accent-rgb: 75, 143, 247;  --accent-2: var(--accent-cyan); }
+  .section-experimental { --accent: var(--accent-pink);   --accent-rgb: 228, 79, 187;  --accent-2: var(--accent-amber); }
 
   .section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    text-align: left;
     cursor: pointer;
     padding: 1rem 1.5rem;
     border-radius: var(--radius-sm);
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.04);
-    transition: all 0.3s ease;
-    user-select: none;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
   }
@@ -276,45 +509,16 @@
   .section-header::before {
     content: "";
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    left: 0; top: 0; bottom: 0;
     width: 3px;
     border-radius: 0 2px 2px 0;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
   }
 
   .section-header:hover {
     background: rgba(255, 255, 255, 0.04);
     border-color: rgba(255, 255, 255, 0.08);
-  }
-
-  /* Section-specific accent colors */
-  .section-featured .section-header::before {
-    background: linear-gradient(180deg, var(--accent-cyan), var(--accent-violet));
-  }
-  .section-featured .section-header:hover {
-    box-shadow: 0 0 30px rgba(0, 212, 170, 0.06);
-  }
-
-  .section-ai .section-header::before {
-    background: linear-gradient(180deg, var(--accent-violet), var(--accent-pink));
-  }
-  .section-ai .section-header:hover {
-    box-shadow: 0 0 30px rgba(124, 92, 252, 0.06);
-  }
-
-  .section-data .section-header::before {
-    background: linear-gradient(180deg, var(--accent-blue), var(--accent-cyan));
-  }
-  .section-data .section-header:hover {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.06);
-  }
-
-  .section-experimental .section-header::before {
-    background: linear-gradient(180deg, var(--accent-pink), #f59e0b);
-  }
-  .section-experimental .section-header:hover {
-    box-shadow: 0 0 30px rgba(228, 79, 187, 0.06);
+    box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.07);
   }
 
   .section-title {
@@ -327,14 +531,13 @@
     font-size: 1.2rem;
     width: 2rem;
     text-align: center;
+    color: var(--accent);
   }
 
   .section-title h2 {
-    font-family: var(--font-display);
     font-size: 1.2rem;
     font-weight: 700;
     letter-spacing: -0.01em;
-    color: var(--text-primary);
   }
 
   .section-count {
@@ -346,34 +549,17 @@
     padding: 0.15rem 0.55rem;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    margin-left: 0.5rem;
+    margin-left: 0.25rem;
   }
 
   .chevron {
-    width: 20px;
-    height: 20px;
+    width: 20px; height: 20px;
     color: var(--text-muted);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s var(--ease);
     flex-shrink: 0;
   }
+  .section-header[aria-expanded="false"] .chevron { transform: rotate(-90deg); }
 
-  .section-header.collapsed .chevron {
-    transform: rotate(-90deg);
-  }
-
-  .section-content {
-    overflow: hidden;
-    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-    max-height: 2000px;
-    opacity: 1;
-  }
-
-  .section-content.collapsed {
-    max-height: 0;
-    opacity: 0;
-  }
-
-  /* Gradient divider between sections */
   .section-divider {
     height: 1px;
     margin: 0 1.5rem 2.5rem;
@@ -383,7 +569,7 @@
   /* ── Project Grid ── */
   .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
     gap: 1.5rem;
     padding: 1.5rem 0.25rem 0.5rem;
   }
@@ -398,50 +584,47 @@
     padding: 1.6rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     position: relative;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    animation-delay: calc(0.08s * var(--i, 0) + 0.1s);
   }
+  .project-card[hidden] { display: none; }
 
   .project-card::before {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: var(--radius);
-    background: radial-gradient(400px 200px at 30% 0%, rgba(255,255,255,0.03), transparent 60%);
+    background: radial-gradient(400px 200px at 30% 0%, rgba(255,255,255,0.035), transparent 60%);
     pointer-events: none;
+  }
+
+  /* Accent top edge on hover */
+  .project-card::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    opacity: 0;
+    transition: opacity 0.35s ease;
   }
 
   .project-card:hover {
     transform: translateY(-4px);
-    border-color: var(--card-border-hover);
-    box-shadow:
-      0 20px 40px rgba(0, 0, 0, 0.4),
-      0 0 40px var(--glow-cyan);
+    border-color: rgba(var(--accent-rgb), 0.35);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(var(--accent-rgb), 0.14);
   }
+  .project-card:hover::after { opacity: 1; }
 
-  /* Section-specific card hover glows */
-  .section-ai .project-card:hover {
-    border-color: rgba(124, 92, 252, 0.35);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px var(--glow-violet);
-  }
+  .card-body { flex: 1; }
 
-  .section-data .project-card:hover {
-    border-color: rgba(59, 130, 246, 0.35);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px rgba(59, 130, 246, 0.15);
-  }
-
-  .section-experimental .project-card:hover {
-    border-color: rgba(228, 79, 187, 0.35);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px var(--glow-pink);
-  }
-
-  .card-header h3 {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
+  .project-card h3 {
+    font-size: 1.12rem;
     font-weight: 700;
-    color: var(--text-primary);
     margin-bottom: 0.6rem;
     letter-spacing: -0.01em;
   }
@@ -456,121 +639,53 @@
     padding: 0.22rem 0.65rem;
     border-radius: 999px;
     margin-bottom: 0.85rem;
-    margin-right: 0.3rem;
-  }
-
-  /* Tag color variants */
-  .tag-cyan {
-    color: var(--accent-cyan);
-    background: rgba(0, 212, 170, 0.08);
-    border: 1px solid rgba(0, 212, 170, 0.2);
-  }
-
-  .tag-violet {
-    color: var(--accent-violet);
-    background: rgba(124, 92, 252, 0.08);
-    border: 1px solid rgba(124, 92, 252, 0.2);
-  }
-
-  .tag-blue {
-    color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.08);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-  }
-
-  .tag-pink {
-    color: var(--accent-pink);
-    background: rgba(228, 79, 187, 0.08);
-    border: 1px solid rgba(228, 79, 187, 0.2);
-  }
-
-  .tag-amber {
-    color: #f59e0b;
-    background: rgba(245, 158, 11, 0.08);
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
   }
 
   .card-desc {
     font-size: 0.9rem;
     line-height: 1.7;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1rem;
     color: var(--text-secondary);
   }
+  .card-desc b { color: var(--text-primary); font-weight: 600; }
 
-  .card-desc b {
-    color: var(--text-primary);
+  .card-note {
+    font-size: 0.8rem;
     font-weight: 600;
+    color: var(--accent);
+    line-height: 1.5;
+    padding-left: 0.7rem;
+    border-left: 2px solid rgba(var(--accent-rgb), 0.4);
+    margin-bottom: 1.4rem;
   }
 
   .card-link {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
     text-decoration: none;
-    font-family: var(--font-display);
     font-weight: 700;
     font-size: 0.88rem;
-    text-align: center;
     padding: 0.65rem 1.2rem;
     border-radius: var(--radius-sm);
-    transition: all 0.3s ease;
     margin-top: auto;
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.06);
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   }
-
-  .link-cyan {
-    color: var(--accent-cyan);
-    background: rgba(0, 212, 170, 0.06);
-    border: 1px solid rgba(0, 212, 170, 0.2);
-  }
-  .link-cyan:hover {
-    background: rgba(0, 212, 170, 0.14);
-    border-color: rgba(0, 212, 170, 0.5);
-    box-shadow: 0 0 24px rgba(0, 212, 170, 0.12);
+  .card-link:hover {
+    background: rgba(var(--accent-rgb), 0.14);
+    border-color: rgba(var(--accent-rgb), 0.5);
+    box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.12);
     transform: translateY(-1px);
   }
-
-  .link-violet {
-    color: var(--accent-violet);
-    background: rgba(124, 92, 252, 0.06);
-    border: 1px solid rgba(124, 92, 252, 0.2);
-  }
-  .link-violet:hover {
-    background: rgba(124, 92, 252, 0.14);
-    border-color: rgba(124, 92, 252, 0.5);
-    box-shadow: 0 0 24px rgba(124, 92, 252, 0.12);
-    transform: translateY(-1px);
-  }
-
-  .link-blue {
-    color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.06);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-  }
-  .link-blue:hover {
-    background: rgba(59, 130, 246, 0.14);
-    border-color: rgba(59, 130, 246, 0.5);
-    box-shadow: 0 0 24px rgba(59, 130, 246, 0.12);
-    transform: translateY(-1px);
-  }
-
-  .link-pink {
-    color: var(--accent-pink);
-    background: rgba(228, 79, 187, 0.06);
-    border: 1px solid rgba(228, 79, 187, 0.2);
-  }
-  .link-pink:hover {
-    background: rgba(228, 79, 187, 0.14);
-    border-color: rgba(228, 79, 187, 0.5);
-    box-shadow: 0 0 24px rgba(228, 79, 187, 0.12);
-    transform: translateY(-1px);
-  }
-
-  .link-disabled {
-    color: var(--text-muted);
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    cursor: default;
-    pointer-events: none;
-    font-style: italic;
-  }
+  .card-link .arrow { transition: transform 0.25s ease; }
+  .card-link:hover .arrow { transform: translate(2px, -2px); }
 
   /* ── Footer ── */
   footer {
@@ -579,13 +694,13 @@
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, 0.04);
   }
-
   footer p {
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--text-muted);
     letter-spacing: 0.05em;
   }
+  footer p a { text-decoration: none; cursor: default; }
 
   .footer-links {
     margin-top: 0.75rem;
@@ -593,422 +708,558 @@
     justify-content: center;
     gap: 1.5rem;
   }
-
   .footer-links a {
-    font-family: var(--font-display);
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-secondary);
     text-decoration: none;
     transition: color 0.3s ease;
   }
-
-  .footer-links a:hover {
-    color: var(--accent-cyan);
-  }
+  .footer-links a:hover { color: var(--accent-cyan); }
 
   /* ── Entrance animations ── */
   .fade-in {
     opacity: 0;
-    transform: translateY(16px);
     animation: fadeUp 0.6s ease forwards;
   }
-
   @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  .portfolio-section:nth-child(1) { animation-delay: 0.1s; }
-  .portfolio-section:nth-child(2) { animation-delay: 0.15s; }
-  .portfolio-section:nth-child(3) { animation-delay: 0.2s; }
-  .portfolio-section:nth-child(4) { animation-delay: 0.25s; }
-
-  .project-card {
-    opacity: 0;
-    transform: translateY(12px);
-    animation: fadeUp 0.5s ease forwards;
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      animation-delay: 0s !important;
+      transition-duration: 0.01ms !important;
+    }
   }
-
-  /* Stagger cards within each section */
-  .project-card:nth-child(1) { animation-delay: 0.1s; }
-  .project-card:nth-child(2) { animation-delay: 0.18s; }
-  .project-card:nth-child(3) { animation-delay: 0.26s; }
-  .project-card:nth-child(4) { animation-delay: 0.34s; }
-  .project-card:nth-child(5) { animation-delay: 0.42s; }
 
   /* ── Responsive ── */
+  @media (max-width: 760px) {
+    .topnav-inner { padding: 0.75rem 1rem; }
+    .brand span { display: none; }
+  }
+
   @media (max-width: 640px) {
-    .container { padding: 1.5rem 1rem 3rem; }
-    header { padding: 2rem 0 1.5rem; }
+    .container { padding: 0.5rem 1rem 3rem; }
+    header.hero { padding: 2.25rem 0 1.5rem; }
+    .stats { gap: 1.5rem; }
     .project-grid { grid-template-columns: 1fr; gap: 1.25rem; }
     .section-header { padding: 0.85rem 1rem; }
     .section-title h2 { font-size: 1.05rem; }
+    .toggle-all { display: none; }
+    .search kbd { display: none; }
   }
 </style>
 </head>
 <body>
 
-<div class="bg-effects"><div class="bg-orb"></div></div>
-<div class="noise"></div>
+<a class="skip-link" href="#work">Skip to projects</a>
+<div class="bg-effects" aria-hidden="true"><div class="bg-orb"></div></div>
+<div class="noise" aria-hidden="true"></div>
 
-<main class="container">
-    <header class="fade-in">
-        <div class="header-label">Portfolio</div>
+<nav class="topnav" id="topnav" aria-label="Primary">
+    <div class="topnav-inner">
+        <a href="#top" class="brand"><img src="BradyK_logo-Icon.png" alt=""><span>Brady W Karras</span></a>
+        <ul class="nav-links">
+            <li><a href="#featured">Featured</a></li>
+            <li><a href="#ai">AI / Automation</a></li>
+            <li><a href="#data">Data</a></li>
+            <li><a href="#experimental">Experimental</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container" id="top">
+    <header class="hero fade-in">
+        <div class="header-label"><span class="status-dot" aria-hidden="true"></span>Portfolio</div>
         <h1>Brady W Karras</h1>
         <p class="header-sub">AI Engineering &middot; Automation &middot; Full-Stack Development</p>
 
-        <div class="about-me-wrapper">
-            <button class="about-me-btn" onclick="toggleAbout()" id="aboutBtn">About Me</button>
+        <div class="hero-actions">
+            <a href="#work" class="btn btn-primary">View My Work</a>
+            <button class="btn btn-ghost" id="aboutBtn" aria-expanded="false" aria-controls="aboutPanel">About Me</button>
+            <a href="https://github.com/bkarras12" class="btn" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.3-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.75.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+                GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/brady-karras" class="btn" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+                LinkedIn
+            </a>
         </div>
 
-        <div class="about-me-dropdown" id="aboutDropdown">
-            <span class="section-label">Bio</span>
-            <p>
-                I'm Brady Karras — a builder at the intersection of AI, data, and software engineering.
-                I specialize in designing agentic AI systems, full-stack applications, and data-driven solutions
-                that turn complex problems into streamlined workflows. From autonomous news aggregators and
-                AI-powered lead scoring pipelines to SEO content engines and machine learning models, I'm
-                driven by making technology that works smarter so people can too.
-            </p>
-            <span class="section-label">Career Goals</span>
-            <p>
-                I'm pursuing a career where I can apply AI engineering and automation at scale —
-                whether that's building intelligent agent systems, architecting data pipelines,
-                or shipping products that leverage machine learning to drive real business impact.
-                I'm looking for roles in AI/ML engineering, solutions engineering, or software development
-                where I can combine technical depth with creative problem-solving to help teams
-                move faster and deliver more.
-            </p>
+        <div class="about-me collapsible collapsed" id="aboutPanel">
+            <div class="collapsible-inner">
+                <div class="about-card">
+                    <span class="section-label">Bio</span>
+                    <p>
+                        I'm Brady Karras — a builder at the intersection of AI, data, and software engineering.
+                        I specialize in designing agentic AI systems, full-stack applications, and data-driven solutions
+                        that turn complex problems into streamlined workflows. From autonomous news aggregators and
+                        AI-powered lead scoring pipelines to SEO content engines and machine learning models, I'm
+                        driven by making technology that works smarter so people can too.
+                    </p>
+                    <span class="section-label">Career Goals</span>
+                    <p>
+                        I'm pursuing a career where I can apply AI engineering and automation at scale —
+                        whether that's building intelligent agent systems, architecting data pipelines,
+                        or shipping products that leverage machine learning to drive real business impact.
+                        I'm looking for roles in AI/ML engineering, solutions engineering, or software development
+                        where I can combine technical depth with creative problem-solving to help teams
+                        move faster and deliver more.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats" aria-label="Portfolio at a glance">
+            <div class="stat"><strong id="statProjects">17</strong><span>Projects</span></div>
+            <div class="stat"><strong id="statAgentic">8</strong><span>AI-powered</span></div>
+            <div class="stat"><strong id="statCategories">4</strong><span>Categories</span></div>
         </div>
     </header>
 
-    <!-- ═══════════ FEATURED PROJECTS ═══════════ -->
-    <div class="portfolio-section section-featured fade-in">
-        <div class="section-header" role="button" tabindex="0" aria-expanded="true" onclick="toggleSection(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection(this)}">
-            <div class="section-title">
-                <span class="section-icon" aria-hidden="true">&#9733;</span>
-                <h2>Featured Projects</h2>
-                <span class="section-count">3</span>
-            </div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+    <div id="work">
+        <div class="toolbar fade-in" style="animation-delay: 0.1s;">
+            <label class="search">
+                <span class="sr-only">Search projects</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input type="search" id="search" placeholder="Search projects — try “agents”, “SQL”, “Tableau”" autocomplete="off">
+                <kbd>/</kbd>
+            </label>
+            <button class="toggle-all" id="toggleAll" type="button">Collapse all</button>
         </div>
-        <div class="section-content">
-            <div class="project-grid">
 
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-cyan">Agentic AI + Sales Tech</span>
-                        <h3>SalesContext AI</h3>
-                        <p class="card-desc">
-                            Automates meeting prep for sales reps. Ingest a company for scouting,
-                            your product, and local area to generate a battle card, meeting cheat sheet,
-                            and optional competitive analysis. Just the MVP — future versions to come.
-                        </p>
-                        <b style="color:var(--accent-cyan); font-size:0.82rem;">Try it out for free :)</b>
+        <p class="no-results" id="noResults">No projects match that search.</p>
+
+        <!-- ═══════════ FEATURED PROJECTS ═══════════ -->
+        <section class="portfolio-section section-featured fade-in" id="featured" aria-labelledby="h-featured">
+            <button class="section-header" aria-expanded="true" aria-controls="c-featured">
+                <span class="section-title">
+                    <span class="section-icon" aria-hidden="true">&#9733;</span>
+                    <h2 id="h-featured">Featured Projects</h2>
+                    <span class="section-count"></span>
+                </span>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="collapsible" id="c-featured">
+                <div class="collapsible-inner">
+                    <div class="project-grid">
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">Agentic AI + Sales Tech</span>
+                                <h3>SalesContext AI</h3>
+                                <p class="card-desc">
+                                    Automates meeting prep for sales reps. Ingest a company for scouting,
+                                    your product, and local area to generate a battle card, meeting cheat sheet,
+                                    and optional competitive analysis. Just the MVP — future versions to come.
+                                </p>
+                                <p class="card-note">Try it out for free :)</p>
+                            </div>
+                            <a href="https://salescontext-ai.vercel.app/" class="card-link">Go to Site</a>
+                        </article>
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">Agentic AI + Automation</span>
+                                <h3>TLDR News</h3>
+                                <p class="card-desc">
+                                    Daily updating website run by autonomous AI agents delivering TLDR reports
+                                    on world news, separated by topic. Includes sentiment analysis and
+                                    future outlooks reasoned by OpenAI agents.
+                                </p>
+                            </div>
+                            <a href="https://bkarras12.github.io/TLDR-NEWS/news/reports.html" class="card-link">View Project</a>
+                        </article>
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">App Development</span>
+                                <h3>QueryPilot</h3>
+                                <p class="card-desc">
+                                    Natural language SQL analytics tool that converts plain English business questions
+                                    into executable queries powered by AI and DuckDB. Get results with dynamic
+                                    visualizations and AI-generated insights — no SQL knowledge required.
+                                </p>
+                            </div>
+                            <a href="https://querypilot-one.vercel.app/" class="card-link">Go to Site</a>
+                        </article>
+
                     </div>
-                    <a href="https://salescontext-ai.vercel.app/" class="card-link link-cyan">Go to Site</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-cyan">Agentic AI + Automation</span>
-                        <h3>TLDR News</h3>
-                        <p class="card-desc">
-                            Daily updating website run by autonomous AI agents delivering TLDR reports
-                            on world news, separated by topic. Includes sentiment analysis and
-                            future outlooks reasoned by OpenAI agents.
-                        </p>
-                    </div>
-                    <a href="https://bkarras12.github.io/TLDR-NEWS/news/reports.html" class="card-link link-cyan">View Project</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-cyan">App Development</span>
-                        <h3>QueryPilot</h3>
-                        <p class="card-desc">
-                            Natural language SQL analytics tool that converts plain English business questions
-                            into executable queries powered by AI and DuckDB. Get results with dynamic
-                            visualizations and AI-generated insights — no SQL knowledge required.
-                        </p>
-                    </div>
-                    <a href="https://querypilot-one.vercel.app/" class="card-link link-cyan">Go to Site</a>
-                </article>
-
+                </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <div class="section-divider"></div>
+        <div class="section-divider"></div>
 
-    <!-- ═══════════ AI / AUTOMATION ═══════════ -->
-    <div class="portfolio-section section-ai fade-in">
-        <div class="section-header" role="button" tabindex="0" aria-expanded="true" onclick="toggleSection(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection(this)}">
-            <div class="section-title">
-                <span class="section-icon" aria-hidden="true">&#9881;</span>
-                <h2>AI / Automation</h2>
-                <span class="section-count">6</span>
+        <!-- ═══════════ AI / AUTOMATION ═══════════ -->
+        <section class="portfolio-section section-ai fade-in" id="ai" aria-labelledby="h-ai">
+            <button class="section-header" aria-expanded="true" aria-controls="c-ai">
+                <span class="section-title">
+                    <span class="section-icon" aria-hidden="true">&#9881;</span>
+                    <h2 id="h-ai">AI / Automation</h2>
+                    <span class="section-count"></span>
+                </span>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="collapsible" id="c-ai">
+                <div class="collapsible-inner">
+                    <div class="project-grid">
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">Solutions Engineering · AI</span>
+                                <h3>ArchitectAI</h3>
+                                <p class="card-desc">
+                                    AI-powered solution architecture configurator built for SEs and TAMs.
+                                    Describe a business problem, answer 2–3 structured discovery questions,
+                                    and receive a <b>complete architecture recommendation</b> — Mermaid.js system diagram,
+                                    tech stack with rationale, and a written Solution Brief with trade-off analysis.
+                                    Constraint controls (scale, budget, team, timeline) update the recommendation in real time.
+                                </p>
+                            </div>
+                            <a href="/architect-ai.html" class="card-link">View Presentation</a>
+                        </article>
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">Workflow Automation + Sales</span>
+                                <h3>AI Lead Qualification &amp; Scoring</h3>
+                                <p class="card-desc">
+                                    Five autonomous AI agents process inbound B2B demo requests end-to-end — enriching
+                                    company data, scoring leads against an ideal customer profile, and routing
+                                    sales-ready opportunities directly to reps. Cuts response time from hours to minutes.
+                                </p>
+                                <p class="card-note">Link leads to a presentation. The actual app is a desktop app :)</p>
+                            </div>
+                            <a href="/SalesPropPresentation.html" class="card-link">View Presentation</a>
+                        </article>
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">Agentic AI</span>
+                                <h3>Agentic Analysis Report</h3>
+                                <p class="card-desc">
+                                    Output from an agentic AI project that automates basic data analysis reports.
+                                    Stakeholder-ready summary with key findings and recommendations,
+                                    generated entirely by AI agents.
+                                </p>
+                            </div>
+                            <a href="/agentic_analysis.html" class="card-link">View Project</a>
+                        </article>
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">Agentic AI + SEO</span>
+                                <h3>Brief Engine</h3>
+                                <p class="card-desc">
+                                    A network of AI agents powering an SEO artifact generator. Submit company info,
+                                    select an artifact type, and a research agent conducts market analysis while
+                                    a writer agent crafts the content. End-to-end automated.
+                                </p>
+                            </div>
+                            <a href="https://brief-engine-web-app.onrender.com/" class="card-link">View Site</a>
+                        </article>
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">App Development</span>
+                                <h3>PicGradr</h3>
+                                <p class="card-desc">
+                                    Full-stack AI-powered web app delivering real-time, structured feedback on dating
+                                    profile photos. Built with LangChain agent orchestration and multimodal AI
+                                    to evaluate images and return actionable suggestions.
+                                </p>
+                            </div>
+                            <a href="picgradr/" class="card-link">View Repository</a>
+                        </article>
+
+                        <article class="project-card" data-ai>
+                            <div class="card-body">
+                                <span class="tag">AI + Developer Tools</span>
+                                <h3>RepoSage</h3>
+                                <p class="card-desc">
+                                    AI-powered codebase onboarding and documentation platform built with Claude.
+                                    Analyze any GitHub repo and generate a comprehensive onboarding guide
+                                    so new developers can ramp up fast.
+                                </p>
+                            </div>
+                            <a href="https://reposage.vercel.app/" class="card-link">Go to Site</a>
+                        </article>
+
+                    </div>
+                </div>
             </div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-        </div>
-        <div class="section-content">
-            <div class="project-grid">
+        </section>
 
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-violet">Solutions Engineering · AI</span>
-                        <h3>ArchitectAI</h3>
-                        <p class="card-desc">
-                            AI-powered solution architecture configurator built for SEs and TAMs.
-                            Describe a business problem, answer 2–3 structured discovery questions,
-                            and receive a <b>complete architecture recommendation</b> — Mermaid.js system diagram,
-                            tech stack with rationale, and a written Solution Brief with trade-off analysis.
-                            Constraint controls (scale, budget, team, timeline) update the recommendation in real time.
-                        </p>
+        <div class="section-divider"></div>
+
+        <!-- ═══════════ DATA / ANALYTICS ═══════════ -->
+        <section class="portfolio-section section-data fade-in" id="data" aria-labelledby="h-data">
+            <button class="section-header" aria-expanded="true" aria-controls="c-data">
+                <span class="section-title">
+                    <span class="section-icon" aria-hidden="true">&#9636;</span>
+                    <h2 id="h-data">Data / Analytics</h2>
+                    <span class="section-count"></span>
+                </span>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="collapsible" id="c-data">
+                <div class="collapsible-inner">
+                    <div class="project-grid">
+
+                        <article class="project-card">
+                            <div class="card-body">
+                                <span class="tag">Data Engineering + Automation</span>
+                                <h3>Pipeline Investigator</h3>
+                                <p class="card-desc">
+                                    Automated root cause analysis tool for broken data pipelines. Detects schema drift,
+                                    null floods, duplicate surges, and silent data corruption in under 10 seconds —
+                                    replacing 30-60 minutes of manual debugging. Built with Python, zero external dependencies.
+                                </p>
+                                <p class="card-note">Note: Demo runs against a fabricated e-commerce database.</p>
+                            </div>
+                            <a href="/pipeline-investigator/investigation_report.html" class="card-link">View Demo Report</a>
+                        </article>
+
+                        <article class="project-card">
+                            <div class="card-body">
+                                <span class="tag">Web App</span>
+                                <h3>Heatmap.fm</h3>
+                                <p class="card-desc">
+                                    Calls Spotify's API to map where your music taste comes from geographically.
+                                    Builds a heatmap from your top 100 artists' origins, plus era grids and
+                                    genre bubble charts. Data from Spotify &amp; MusicBrainz.
+                                </p>
+                                <p class="card-note">Note: Demo presentation links to repo. Avoiding database costs.</p>
+                            </div>
+                            <a href="heatmap.fm/heatmapfm_presentation.html" class="card-link">View Demo</a>
+                        </article>
+
+                        <article class="project-card">
+                            <div class="card-body">
+                                <span class="tag">ML Model</span>
+                                <h3>College Football ML Model</h3>
+                                <p class="card-desc">
+                                    Machine learning model built to predict outcomes and spreads
+                                    of college football games using linear regression.
+                                </p>
+                            </div>
+                            <a href="/CFB_linear_reg/" class="card-link">View Project</a>
+                        </article>
+
+                        <article class="project-card">
+                            <div class="card-body">
+                                <span class="tag">Data Visualization</span>
+                                <h3>Class Data Visualization</h3>
+                                <p class="card-desc">
+                                    Dashboard and presentation created to answer questions for a school
+                                    about their staff and classes. Built with Tableau.
+                                </p>
+                            </div>
+                            <a href="assets/Karras_presentation_project.pdf" class="card-link">View Report</a>
+                        </article>
+
+                        <article class="project-card">
+                            <div class="card-body">
+                                <span class="tag">Data Visualization</span>
+                                <h3>Web Page Traffic Visualization</h3>
+                                <p class="card-desc">
+                                    Tableau workbook tracking incoming web traffic patterns
+                                    and user behavior for a website.
+                                </p>
+                            </div>
+                            <a href="assets/web_data_visualization.pdf" class="card-link">View Report</a>
+                        </article>
+
                     </div>
-                    <a href="/architect-ai.html" class="card-link link-violet">View Presentation</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-violet">Workflow Automation + Sales</span>
-                        <h3>AI Lead Qualification & Scoring</h3>
-                        <p class="card-desc">
-                            Five autonomous AI agents process inbound B2B demo requests end-to-end — enriching
-                            company data, scoring leads against an ideal customer profile, and routing
-                            sales-ready opportunities directly to reps. Cuts response time from hours to minutes.
-                        </p>
-                        <b style="color:var(--accent-violet); font-size:0.82rem;">Link leads to a presentation. The actual app is a desktop app :)</b>
-                    </div>
-                    <a href="/SalesPropPresentation.html" class="card-link link-violet">View Presentation</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-violet">Agentic AI</span>
-                        <h3>Agentic Analysis Report</h3>
-                        <p class="card-desc">
-                            Output from an agentic AI project that automates basic data analysis reports.
-                            Stakeholder-ready summary with key findings and recommendations,
-                            generated entirely by AI agents.
-                        </p>
-                    </div>
-                    <a href="/agentic_analysis.html" class="card-link link-violet">View Project</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-violet">Agentic AI + SEO</span>
-                        <h3>Brief Engine</h3>
-                        <p class="card-desc">
-                            A network of AI agents powering an SEO artifact generator. Submit company info,
-                            select an artifact type, and a research agent conducts market analysis while
-                            a writer agent crafts the content. End-to-end automated.
-                        </p>
-                    </div>
-                    <a href="https://brief-engine-web-app.onrender.com/" class="card-link link-violet">View Site</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-violet">App Development</span>
-                        <h3>PicGradr</h3>
-                        <p class="card-desc">
-                            Full-stack AI-powered web app delivering real-time, structured feedback on dating
-                            profile photos. Built with LangChain agent orchestration and multimodal AI
-                            to evaluate images and return actionable suggestions.
-                        </p>
-                    </div>
-                    <a href="picgradr/" class="card-link link-violet">View Repository</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-violet">AI + Developer Tools</span>
-                        <h3>RepoSage</h3>
-                        <p class="card-desc">
-                            AI-powered codebase onboarding and documentation platform built with Claude.
-                            Analyze any GitHub repo and generate a comprehensive onboarding guide
-                            so new developers can ramp up fast.
-                        </p>
-                    </div>
-                    <a href="https://reposage.vercel.app/" class="card-link link-violet">Go to Site</a>
-                </article>
-
+                </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <div class="section-divider"></div>
+        <div class="section-divider"></div>
 
-    <!-- ═══════════ DATA / ANALYTICS ═══════════ -->
-    <div class="portfolio-section section-data fade-in">
-        <div class="section-header" role="button" tabindex="0" aria-expanded="true" onclick="toggleSection(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection(this)}">
-            <div class="section-title">
-                <span class="section-icon" aria-hidden="true">&#9636;</span>
-                <h2>Data / Analytics</h2>
-                <span class="section-count">5</span>
+        <!-- ═══════════ EXPERIMENTAL / OTHER ═══════════ -->
+        <section class="portfolio-section section-experimental fade-in" id="experimental" aria-labelledby="h-experimental">
+            <button class="section-header" aria-expanded="true" aria-controls="c-experimental">
+                <span class="section-title">
+                    <span class="section-icon" aria-hidden="true">&#9889;</span>
+                    <h2 id="h-experimental">Experimental / Other Builds</h2>
+                    <span class="section-count"></span>
+                </span>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="collapsible" id="c-experimental">
+                <div class="collapsible-inner">
+                    <div class="project-grid">
+
+                        <article class="project-card">
+                            <div class="card-body">
+                                <span class="tag">App Development</span>
+                                <h3>Your Next Mountain</h3>
+                                <p class="card-desc">
+                                    A simple productivity app I created and actively use,
+                                    inspired by stoic philosophies.
+                                </p>
+                            </div>
+                            <a href="/productivityapp/" class="card-link">View Project</a>
+                        </article>
+
+                        <article class="project-card">
+                            <div class="card-body">
+                                <span class="tag">Web App</span>
+                                <h3>Utah Contractors Directory</h3>
+                                <p class="card-desc">
+                                    A lead-gen marketplace connecting homeowners with licensed Utah contractors.
+                                    Browse by trade, location, and ratings to find the right contractor for your project.
+                                </p>
+                            </div>
+                            <a href="https://utahconstruction.site" class="card-link">Go to Site</a>
+                        </article>
+
+                        <article class="project-card">
+                            <div class="card-body">
+                                <span class="tag">Game Development</span>
+                                <h3>Echoes of the Living World</h3>
+                                <p class="card-desc">
+                                    An immersive game project exploring dynamic, living world mechanics
+                                    where the environment and its inhabitants evolve and respond to player actions.
+                                </p>
+                            </div>
+                            <a href="https://github.com/bkarras12/Echoes-of-the-living-world" class="card-link">View Repository</a>
+                        </article>
+
+                    </div>
+                </div>
             </div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-        </div>
-        <div class="section-content">
-            <div class="project-grid">
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-blue">Data Engineering + Automation</span>
-                        <h3>Pipeline Investigator</h3>
-                        <p class="card-desc">
-                            Automated root cause analysis tool for broken data pipelines. Detects schema drift,
-                            null floods, duplicate surges, and silent data corruption in under 10 seconds —
-                            replacing 30-60 minutes of manual debugging. Built with Python, zero external dependencies.
-                        </p>
-                        <b style="color:var(--accent-blue); font-size:0.82rem;">NOTE: Demo runs against a fabricated e-commerce database.</b>
-                    </div>
-                    <a href="/pipeline-investigator/investigation_report.html" class="card-link link-blue">View Demo Report</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-blue">Web App</span>
-                        <h3>Heatmap.fm</h3>
-                        <p class="card-desc">
-                            Calls Spotify's API to map where your music taste comes from geographically.
-                            Builds a heatmap from your top 100 artists' origins, plus era grids and
-                            genre bubble charts. Data from Spotify &amp; MusicBrainz.
-                        </p>
-                        <b style="color:var(--accent-blue); font-size:0.82rem;">NOTE: Demo presentation links to repo. Avoiding database costs.</b>
-                    </div>
-                    <a href="heatmap.fm/heatmapfm_presentation.html" class="card-link link-blue">View Demo</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-blue">ML Model</span>
-                        <h3>College Football ML Model</h3>
-                        <p class="card-desc">
-                            Machine learning model built to predict outcomes and spreads
-                            of college football games using linear regression.
-                        </p>
-                    </div>
-                    <a href="/CFB_linear_reg/" class="card-link link-blue">View Project</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-blue">Data Visualization</span>
-                        <h3>Class Data Visualization</h3>
-                        <p class="card-desc">
-                            Dashboard and presentation created to answer questions for a school
-                            about their staff and classes. Built with Tableau.
-                        </p>
-                    </div>
-                    <a href="assets/Karras_presentation_project.pdf" class="card-link link-blue">View Report</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-blue">Data Visualization</span>
-                        <h3>Web Page Traffic Visualization</h3>
-                        <p class="card-desc">
-                            Tableau workbook tracking incoming web traffic patterns
-                            and user behavior for a website.
-                        </p>
-                    </div>
-                    <a href="assets/web_data_visualization.pdf" class="card-link link-blue">View Report</a>
-                </article>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- ═══════════ EXPERIMENTAL / OTHER ═══════════ -->
-    <div class="portfolio-section section-experimental fade-in">
-        <div class="section-header" role="button" tabindex="0" aria-expanded="true" onclick="toggleSection(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection(this)}">
-            <div class="section-title">
-                <span class="section-icon" aria-hidden="true">&#9889;</span>
-                <h2>Experimental / Other Builds</h2>
-                <span class="section-count">3</span>
-            </div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-        </div>
-        <div class="section-content">
-            <div class="project-grid">
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-pink">App Development</span>
-                        <h3>Your Next Mountain</h3>
-                        <p class="card-desc">
-                            A simple productivity app I created and actively use,
-                            inspired by stoic philosophies.
-                        </p>
-                    </div>
-                    <a href="/productivityapp/" class="card-link link-pink">View Project</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-pink">Web App</span>
-                        <h3>Utah Contractors Directory</h3>
-                        <p class="card-desc">
-                            A lead-gen marketplace connecting homeowners with licensed Utah contractors.
-                            Browse by trade, location, and ratings to find the right contractor for your project.
-                        </p>
-                    </div>
-                    <a href="https://utahconstruction.site" class="card-link link-pink">Go to Site</a>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-header">
-                        <span class="tag tag-pink">Game Development</span>
-                        <h3>Echoes of the Living World</h3>
-                        <p class="card-desc">
-                            An immersive game project exploring dynamic, living world mechanics
-                            where the environment and its inhabitants evolve and respond to player actions.
-                        </p>
-                    </div>
-                    <a href="https://github.com/bkarras12/Echoes-of-the-living-world" class="card-link link-pink">View Repository</a>
-                </article>
-
-            </div>
-        </div>
+        </section>
     </div>
 
     <footer class="fade-in" style="animation-delay: 0.35s;">
-        <p><a href="/dev.html" style="color:inherit;text-decoration:none;cursor:default;">&copy; 2026 Brady W Karras</a></p>
+        <p><a href="/dev.html">&copy; <span id="year">2026</span> Brady W Karras</a></p>
         <div class="footer-links">
-            <a href="https://github.com/bkarras12">GitHub</a>
-            <a href="https://www.linkedin.com/in/brady-karras">LinkedIn</a>
+            <a href="https://github.com/bkarras12" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/brady-karras" target="_blank" rel="noopener">LinkedIn</a>
         </div>
     </footer>
 </main>
 
 <script>
-function toggleAbout() {
-    var dropdown = document.getElementById('aboutDropdown');
-    var btn = document.getElementById('aboutBtn');
-    dropdown.classList.toggle('open');
-    btn.classList.toggle('active');
-}
+(function () {
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.portfolio-section'));
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.project-card'));
 
-function toggleSection(header) {
-    header.classList.toggle('collapsed');
-    var content = header.nextElementSibling;
-    content.classList.toggle('collapsed');
-    var expanded = !header.classList.contains('collapsed');
-    header.setAttribute('aria-expanded', expanded);
-}
+    function setExpanded(btn, expanded) {
+        btn.setAttribute('aria-expanded', String(expanded));
+        document.getElementById(btn.getAttribute('aria-controls')).classList.toggle('collapsed', !expanded);
+    }
+
+    // About Me
+    var aboutBtn = document.getElementById('aboutBtn');
+    aboutBtn.addEventListener('click', function () {
+        setExpanded(aboutBtn, aboutBtn.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Section collapse
+    var headers = sections.map(function (s) { return s.querySelector('.section-header'); });
+    headers.forEach(function (h) {
+        h.addEventListener('click', function () {
+            setExpanded(h, h.getAttribute('aria-expanded') !== 'true');
+            syncToggleAll();
+        });
+    });
+
+    var toggleAll = document.getElementById('toggleAll');
+    function syncToggleAll() {
+        var anyOpen = headers.some(function (h) { return h.getAttribute('aria-expanded') === 'true'; });
+        toggleAll.textContent = anyOpen ? 'Collapse all' : 'Expand all';
+    }
+    toggleAll.addEventListener('click', function () {
+        var expand = toggleAll.textContent === 'Expand all';
+        headers.forEach(function (h) { setExpanded(h, expand); });
+        syncToggleAll();
+    });
+
+    // Card stagger index, external links, counts
+    sections.forEach(function (s) {
+        s.querySelectorAll('.project-card').forEach(function (c, i) { c.style.setProperty('--i', i); });
+    });
+
+    document.querySelectorAll('.card-link').forEach(function (a) {
+        var external = /^https?:\/\//.test(a.getAttribute('href')) && a.hostname !== location.hostname;
+        if (external) {
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.insertAdjacentHTML('beforeend', '<span class="arrow" aria-hidden="true">&#8599;</span>');
+        } else {
+            a.insertAdjacentHTML('beforeend', '<span class="arrow" aria-hidden="true">&rarr;</span>');
+        }
+    });
+
+    function updateCounts() {
+        var total = 0;
+        sections.forEach(function (s) {
+            var visible = s.querySelectorAll('.project-card:not([hidden])').length;
+            s.querySelector('.section-count').textContent = visible;
+            s.hidden = visible === 0;
+            total += visible;
+        });
+        document.getElementById('noResults').classList.toggle('show', total === 0);
+    }
+
+    document.getElementById('statProjects').textContent = cards.length;
+    document.getElementById('statAgentic').textContent = document.querySelectorAll('.project-card[data-ai]').length;
+    document.getElementById('statCategories').textContent = sections.length;
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Search
+    var search = document.getElementById('search');
+    cards.forEach(function (c) { c.dataset.text = c.textContent.toLowerCase().replace(/\s+/g, ' '); });
+    search.addEventListener('input', function () {
+        var q = search.value.trim().toLowerCase();
+        cards.forEach(function (c) { c.hidden = q !== '' && c.dataset.text.indexOf(q) === -1; });
+        document.getElementById('work').classList.toggle('searching', q !== '');
+        if (q) headers.forEach(function (h) { setExpanded(h, true); });
+        syncToggleAll();
+        updateCounts();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === '/' && document.activeElement !== search && !/input|textarea/i.test(document.activeElement.tagName)) {
+            e.preventDefault();
+            search.focus();
+        } else if (e.key === 'Escape' && document.activeElement === search) {
+            search.value = '';
+            search.dispatchEvent(new Event('input'));
+            search.blur();
+        }
+    });
+
+    updateCounts();
+
+    // Nav: border on scroll + active section highlight
+    var nav = document.getElementById('topnav');
+    window.addEventListener('scroll', function () {
+        nav.classList.toggle('scrolled', window.scrollY > 8);
+    }, { passive: true });
+
+    var navLinks = {};
+    document.querySelectorAll('.nav-links a').forEach(function (a) { navLinks[a.getAttribute('href').slice(1)] = a; });
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+                if (en.isIntersecting) {
+                    Object.keys(navLinks).forEach(function (k) { navLinks[k].classList.toggle('active', k === en.target.id); });
+                }
+            });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+        sections.forEach(function (s) { io.observe(s); });
+    }
+})();
 </script>
 </body>
 </html>
